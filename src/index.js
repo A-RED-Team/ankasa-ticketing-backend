@@ -1,5 +1,5 @@
-const { APP_NAME, APP_VERSION, PORT } = require('./helpers/env');
 const app = require('./app');
+const { APP_NAME, APP_VERSION, PORT } = require('./helpers/env');
 const { failed } = require('./helpers/response');
 
 // root router
