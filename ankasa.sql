@@ -5,7 +5,7 @@
 -- Dumped from database version 14.2
 -- Dumped by pg_dump version 14.2
 
--- Started on 2022-04-29 21:29:20
+-- Started on 2022-04-30 12:03:38
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -105,25 +105,7 @@ CREATE TABLE public.countries (
 ALTER TABLE public.countries OWNER TO postgres;
 
 --
--- TOC entry 214 (class 1259 OID 43869)
--- Name: departure_time; Type: TABLE; Schema: public; Owner: postgres
---
-
-CREATE TABLE public.departure_time (
-    id character varying(255) NOT NULL,
-    start_time time without time zone,
-    end_time time without time zone,
-    is_active integer,
-    created_at timestamp without time zone,
-    updated_at timestamp without time zone,
-    deleted_at timestamp without time zone
-);
-
-
-ALTER TABLE public.departure_time OWNER TO postgres;
-
---
--- TOC entry 216 (class 1259 OID 43879)
+-- TOC entry 214 (class 1259 OID 43879)
 -- Name: flights; Type: TABLE; Schema: public; Owner: postgres
 --
 
@@ -146,8 +128,6 @@ CREATE TABLE public.flights (
     luggage integer,
     meal integer,
     wifi integer,
-    id_departure_time character varying(255),
-    id_time_arrived character varying(255),
     price integer,
     stock integer,
     rating integer,
@@ -163,7 +143,7 @@ CREATE TABLE public.flights (
 ALTER TABLE public.flights OWNER TO postgres;
 
 --
--- TOC entry 217 (class 1259 OID 43886)
+-- TOC entry 215 (class 1259 OID 43886)
 -- Name: pic; Type: TABLE; Schema: public; Owner: postgres
 --
 
@@ -180,24 +160,6 @@ CREATE TABLE public.pic (
 
 
 ALTER TABLE public.pic OWNER TO postgres;
-
---
--- TOC entry 215 (class 1259 OID 43874)
--- Name: time_arrived; Type: TABLE; Schema: public; Owner: postgres
---
-
-CREATE TABLE public.time_arrived (
-    id character varying(255) NOT NULL,
-    start_time time without time zone,
-    end_time time without time zone,
-    is_active integer,
-    created_at timestamp without time zone,
-    updated_at time without time zone,
-    deleted_at time without time zone
-);
-
-
-ALTER TABLE public.time_arrived OWNER TO postgres;
 
 --
 -- TOC entry 209 (class 1259 OID 35646)
@@ -217,7 +179,8 @@ CREATE TABLE public.users (
     verify_token character varying(255),
     is_verfied integer,
     is_active integer,
-    created_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    level integer,
+    created_at timestamp without time zone,
     updated_at timestamp without time zone,
     deleted_at timestamp without time zone
 );
@@ -226,7 +189,7 @@ CREATE TABLE public.users (
 ALTER TABLE public.users OWNER TO postgres;
 
 --
--- TOC entry 3357 (class 0 OID 43853)
+-- TOC entry 3344 (class 0 OID 43853)
 -- Dependencies: 212
 -- Data for Name: airlines; Type: TABLE DATA; Schema: public; Owner: postgres
 --
@@ -234,7 +197,7 @@ ALTER TABLE public.users OWNER TO postgres;
 
 
 --
--- TOC entry 3358 (class 0 OID 43862)
+-- TOC entry 3345 (class 0 OID 43862)
 -- Dependencies: 213
 -- Data for Name: bookings; Type: TABLE DATA; Schema: public; Owner: postgres
 --
@@ -242,7 +205,7 @@ ALTER TABLE public.users OWNER TO postgres;
 
 
 --
--- TOC entry 3355 (class 0 OID 43837)
+-- TOC entry 3342 (class 0 OID 43837)
 -- Dependencies: 210
 -- Data for Name: cities; Type: TABLE DATA; Schema: public; Owner: postgres
 --
@@ -250,7 +213,7 @@ ALTER TABLE public.users OWNER TO postgres;
 
 
 --
--- TOC entry 3356 (class 0 OID 43845)
+-- TOC entry 3343 (class 0 OID 43845)
 -- Dependencies: 211
 -- Data for Name: countries; Type: TABLE DATA; Schema: public; Owner: postgres
 --
@@ -258,39 +221,23 @@ ALTER TABLE public.users OWNER TO postgres;
 
 
 --
--- TOC entry 3359 (class 0 OID 43869)
+-- TOC entry 3346 (class 0 OID 43879)
 -- Dependencies: 214
--- Data for Name: departure_time; Type: TABLE DATA; Schema: public; Owner: postgres
---
-
-
-
---
--- TOC entry 3361 (class 0 OID 43879)
--- Dependencies: 216
 -- Data for Name: flights; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
 
 
 --
--- TOC entry 3362 (class 0 OID 43886)
--- Dependencies: 217
+-- TOC entry 3347 (class 0 OID 43886)
+-- Dependencies: 215
 -- Data for Name: pic; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
 
 
 --
--- TOC entry 3360 (class 0 OID 43874)
--- Dependencies: 215
--- Data for Name: time_arrived; Type: TABLE DATA; Schema: public; Owner: postgres
---
-
-
-
---
--- TOC entry 3354 (class 0 OID 35646)
+-- TOC entry 3341 (class 0 OID 35646)
 -- Dependencies: 209
 -- Data for Name: users; Type: TABLE DATA; Schema: public; Owner: postgres
 --
@@ -298,7 +245,7 @@ ALTER TABLE public.users OWNER TO postgres;
 
 
 --
--- TOC entry 3206 (class 2606 OID 43868)
+-- TOC entry 3197 (class 2606 OID 43868)
 -- Name: bookings bookings_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -307,7 +254,7 @@ ALTER TABLE ONLY public.bookings
 
 
 --
--- TOC entry 3202 (class 2606 OID 43844)
+-- TOC entry 3193 (class 2606 OID 43844)
 -- Name: cities cities_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -316,7 +263,7 @@ ALTER TABLE ONLY public.cities
 
 
 --
--- TOC entry 3204 (class 2606 OID 43852)
+-- TOC entry 3195 (class 2606 OID 43852)
 -- Name: countries countries_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -325,16 +272,7 @@ ALTER TABLE ONLY public.countries
 
 
 --
--- TOC entry 3208 (class 2606 OID 43873)
--- Name: departure_time departure_time_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY public.departure_time
-    ADD CONSTRAINT departure_time_pkey PRIMARY KEY (id);
-
-
---
--- TOC entry 3212 (class 2606 OID 43885)
+-- TOC entry 3199 (class 2606 OID 43885)
 -- Name: flights flights_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -343,7 +281,7 @@ ALTER TABLE ONLY public.flights
 
 
 --
--- TOC entry 3214 (class 2606 OID 43892)
+-- TOC entry 3201 (class 2606 OID 43892)
 -- Name: pic pic_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -352,16 +290,7 @@ ALTER TABLE ONLY public.pic
 
 
 --
--- TOC entry 3210 (class 2606 OID 43878)
--- Name: time_arrived time_arrived_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY public.time_arrived
-    ADD CONSTRAINT time_arrived_pkey PRIMARY KEY (id);
-
-
---
--- TOC entry 3200 (class 2606 OID 35653)
+-- TOC entry 3191 (class 2606 OID 35653)
 -- Name: users users_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -369,7 +298,7 @@ ALTER TABLE ONLY public.users
     ADD CONSTRAINT users_pkey PRIMARY KEY (id);
 
 
--- Completed on 2022-04-29 21:29:24
+-- Completed on 2022-04-30 12:03:40
 
 --
 -- PostgreSQL database dump complete
