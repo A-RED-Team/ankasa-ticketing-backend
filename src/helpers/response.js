@@ -36,7 +36,7 @@ module.exports = {
       status: success,
       message: 'create user sucesss',
       data: [],
-      pagginatio: []
+      paggination: []
     })
     */
   },
