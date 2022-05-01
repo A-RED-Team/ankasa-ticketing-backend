@@ -14,17 +14,18 @@ const authModel = {
       );
     });
   },
-  registerData: (
-    id,
-    username,
-    email,
-    passwordHashed,
-    verifyToken,
-    isVerified,
-    isActive,
-    level
-  ) => {
+  registerData: (data) => {
     return new Promise((resolve, reject) => {
+      const {
+        id,
+        username,
+        email,
+        passwordHashed,
+        verifyToken,
+        isVerified,
+        isActive,
+        level,
+      } = data;
       db.query(
         `INSERT INTO users(id,username,email,password,verify_token,is_verfied,is_active,level)
         VALUES('${id}','${username}','${email}','${passwordHashed}','${verifyToken}','${isVerified}',${isActive},${level})`,

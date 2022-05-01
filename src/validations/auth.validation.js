@@ -15,6 +15,7 @@ const registerValidation = [
   check('email', 'Email maximum length is 50 characters').isLength({ max: 50 }),
 
   //password
+  check('password', 'Password required').not().isEmpty(),
   check('password', 'Password require 8 or more characters').isLength({
     min: 8,
   }),
@@ -33,5 +34,5 @@ const loginValidation = [
 
 module.exports = {
   registerValidation,
-  loginValidation
+  loginValidation,
 };
