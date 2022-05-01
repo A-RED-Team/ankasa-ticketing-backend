@@ -5,7 +5,7 @@
 -- Dumped from database version 14.2
 -- Dumped by pg_dump version 14.2
 
--- Started on 2022-04-30 12:03:38
+-- Started on 2022-05-01 14:09:34
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -23,7 +23,7 @@ SET default_tablespace = '';
 SET default_table_access_method = heap;
 
 --
--- TOC entry 212 (class 1259 OID 43853)
+-- TOC entry 211 (class 1259 OID 43853)
 -- Name: airlines; Type: TABLE; Schema: public; Owner: postgres
 --
 
@@ -41,7 +41,7 @@ CREATE TABLE public.airlines (
 ALTER TABLE public.airlines OWNER TO postgres;
 
 --
--- TOC entry 213 (class 1259 OID 43862)
+-- TOC entry 212 (class 1259 OID 43862)
 -- Name: bookings; Type: TABLE; Schema: public; Owner: postgres
 --
 
@@ -59,7 +59,7 @@ CREATE TABLE public.bookings (
     resechedule integer,
     total_payment integer,
     is_active integer,
-    created_at timestamp without time zone,
+    created_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
     updated_at timestamp without time zone,
     deleted_at timestamp without time zone
 );
@@ -68,7 +68,7 @@ CREATE TABLE public.bookings (
 ALTER TABLE public.bookings OWNER TO postgres;
 
 --
--- TOC entry 210 (class 1259 OID 43837)
+-- TOC entry 209 (class 1259 OID 43837)
 -- Name: cities; Type: TABLE; Schema: public; Owner: postgres
 --
 
@@ -87,7 +87,7 @@ CREATE TABLE public.cities (
 ALTER TABLE public.cities OWNER TO postgres;
 
 --
--- TOC entry 211 (class 1259 OID 43845)
+-- TOC entry 210 (class 1259 OID 43845)
 -- Name: countries; Type: TABLE; Schema: public; Owner: postgres
 --
 
@@ -105,7 +105,7 @@ CREATE TABLE public.countries (
 ALTER TABLE public.countries OWNER TO postgres;
 
 --
--- TOC entry 214 (class 1259 OID 43879)
+-- TOC entry 213 (class 1259 OID 43879)
 -- Name: flights; Type: TABLE; Schema: public; Owner: postgres
 --
 
@@ -134,7 +134,7 @@ CREATE TABLE public.flights (
     total_reviewed integer,
     id_pic character varying(255),
     is_active integer,
-    created_at timestamp without time zone,
+    created_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
     updated_at timestamp without time zone,
     deleted_at timestamp without time zone
 );
@@ -143,7 +143,7 @@ CREATE TABLE public.flights (
 ALTER TABLE public.flights OWNER TO postgres;
 
 --
--- TOC entry 215 (class 1259 OID 43886)
+-- TOC entry 214 (class 1259 OID 43886)
 -- Name: pic; Type: TABLE; Schema: public; Owner: postgres
 --
 
@@ -153,7 +153,7 @@ CREATE TABLE public.pic (
     email character varying(255),
     phone_number character varying(20),
     is_active integer,
-    created_at timestamp without time zone,
+    created_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
     updated_at timestamp without time zone,
     deleted_at time without time zone
 );
@@ -162,7 +162,7 @@ CREATE TABLE public.pic (
 ALTER TABLE public.pic OWNER TO postgres;
 
 --
--- TOC entry 209 (class 1259 OID 35646)
+-- TOC entry 215 (class 1259 OID 43893)
 -- Name: users; Type: TABLE; Schema: public; Owner: postgres
 --
 
@@ -171,16 +171,17 @@ CREATE TABLE public.users (
     username character varying(255) NOT NULL,
     email character varying(255) NOT NULL,
     password character varying(255) NOT NULL,
+    name character varying(255),
     phone_number character varying(20),
     city character varying(255),
     address character varying(255),
     post_code character varying(20),
     photo character varying(255),
     verify_token character varying(255),
-    is_verfied integer,
+    is_verified integer,
     is_active integer,
     level integer,
-    created_at timestamp without time zone,
+    created_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
     updated_at timestamp without time zone,
     deleted_at timestamp without time zone
 );
@@ -189,63 +190,63 @@ CREATE TABLE public.users (
 ALTER TABLE public.users OWNER TO postgres;
 
 --
--- TOC entry 3344 (class 0 OID 43853)
--- Dependencies: 212
+-- TOC entry 3345 (class 0 OID 43853)
+-- Dependencies: 211
 -- Data for Name: airlines; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
 
 
 --
--- TOC entry 3345 (class 0 OID 43862)
--- Dependencies: 213
+-- TOC entry 3346 (class 0 OID 43862)
+-- Dependencies: 212
 -- Data for Name: bookings; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
 
 
 --
--- TOC entry 3342 (class 0 OID 43837)
--- Dependencies: 210
+-- TOC entry 3343 (class 0 OID 43837)
+-- Dependencies: 209
 -- Data for Name: cities; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
 
 
 --
--- TOC entry 3343 (class 0 OID 43845)
--- Dependencies: 211
+-- TOC entry 3344 (class 0 OID 43845)
+-- Dependencies: 210
 -- Data for Name: countries; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
 
 
 --
--- TOC entry 3346 (class 0 OID 43879)
--- Dependencies: 214
+-- TOC entry 3347 (class 0 OID 43879)
+-- Dependencies: 213
 -- Data for Name: flights; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
 
 
 --
--- TOC entry 3347 (class 0 OID 43886)
--- Dependencies: 215
+-- TOC entry 3348 (class 0 OID 43886)
+-- Dependencies: 214
 -- Data for Name: pic; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
 
 
 --
--- TOC entry 3341 (class 0 OID 35646)
--- Dependencies: 209
+-- TOC entry 3349 (class 0 OID 43893)
+-- Dependencies: 215
 -- Data for Name: users; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
 
 
 --
--- TOC entry 3197 (class 2606 OID 43868)
+-- TOC entry 3199 (class 2606 OID 43868)
 -- Name: bookings bookings_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -254,7 +255,7 @@ ALTER TABLE ONLY public.bookings
 
 
 --
--- TOC entry 3193 (class 2606 OID 43844)
+-- TOC entry 3195 (class 2606 OID 43844)
 -- Name: cities cities_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -263,7 +264,7 @@ ALTER TABLE ONLY public.cities
 
 
 --
--- TOC entry 3195 (class 2606 OID 43852)
+-- TOC entry 3197 (class 2606 OID 43852)
 -- Name: countries countries_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -272,7 +273,7 @@ ALTER TABLE ONLY public.countries
 
 
 --
--- TOC entry 3199 (class 2606 OID 43885)
+-- TOC entry 3201 (class 2606 OID 43885)
 -- Name: flights flights_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -281,7 +282,7 @@ ALTER TABLE ONLY public.flights
 
 
 --
--- TOC entry 3201 (class 2606 OID 43892)
+-- TOC entry 3203 (class 2606 OID 43892)
 -- Name: pic pic_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -289,16 +290,7 @@ ALTER TABLE ONLY public.pic
     ADD CONSTRAINT pic_pkey PRIMARY KEY (id);
 
 
---
--- TOC entry 3191 (class 2606 OID 35653)
--- Name: users users_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY public.users
-    ADD CONSTRAINT users_pkey PRIMARY KEY (id);
-
-
--- Completed on 2022-04-30 12:03:40
+-- Completed on 2022-05-01 14:09:38
 
 --
 -- PostgreSQL database dump complete
