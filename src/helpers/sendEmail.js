@@ -1,8 +1,8 @@
 const nodemailer = require('nodemailer');
 const hbs = require('nodemailer-express-handlebars');
 const path = require('path');
-// require('dotenv').config();
 const { GMAIL_PASS, GMAIL_USER, APP_URL } = require('./env');
+
 const transport = nodemailer.createTransport({
   host: 'smtp.gmail.com',
   port: 587,

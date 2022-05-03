@@ -74,7 +74,7 @@ module.exports = {
                 code: 200,
                 status: 'success',
                 message: 'create user sucesss, please activate your email',
-                data: out,
+                data: data,
                 paggination: [],
             });
         } catch (error) {
