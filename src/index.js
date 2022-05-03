@@ -1,7 +1,9 @@
-const app = require('./app')
-const { APP_NAME, APP_VERSION, PORT } = require('./helpers/env')
-const { failed } = require('./helpers/response')
-const userRoute = require('./routes/user.router')
+const app = require('./app');
+const { APP_NAME, APP_VERSION, PORT } = require('./helpers/env');
+const { failed } = require('./helpers/response');
+const userRoute = require('./routes/user.router');
+
+app.use(require('./routes/auth.route'));
 
 // root router
 // app.use('/', (req, res) => {
@@ -18,8 +20,8 @@ const userRoute = require('./routes/user.router')
 //   });
 // });
 
-app.use(userRoute)
+app.use(userRoute);
 
 // set port or using default port, listen for requests
-const port = PORT || 4000
-app.listen(port, () => console.log(`Server running at port ${port}`))
+const port = PORT;
+app.listen(port, () => console.log(`Server running at port ${port}`));

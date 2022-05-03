@@ -48,10 +48,33 @@ const userModel = {
       });
     });
   },
+  emailCheck: (email) => {
+    return new Promise((resolve, reject) => {
+      db.query(`SELECT * FROM users WHERE email='${email}'`, (err, result) => {
+        if (err) {
+          reject(err);
+        }
+        resolve(result);
+      });
+    });
+  },
+  usernameCheck: (username) => {
+    return new Promise((resolve, reject) => {
+      db.query(
+        `SELECT * FROM users WHERE username='${username}'`,
+        (err, result) => {
+          if (err) {
+            reject(err);
+          }
+          resolve(result);
+        }
+      );
+    });
+  },
   updateProfile: (email, username, phone, city, address, postCode, id) => {
     return new Promise((resolve, reject) => {
       db.query(
-        `UPDATE users SET email='${email}', username='${username}', phone_number='${phone}', city='${city}', address='${address}', post_code='${postCode}' WHERE id='${id}'`,
+        `UPDATE users SET email='${email}', username='${username}', phone_number='${phone}', city='${city}', address='${address}', post_code='${postCode}', updated_at=NOW() WHERE id='${id}'`,
         (err, result) => {
           if (err) {
             reject(new Error(err.message));
@@ -65,7 +88,7 @@ const userModel = {
   updatePhoto: (photo, id) => {
     return new Promise((resolve, reject) => {
       db.query(
-        `UPDATE users SET photo='${photo}'  WHERE id='${id}'`,
+        `UPDATE users SET photo='${photo}', updated_at=NOW()  WHERE id='${id}'`,
         (err, result) => {
           if (err) {
             reject(new Error(err.message));
@@ -79,7 +102,7 @@ const userModel = {
   updateIsActive: (active, id) => {
     return new Promise((resolve, reject) => {
       db.query(
-        `UPDATE users SET is_active='${active}'  WHERE id='${id}'`,
+        `UPDATE users SET is_active='${active}' WHERE id='${id}'`,
         (err, result) => {
           if (err) {
             reject(new Error(err.message));
@@ -92,7 +115,7 @@ const userModel = {
   },
   deleteUser: (id) => {
     return new Promise((resolve, reject) => {
-      db.query(`DELETE FROM users WHERE id=${id}`, (err, result) => {
+      db.query(`DELETE FROM users WHERE id='${id}'`, (err, result) => {
         if (err) {
           reject(new Error(err.message));
         } else {
