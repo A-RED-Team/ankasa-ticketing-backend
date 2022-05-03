@@ -14,4 +14,10 @@ module.exports = {
   PG_PORT: process.env.PG_PORT,
   // jwt
   JWT_SECRET: process.env.JWT_SECRET,
+  // email
+  GMAIL_USER: process.env.GMAIL_USER,
+  GMAIL_PASS: process.env.GMAIL_PASS,
+  EMAIL_SENDER: process.env.EMAIL_SENDER,
+  //api
+  APP_URL: process.env.APP_URL,
 };
