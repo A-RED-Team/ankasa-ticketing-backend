@@ -14,7 +14,7 @@ const transport = nodemailer.createTransport({
 });
 
 module.exports = {
-  sendConfirmationEmail: (email, confirmationCode) => {
+  sendConfirmationEmail: (email, confirmationCode, username) => {
     transport.use(
       'compile',
       hbs({
@@ -35,6 +35,7 @@ module.exports = {
       template: 'confirm-email',
       context: {
         url: `${APP_URL}/auth/verify-email?token=${confirmationCode}`,
+        username: `${username}`,
       },
     };
 
