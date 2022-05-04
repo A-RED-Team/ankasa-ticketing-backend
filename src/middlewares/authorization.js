@@ -1,4 +1,3 @@
-// const userModel = require('../models/user.model');
 const { failed } = require('../helpers/response');
 
 module.exports = {
@@ -14,7 +13,7 @@ module.exports = {
       });
     }
   },
-  isCustomer: (req, res, next) => {
+  isCustomers: (req, res, next) => {
     if (req.APP_DATA.tokenDecoded.level === 0) {
       next();
     } else {
