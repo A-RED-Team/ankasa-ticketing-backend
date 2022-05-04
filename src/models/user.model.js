@@ -102,7 +102,7 @@ const userModel = {
   updateIsActive: (active, id) => {
     return new Promise((resolve, reject) => {
       db.query(
-        `UPDATE users SET is_active='${active}' WHERE id='${id}'`,
+        `UPDATE users SET is_active='${active}', deleted_at=NOW() WHERE id='${id}'`,
         (err, result) => {
           if (err) {
             reject(new Error(err.message));
@@ -113,17 +113,45 @@ const userModel = {
       );
     });
   },
-  deleteUser: (id) => {
+  updateNonActive: (nonActive, id) => {
     return new Promise((resolve, reject) => {
-      db.query(`DELETE FROM users WHERE id='${id}'`, (err, result) => {
-        if (err) {
-          reject(new Error(err.message));
-        } else {
-          resolve(result);
+      db.query(
+        `UPDATE users SET is_active='${nonActive}', updated_at=NOW() WHERE id='${id}'`,
+        (err, result) => {
+          if (err) {
+            reject(new Error(err.message));
+          } else {
+            resolve(result);
+          }
         }
-      });
+      );
     });
   },
+  updateLevel: (level, id) => {
+    return new Promise((resolve, reject) => {
+      db.query(
+        `UPDATE users SET level='${level}', updated_at=NOW() WHERE id='${id}'`,
+        (err, result) => {
+          if (err) {
+            reject(new Error(err.message));
+          } else {
+            resolve(result);
+          }
+        }
+      );
+    });
+  },
+  // deleteUser: (id) => {
+  //   return new Promise((resolve, reject) => {
+  //     db.query(`DELETE FROM users WHERE id='${id}'`, (err, result) => {
+  //       if (err) {
+  //         reject(new Error(err.message));
+  //       } else {
+  //         resolve(result);
+  //       }
+  //     });
+  //   });
+  // },
 };
 
 module.exports = userModel;

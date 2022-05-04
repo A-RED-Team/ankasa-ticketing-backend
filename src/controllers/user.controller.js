@@ -42,7 +42,7 @@ const userController = {
         success(res, {
           code: 200,
           status: 'Success',
-          message: 'Get user sucesss',
+          message: 'Get user success',
           data: result,
           pagination,
         });
@@ -55,7 +55,7 @@ const userController = {
         success(res, {
           code: 201,
           status: 'Success',
-          message: 'Get all users sucesss',
+          message: 'Get all users success',
           data: result,
           pagination,
         });
@@ -76,7 +76,7 @@ const userController = {
       success(res, {
         code: 200,
         status: 'Success',
-        message: 'Get detail user sucesss',
+        message: 'Get detail user success',
         data: result,
       });
     } catch (err) {
@@ -94,15 +94,7 @@ const userController = {
       const { email, username, phone, city, address, postCode } = req.body;
       const emailCheck = await userModel.emailCheck(email);
       const usernameCheck = await userModel.usernameCheck(username);
-      if (!username || !phone || !email || !city || !address || !postCode) {
-        failed(res, {
-          code: 400,
-          status: 'Error',
-          message: 'All data must be filled',
-          error: null,
-        });
-        return;
-      }
+
       // if (emailCheck.rowCount > 1 || usernameCheck.rowCount > 1) {
       //   failed(res, {
       //     code: 400,
@@ -173,13 +165,23 @@ const userController = {
     try {
       const id = req.params.id;
       const { status } = req.body;
-      const result = await userModel.updateIsActive(status, id);
-      success(res, {
-        code: 200,
-        status: 'Success',
-        message: 'Update status user sucesss',
-        data: result,
-      });
+      if (status === '0') {
+        const result = await userModel.updateIsActive(status, id);
+        success(res, {
+          code: 200,
+          status: 'Success',
+          message: 'Update status user success',
+          data: result,
+        });
+      } else {
+        const result = await userModel.updateNonActive(status, id);
+        success(res, {
+          code: 200,
+          status: 'Success',
+          message: 'Update status user success',
+          data: result,
+        });
+      }
     } catch (err) {
       failed(res, {
         code: 400,
@@ -189,39 +191,59 @@ const userController = {
       });
     }
   },
-  deleteUser: async (req, res) => {
+  updateLevel: async (req, res) => {
     try {
       const id = req.params.id;
-      const checkIsActive = await userModel.getDetail(id);
-      const getIsActive = checkIsActive.rows[0].is_active;
-      const checkPhoto = await userModel.getPhoto(id);
-      const getPhoto = checkPhoto.rows[0].photo;
-      if (getIsActive === 1) {
-        failed(res, {
-          code: 400,
-          status: 'Error',
-          message: 'User active',
-          error: null,
-        });
-      } else {
-        const result = await userModel.deleteUser(id);
-        success(res, {
-          code: 200,
-          status: 'Success',
-          message: 'Delete user sucesss',
-          data: result,
-        });
-        deleteFile(`./public/uploads/users/${getPhoto}`);
-      }
+      const { level } = req.body;
+      const result = await userModel.updateLevel(level, id);
+      success(res, {
+        code: 200,
+        status: 'Success',
+        message: 'Update level user success',
+        data: result,
+      });
     } catch (err) {
       failed(res, {
         code: 400,
         status: 'Error',
-        message: 'Delete user failed',
+        message: 'Update level user failed',
         error: err.message,
       });
     }
   },
+  // deleteUser: async (req, res) => {
+  //   try {
+  //     const id = req.params.id;
+  //     const checkIsActive = await userModel.getDetail(id);
+  //     const getIsActive = checkIsActive.rows[0].is_active;
+  //     const checkPhoto = await userModel.getPhoto(id);
+  //     const getPhoto = checkPhoto.rows[0].photo;
+  //     if (getIsActive === 1) {
+  //       failed(res, {
+  //         code: 400,
+  //         status: 'Error',
+  //         message: 'User active',
+  //         error: null,
+  //       });
+  //     } else {
+  //       const result = await userModel.deleteUser(id);
+  //       success(res, {
+  //         code: 200,
+  //         status: 'Success',
+  //         message: 'Delete user sucesss',
+  //         data: result,
+  //       });
+  //       deleteFile(`./public/uploads/users/${getPhoto}`);
+  //     }
+  //   } catch (err) {
+  //     failed(res, {
+  //       code: 400,
+  //       status: 'Error',
+  //       message: 'Delete user failed',
+  //       error: err.message,
+  //     });
+  //   }
+  // },
 };
 
 module.exports = userController;
