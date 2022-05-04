@@ -6,10 +6,10 @@ module.exports = {
       next();
     } else {
       failed(res, {
-        code: 400,
+        code: 500,
         status: 'failed',
         message: 'user dont have access',
-        error: null,
+        error: [],
       });
     }
   },
@@ -18,10 +18,10 @@ module.exports = {
       next();
     } else {
       failed(res, {
-        code: 400,
+        code: 500,
         status: 'failed',
-        message: 'you dont have access',
-        error: null,
+        message: 'user dont have access',
+        error: [],
       });
     }
   },

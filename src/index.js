@@ -4,6 +4,7 @@ const { failed } = require('./helpers/response');
 const userRoute = require('./routes/user.router');
 
 app.use(require('./routes/auth.route'));
+app.use(require('./routes/airlines.route'))
 
 // root router
 // app.use('/', (req, res) => {
