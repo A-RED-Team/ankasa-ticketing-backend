@@ -3,6 +3,7 @@ const { APP_NAME, APP_VERSION, PORT } = require('./helpers/env');
 const { failed } = require('./helpers/response');
 
 app.use(require('./routes/auth.route'));
+app.use(require('./routes/airlines.route'))
 
 // root router
 app.use('/', (req, res) => {
