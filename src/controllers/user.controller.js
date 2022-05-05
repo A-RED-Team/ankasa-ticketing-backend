@@ -43,7 +43,7 @@ const userController = {
           code: 200,
           status: 'Success',
           message: 'Get user success',
-          data: result,
+          data: result.rows[0],
           pagination,
         });
       } else {
@@ -56,7 +56,7 @@ const userController = {
           code: 201,
           status: 'Success',
           message: 'Get all users success',
-          data: result,
+          data: result.rows[0],
           pagination,
         });
       }
@@ -73,11 +73,20 @@ const userController = {
     try {
       const id = req.params.id;
       const result = await userModel.getDetail(id);
+      if (result.rowCount === 0) {
+        failed(res, {
+          code: 400,
+          status: 'Error',
+          message: 'Id not found',
+          error: null,
+        });
+        return;
+      }
       success(res, {
         code: 200,
         status: 'Success',
         message: 'Get detail user success',
-        data: result,
+        data: result.rows[0],
       });
     } catch (err) {
       failed(res, {
@@ -94,31 +103,36 @@ const userController = {
       const { email, username, phone, city, address, postCode } = req.body;
       const emailCheck = await userModel.emailCheck(email);
       const usernameCheck = await userModel.usernameCheck(username);
-
-      // if (emailCheck.rowCount > 1 || usernameCheck.rowCount > 1) {
-      //   failed(res, {
-      //     code: 400,
-      //     status: 'error',
-      //     message: 'Username or Email already exist',
-      //     error: null,
-      //   });
-      //   return;
-      // }
-      const result = await userModel.updateProfile(
-        email,
-        username,
-        phone,
-        city,
-        address,
-        postCode,
-        id
-      );
-      success(res, {
-        code: 200,
-        status: 'Success',
-        message: 'Update user success',
-        data: result,
-      });
+      if (
+        username == req.APP_DATA.tokenDecoded.username &&
+        email == req.APP_DATA.tokenDecoded.email
+      ) {
+        const result = await userModel.updateProfile(
+          email,
+          username,
+          phone,
+          city,
+          address,
+          postCode,
+          id
+        );
+        success(res, {
+          code: 200,
+          status: 'Success',
+          message: 'Update user success',
+          data: result,
+        });
+        return;
+      }
+      if (emailCheck.rowCount > 0 || usernameCheck.rowCount > 0) {
+        failed(res, {
+          code: 400,
+          status: 'error',
+          message: 'Username or Email already exist',
+          error: null,
+        });
+        return;
+      }
     } catch (err) {
       failed(res, {
         code: 400,
@@ -167,6 +181,15 @@ const userController = {
       const { status } = req.body;
       if (status === '0') {
         const result = await userModel.updateIsActive(status, id);
+        if (result.rowCount === 0) {
+          failed(res, {
+            code: 400,
+            status: 'Error',
+            message: 'Id not found',
+            error: null,
+          });
+          return;
+        }
         success(res, {
           code: 200,
           status: 'Success',
@@ -175,6 +198,15 @@ const userController = {
         });
       } else {
         const result = await userModel.updateNonActive(status, id);
+        if (result.rowCount === 0) {
+          failed(res, {
+            code: 400,
+            status: 'Error',
+            message: 'Id not found',
+            error: null,
+          });
+          return;
+        }
         success(res, {
           code: 200,
           status: 'Success',
@@ -196,6 +228,15 @@ const userController = {
       const id = req.params.id;
       const { level } = req.body;
       const result = await userModel.updateLevel(level, id);
+      if (result.rowCount === 0) {
+        failed(res, {
+          code: 400,
+          status: 'Error',
+          message: 'Id not found',
+          error: null,
+        });
+        return;
+      }
       success(res, {
         code: 200,
         status: 'Success',
@@ -227,6 +268,15 @@ const userController = {
   //       });
   //     } else {
   //       const result = await userModel.deleteUser(id);
+  //       if (result.rowCount === 0) {
+  //         failed(res, {
+  //           code: 400,
+  //           status: 'Error',
+  //           message: 'Id not found',
+  //           error: null,
+  //         });
+  //         return;
+  //       }
   //       success(res, {
   //         code: 200,
   //         status: 'Success',
