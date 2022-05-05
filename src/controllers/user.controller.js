@@ -181,6 +181,15 @@ const userController = {
       const { status } = req.body;
       if (status === '0') {
         const result = await userModel.updateIsActive(status, id);
+        if (result.rowCount === 0) {
+          failed(res, {
+            code: 400,
+            status: 'Error',
+            message: 'Id not found',
+            error: null,
+          });
+          return;
+        }
         success(res, {
           code: 200,
           status: 'Success',
@@ -189,6 +198,15 @@ const userController = {
         });
       } else {
         const result = await userModel.updateNonActive(status, id);
+        if (result.rowCount === 0) {
+          failed(res, {
+            code: 400,
+            status: 'Error',
+            message: 'Id not found',
+            error: null,
+          });
+          return;
+        }
         success(res, {
           code: 200,
           status: 'Success',
@@ -210,6 +228,15 @@ const userController = {
       const id = req.params.id;
       const { level } = req.body;
       const result = await userModel.updateLevel(level, id);
+      if (result.rowCount === 0) {
+        failed(res, {
+          code: 400,
+          status: 'Error',
+          message: 'Id not found',
+          error: null,
+        });
+        return;
+      }
       success(res, {
         code: 200,
         status: 'Success',
@@ -241,6 +268,15 @@ const userController = {
   //       });
   //     } else {
   //       const result = await userModel.deleteUser(id);
+  //       if (result.rowCount === 0) {
+  //         failed(res, {
+  //           code: 400,
+  //           status: 'Error',
+  //           message: 'Id not found',
+  //           error: null,
+  //         });
+  //         return;
+  //       }
   //       success(res, {
   //         code: 200,
   //         status: 'Success',
