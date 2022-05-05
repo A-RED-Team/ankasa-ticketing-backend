@@ -43,7 +43,7 @@ const userController = {
           code: 200,
           status: 'Success',
           message: 'Get user success',
-          data: result,
+          data: result.rows,
           pagination,
         });
       } else {
@@ -53,10 +53,10 @@ const userController = {
           totalPage: Math.ceil(totalData / getLimit),
         };
         success(res, {
-          code: 201,
+          code: 200,
           status: 'Success',
           message: 'Get all users success',
-          data: result,
+          data: result.rows,
           pagination,
         });
       }
@@ -73,11 +73,21 @@ const userController = {
     try {
       const id = req.params.id;
       const result = await userModel.getDetail(id);
+
+      if (result.rowCount < 1) {
+        failed(res, {
+          code: 404,
+          status: 'failed',
+          message: 'Get detail user by id not found',
+          data: [],
+        });
+      }
+
       success(res, {
         code: 200,
         status: 'Success',
         message: 'Get detail user success',
-        data: result,
+        data: result.rows,
       });
     } catch (err) {
       failed(res, {
@@ -117,7 +127,7 @@ const userController = {
         code: 200,
         status: 'Success',
         message: 'Update user success',
-        data: result,
+        data: req.body,
       });
     } catch (err) {
       failed(res, {
@@ -171,7 +181,7 @@ const userController = {
           code: 200,
           status: 'Success',
           message: 'Update status user success',
-          data: result,
+          data: req.body,
         });
       } else {
         const result = await userModel.updateNonActive(status, id);
@@ -179,7 +189,7 @@ const userController = {
           code: 200,
           status: 'Success',
           message: 'Update status user success',
-          data: result,
+          data: req.body,
         });
       }
     } catch (err) {
@@ -200,7 +210,7 @@ const userController = {
         code: 200,
         status: 'Success',
         message: 'Update level user success',
-        data: result,
+        data: req.body,
       });
     } catch (err) {
       failed(res, {
