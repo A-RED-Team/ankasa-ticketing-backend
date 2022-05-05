@@ -129,6 +129,7 @@ dist
 .yarn/install-state.gz
 .pnp.*
 
-
-# ignore local image
+# local image
+/public/uploads/users
+/public/uploads/cities
 /public/uploads/airlines
