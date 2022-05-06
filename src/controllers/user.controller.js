@@ -53,7 +53,7 @@ const userController = {
           totalPage: Math.ceil(totalData / getLimit),
         };
         success(res, {
-          code: 201,
+          code: 200,
           status: 'Success',
           message: 'Get all users success',
           data: result.rows,
@@ -194,7 +194,7 @@ const userController = {
           code: 200,
           status: 'Success',
           message: 'Update status user success',
-          data: result,
+          data: req.body,
         });
       } else {
         const result = await userModel.updateNonActive(status, id);
@@ -211,7 +211,7 @@ const userController = {
           code: 200,
           status: 'Success',
           message: 'Update status user success',
-          data: result,
+          data: req.body,
         });
       }
     } catch (err) {
@@ -241,7 +241,7 @@ const userController = {
         code: 200,
         status: 'Success',
         message: 'Update level user success',
-        data: result,
+        data: req.body,
       });
     } catch (err) {
       failed(res, {
