@@ -43,7 +43,7 @@ const userController = {
           code: 200,
           status: 'Success',
           message: 'Get user success',
-          data: result.rows[0],
+          data: result.rows,
           pagination,
         });
       } else {
@@ -56,7 +56,7 @@ const userController = {
           code: 201,
           status: 'Success',
           message: 'Get all users success',
-          data: result.rows[0],
+          data: result.rows,
           pagination,
         });
       }

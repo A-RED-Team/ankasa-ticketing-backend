@@ -26,18 +26,6 @@ const bookingValidation = [
     min: 1,
     max: 10,
   }),
-
-  // terminal
-  check('terminal', 'Terminal cannot be empty').not().isEmpty(),
-  check('terminal', 'Terminal require 3 characters').isLength({
-    min: 3,
-  }),
-
-  // gate
-  check('gate', 'Gate cannot be empty').not().isEmpty(),
-  check('gate', 'Gate require 3 characters').isLength({
-    min: 3,
-  }),
 ];
 
 const bookingIsActive = [

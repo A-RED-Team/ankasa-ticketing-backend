@@ -3,7 +3,7 @@ const {
   insertBooking,
   allBooking,
   detailBooking,
-  userBooking,
+  listUserBooking,
   updateBooking,
   deleteBooking,
 } = require('../controllers/booking.controller');
@@ -28,7 +28,7 @@ router
   )
   .get('/get-all-booking', jwtAuth, isAdmin, allBooking)
   .get('/detail-booking/:bookingId', jwtAuth, detailBooking)
-  .get('/detail-booking-user/:userId', jwtAuth, isCustomers, userBooking)
+  .get('/detail-booking-user', jwtAuth, isCustomers, listUserBooking)
   .put(
     '/update-booking-payment/:bookingId',
     jwtAuth,
