@@ -1,6 +1,7 @@
 const bookingModel = require('../models/booking.model');
 const { success, failed } = require('../helpers/response');
 const { v4: uuidv4 } = require('uuid');
+const QRCode = require('qrcode');
 
 const bookingController = {
   insertBooking: async (req, res) => {
@@ -57,6 +58,22 @@ const bookingController = {
           gate,
           getTotal
         );
+
+        QRCode.toFile(
+          `public/qrcode/${id}.png`,
+          id,
+          {
+            color: {
+              dark: '#00F', // Blue dots
+              light: '#0000', // Transparent background
+            },
+          },
+          function (err) {
+            if (err) throw err;
+            console.log('done');
+          }
+        );
+
         success(res, {
           code: 200,
           status: 'Success',
