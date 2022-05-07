@@ -8,14 +8,14 @@ const bookingController = {
     try {
       const userId = req.APP_DATA.tokenDecoded.id;
       const id = uuidv4();
-      const flightId = req.params.flightId;
-      const { title, fullName, nationallity, travelInsurance } = req.body;
+      const { title, fullName, nationallity, travelInsurance, flightId } =
+        req.body;
       const getFlight = await bookingModel.getFlight(flightId);
       if (getFlight.rowCount === 0) {
         failed(res, {
           code: 400,
           status: 'Error',
-          message: 'Flight Id not found',
+          message: `Flight with Id ${flightId} not found`,
           error: null,
         });
         return;
@@ -64,13 +64,12 @@ const bookingController = {
           id,
           {
             color: {
-              dark: '#00F', // Blue dots
-              light: '#0000', // Transparent background
+              dark: '#000',
+              light: '#ffff',
             },
           },
           function (err) {
             if (err) throw err;
-            console.log('done');
           }
         );
 
@@ -165,7 +164,7 @@ const bookingController = {
         failed(res, {
           code: 400,
           status: 'Error',
-          message: 'Booking Id not found',
+          message: `Booking with Id ${bookingId} not found`,
           error: null,
         });
         return;
@@ -193,7 +192,7 @@ const bookingController = {
         failed(res, {
           code: 400,
           status: 'Error',
-          message: 'User Id not found',
+          message: `Booking with Id ${userId} not found`,
           error: null,
         });
         return;
@@ -217,12 +216,22 @@ const bookingController = {
     try {
       const bookingId = req.params.bookingId;
       const userId = req.APP_DATA.tokenDecoded.id;
+      const checkPayment = await bookingModel.detailBooking(bookingId);
+      if (checkPayment.rows[0].payment_status == 1) {
+        failed(res, {
+          code: 400,
+          status: 'Error',
+          message: `Ticket with id booking ${bookingId} have been paid off`,
+          error: null,
+        });
+        return;
+      }
       const result = await bookingModel.updateBooking(bookingId, userId);
       if (result.rowCount === 0) {
         failed(res, {
           code: 400,
           status: 'Error',
-          message: 'Booking Id not found',
+          message: `Booking with Id ${bookingId} not found`,
           error: null,
         });
         return;
@@ -247,12 +256,12 @@ const bookingController = {
       const bookingId = req.params.bookingId;
       const { isActive } = req.body;
       if (isActive === '0') {
-        const result = await bookingModel.bookingNonActive(isActive, bookingId);
+        const result = await bookingModel.bookingNonActive(bookingId);
         if (result.rowCount === 0) {
           failed(res, {
             code: 400,
             status: 'Error',
-            message: 'Booking Id not found',
+            message: `Booking with Id ${bookingId} not found`,
             error: null,
           });
           return;
@@ -261,15 +270,15 @@ const bookingController = {
           code: 200,
           status: 'Success',
           message: 'Delete booking success',
-          data: result,
+          data: req.body,
         });
       } else {
-        const result = await bookingModel.bookingActive(isActive, bookingId);
+        const result = await bookingModel.bookingActive(bookingId);
         if (result.rowCount === 0) {
           failed(res, {
             code: 400,
             status: 'Error',
-            message: 'Booking Id not found',
+            message: `Booking with Id ${bookingId} not found`,
             error: null,
           });
           return;
@@ -278,7 +287,7 @@ const bookingController = {
           code: 200,
           status: 'Success',
           message: 'Booking active success',
-          data: result,
+          data: req.body,
         });
       }
     } catch (err) {
