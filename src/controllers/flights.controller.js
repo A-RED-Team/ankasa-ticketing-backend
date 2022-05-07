@@ -47,7 +47,7 @@ module.exports = {
         success(res, {
           code: 200,
           status: 'success',
-          message: `Success get data airlines`,
+          message: `Success get data flights`,
           data: goQuery.rows,
           pagination: pagination,
         });
@@ -61,7 +61,7 @@ module.exports = {
         success(res, {
           code: 200,
           status: 'success',
-          message: `Success get data airlines`,
+          message: `Success get data flights`,
           data: goQuery.rows,
           pagination: pagination,
         });
@@ -647,7 +647,7 @@ module.exports = {
         success(res, {
           code: 200,
           status: 'success',
-          message: `Success get data airlines`,
+          message: `Success get data flights`,
           data: goQuery.rows,
           pagination: pagination,
         });
@@ -661,7 +661,7 @@ module.exports = {
         success(res, {
           code: 200,
           status: 'success',
-          message: `Success get data airlines`,
+          message: `Success get data flights`,
           data: goQuery.rows,
           pagination: pagination,
         });
