@@ -26,6 +26,9 @@ const bookingValidation = [
     min: 1,
     max: 10,
   }),
+
+  // flightId
+  check('flightId', 'Flight Id cannot be empty').not().isEmpty(),
 ];
 
 const bookingIsActive = [

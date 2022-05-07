@@ -1,20 +1,21 @@
 const bookingModel = require('../models/booking.model');
 const { success, failed } = require('../helpers/response');
 const { v4: uuidv4 } = require('uuid');
+const QRCode = require('qrcode');
 
 const bookingController = {
   insertBooking: async (req, res) => {
     try {
       const userId = req.APP_DATA.tokenDecoded.id;
       const id = uuidv4();
-      const flightId = req.params.flightId;
-      const { title, fullName, nationallity, travelInsurance } = req.body;
+      const { title, fullName, nationallity, travelInsurance, flightId } =
+        req.body;
       const getFlight = await bookingModel.getFlight(flightId);
       if (getFlight.rowCount === 0) {
         failed(res, {
           code: 400,
           status: 'Error',
-          message: 'Flight Id not found',
+          message: `Flight wiht Id ${flightId} not found`,
           error: null,
         });
         return;
@@ -57,6 +58,21 @@ const bookingController = {
           gate,
           getTotal
         );
+
+        QRCode.toFile(
+          `public/qrcode/${id}.png`,
+          id,
+          {
+            color: {
+              dark: '#000',
+              light: '#ffff',
+            },
+          },
+          function (err) {
+            if (err) throw err;
+          }
+        );
+
         success(res, {
           code: 200,
           status: 'Success',
@@ -148,7 +164,7 @@ const bookingController = {
         failed(res, {
           code: 400,
           status: 'Error',
-          message: 'Booking Id not found',
+          message: `Booking with Id ${bookingId} not found`,
           error: null,
         });
         return;
@@ -176,7 +192,7 @@ const bookingController = {
         failed(res, {
           code: 400,
           status: 'Error',
-          message: 'User Id not found',
+          message: `User wiht Id ${userId} not found`,
           error: null,
         });
         return;
@@ -200,12 +216,22 @@ const bookingController = {
     try {
       const bookingId = req.params.bookingId;
       const userId = req.APP_DATA.tokenDecoded.id;
+      const checkPayment = await bookingModel.detailBooking(bookingId);
+      if (checkPayment.rows[0].payment_status == 1) {
+        failed(res, {
+          code: 400,
+          status: 'Error',
+          message: `Ticket with id booking ${bookingId} have been paid off`,
+          error: null,
+        });
+        return;
+      }
       const result = await bookingModel.updateBooking(bookingId, userId);
       if (result.rowCount === 0) {
         failed(res, {
           code: 400,
           status: 'Error',
-          message: 'Booking Id not found',
+          message: `Booking wiht Id ${bookingId} not found`,
           error: null,
         });
         return;
@@ -235,7 +261,7 @@ const bookingController = {
           failed(res, {
             code: 400,
             status: 'Error',
-            message: 'Booking Id not found',
+            message: `Booking wiht Id ${bookingId} not found`,
             error: null,
           });
           return;
