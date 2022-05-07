@@ -5,6 +5,7 @@ const userRoute = require('./routes/user.router');
 const bookingRoute = require('./routes/booking.route');
 const countryRoute = require('./routes/country.route')
 
+// test
 app.use(require('./routes/auth.route'));
 app.use(require('./routes/airlines.route'))
 
