@@ -3,6 +3,7 @@ const { APP_NAME, APP_VERSION, PORT } = require('./helpers/env');
 const { failed } = require('./helpers/response');
 const userRoute = require('./routes/user.router');
 const bookingRoute = require('./routes/booking.route');
+const countryRoute = require('./routes/country.route')
 
 app.use(require('./routes/auth.route'));
 app.use(require('./routes/airlines.route'))
@@ -24,6 +25,7 @@ app.use(require('./routes/airlines.route'))
 
 app.use(userRoute);
 app.use(bookingRoute);
+app.use(countryRoute)
 
 // set port or using default port, listen for requests
 const port = PORT;

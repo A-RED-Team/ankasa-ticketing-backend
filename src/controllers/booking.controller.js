@@ -15,7 +15,7 @@ const bookingController = {
         failed(res, {
           code: 400,
           status: 'Error',
-          message: `Flight wiht Id ${flightId} not found`,
+          message: `Flight with Id ${flightId} not found`,
           error: null,
         });
         return;
@@ -192,7 +192,7 @@ const bookingController = {
         failed(res, {
           code: 400,
           status: 'Error',
-          message: `User wiht Id ${userId} not found`,
+          message: `Booking with Id ${userId} not found`,
           error: null,
         });
         return;
@@ -231,7 +231,7 @@ const bookingController = {
         failed(res, {
           code: 400,
           status: 'Error',
-          message: `Booking wiht Id ${bookingId} not found`,
+          message: `Booking with Id ${bookingId} not found`,
           error: null,
         });
         return;
@@ -256,12 +256,12 @@ const bookingController = {
       const bookingId = req.params.bookingId;
       const { isActive } = req.body;
       if (isActive === '0') {
-        const result = await bookingModel.bookingNonActive(isActive, bookingId);
+        const result = await bookingModel.bookingNonActive(bookingId);
         if (result.rowCount === 0) {
           failed(res, {
             code: 400,
             status: 'Error',
-            message: `Booking wiht Id ${bookingId} not found`,
+            message: `Booking with Id ${bookingId} not found`,
             error: null,
           });
           return;
@@ -270,15 +270,15 @@ const bookingController = {
           code: 200,
           status: 'Success',
           message: 'Delete booking success',
-          data: result,
+          data: req.body,
         });
       } else {
-        const result = await bookingModel.bookingActive(isActive, bookingId);
+        const result = await bookingModel.bookingActive(bookingId);
         if (result.rowCount === 0) {
           failed(res, {
             code: 400,
             status: 'Error',
-            message: 'Booking Id not found',
+            message: `Booking with Id ${bookingId} not found`,
             error: null,
           });
           return;
@@ -287,7 +287,7 @@ const bookingController = {
           code: 200,
           status: 'Success',
           message: 'Booking active success',
-          data: result,
+          data: req.body,
         });
       }
     } catch (err) {

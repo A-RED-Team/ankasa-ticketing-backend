@@ -86,7 +86,7 @@ const bookingModel = {
       INNER JOIN countries AS country2 ON country2.id = city2.country_id
       INNER JOIN airlines ON flights.airline_id = airlines.id
       INNER JOIN users ON users.id = bookings.user_id
-      WHERE (users.username ILIKE '%${getSearch}%' OR bookings.full_name ILIKE '%${getSearch}%')
+      WHERE (users.username ILIKE '%${getSearch}%' OR bookings.full_name ILIKE '%${getSearch}%' OR users.city ILIKE '%${getSearch}%' OR users.address ILIKE '%${getSearch}%' OR airlines.name ILIKE '%${getSearch}%')
       ORDER BY ${sortByField} ${sortByType} LIMIT ${getLimit} OFFSET ${offset}`,
         (err, result) => {
           if (err) {
@@ -140,10 +140,10 @@ const bookingModel = {
       );
     });
   },
-  bookingNonActive: (isActive, bookingId) => {
+  bookingNonActive: (bookingId) => {
     return new Promise((resolve, reject) => {
       db.query(
-        `UPDATE bookings SET is_active=${isActive}, deleted_at=NOW() WHERE id='${bookingId}'`,
+        `UPDATE bookings SET is_active=0, deleted_at=NOW() WHERE id='${bookingId}'`,
         (err, result) => {
           if (err) {
             reject(new Error(err.message));
@@ -154,10 +154,10 @@ const bookingModel = {
       );
     });
   },
-  bookingActive: (isActive, bookingId) => {
+  bookingActive: (bookingId) => {
     return new Promise((resolve, reject) => {
       db.query(
-        `UPDATE bookings SET is_active=${isActive}, updated_at=NOW() WHERE id='${bookingId}'`,
+        `UPDATE bookings SET is_active=1, updated_at=NOW() WHERE id='${bookingId}'`,
         (err, result) => {
           if (err) {
             reject(new Error(err.message));
