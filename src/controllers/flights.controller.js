@@ -1,4 +1,4 @@
-// it is flight controller
+// itis flight controller
 
 const { success, failed } = require('../helpers/response');
 
