@@ -6,7 +6,8 @@ const bookingRoute = require('./routes/booking.route');
 const countryRoute = require('./routes/country.route')
 
 app.use(require('./routes/auth.route'));
-app.use(require('./routes/airlines.route'))
+app.use(require('./routes/airlines.route'));
+app.use(require('./routes/flights.route'));
 
 // root router
 // app.use('/', (req, res) => {
@@ -22,7 +23,6 @@ app.use(require('./routes/airlines.route'))
 //     error: 'url not found',
 //   });
 // });
-
 app.use(userRoute);
 app.use(bookingRoute);
 app.use(countryRoute)
