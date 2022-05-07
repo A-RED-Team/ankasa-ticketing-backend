@@ -15,7 +15,7 @@ module.exports = (req, res, next) => {
       code: 400,
       status: 'error',
       message: 'bad request',
-      error: null,
+      error: err.message,
     });
   }
 };
