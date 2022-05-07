@@ -173,6 +173,20 @@ module.exports = {
       let image;
       const airlinesData = await airlinesModel.airlinesDetailData(id);
       const airlinesNameCheck = await airlinesModel.airlinesNameCheck(name);
+      // check id
+      const checkId = await airlinesModel.airlinesDetailData(id);
+      if (checkId.rowCount === 0) {
+        const err = {
+          message: `Airlines with id ${id} not found`,
+        };
+        failed(res, {
+          code: 500,
+          status: 'error',
+          message: err.message,
+          error: [],
+        });
+        return;
+      }
       // airlines name check
       if (name != airlinesData.rows[0].name) {
         if (airlinesNameCheck.rowCount > 0) {
