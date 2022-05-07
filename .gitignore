@@ -128,3 +128,11 @@ dist
 .yarn/build-state.yml
 .yarn/install-state.gz
 .pnp.*
+
+# local image
+/public/uploads/users
+/public/uploads/cities
+/public/uploads/airlines
+
+# rifan
+/dev.rifan
