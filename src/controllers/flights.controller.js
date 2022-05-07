@@ -1,3 +1,5 @@
+// it is flight controller
+
 const { success, failed } = require('../helpers/response');
 
 const { v4: uuidv4 } = require('uuid');
