@@ -2,9 +2,9 @@ const app = require('./app');
 const { APP_NAME, APP_VERSION, PORT } = require('./helpers/env');
 const { failed } = require('./helpers/response');
 const userRoute = require('./routes/user.router');
-
 app.use(require('./routes/auth.route'));
-app.use(require('./routes/airlines.route'))
+app.use(require('./routes/airlines.route'));
+app.use(require('./routes/flights.route'));
 
 // root router
 // app.use('/', (req, res) => {
@@ -20,7 +20,6 @@ app.use(require('./routes/airlines.route'))
 //     error: 'url not found',
 //   });
 // });
-
 app.use(userRoute);
 
 // set port or using default port, listen for requests
