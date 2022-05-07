@@ -24,7 +24,7 @@ const countryController = {
         offset,
         getSearch
       );
-      if (result.rowCount === 0) {
+      if (result.rowCount == 0) {
         failed(res, {
           code: 400,
           status: 'Error',
@@ -64,7 +64,7 @@ const countryController = {
       failed(res, {
         code: 400,
         status: 'Error',
-        message: 'Failed',
+        message: 'Failed get all country',
         error: err.message,
       });
     }
@@ -73,7 +73,7 @@ const countryController = {
     try {
       const id = req.params.countryId;
       const result = await countryModel.getDetailCountry(id);
-      if (result.rowCount === 0) {
+      if (result.rowCount == 0) {
         failed(res, {
           code: 400,
           status: 'Error',
@@ -92,7 +92,7 @@ const countryController = {
       failed(res, {
         code: 400,
         status: 'Error',
-        message: 'Failed',
+        message: 'Get detail country failed',
         error: err.message,
       });
     }
@@ -101,6 +101,26 @@ const countryController = {
     try {
       const id = uuidv4();
       const { nameCountry, aliasCountry } = req.body;
+      const checkName = await countryModel.checkNameCountry(nameCountry);
+      const checkAlias = await countryModel.checkAliasCountry(aliasCountry);
+      if (checkName.rowCount > 0) {
+        failed(res, {
+          code: 400,
+          status: 'Error',
+          message: 'Name Country is already exist',
+          error: null,
+        });
+        return;
+      }
+      if (checkAlias.rowCount > 0) {
+        failed(res, {
+          code: 400,
+          status: 'Error',
+          message: 'Alias Country is already exist',
+          error: null,
+        });
+        return;
+      }
       const result = await countryModel.insertCountry(
         id,
         nameCountry,
@@ -124,13 +144,8 @@ const countryController = {
   updateCountry: async (req, res) => {
     try {
       const id = req.params.countryId;
-      const { nameCountry, aliasCountry } = req.body;
-      const result = await countryModel.updateCountry(
-        id,
-        nameCountry,
-        aliasCountry
-      );
-      if (result.rowCount === 0) {
+      const checkId = await countryModel.getCountry(id);
+      if (checkId.rowCount == 0) {
         failed(res, {
           code: 400,
           status: 'Error',
@@ -139,6 +154,36 @@ const countryController = {
         });
         return;
       }
+      const { nameCountry, aliasCountry } = req.body;
+      const checkName = await countryModel.checkNameCountry(nameCountry);
+      const checkAlias = await countryModel.checkAliasCountry(aliasCountry);
+      if (aliasCountry != checkId.rows[0].alias) {
+        if (checkAlias.rowCount > 0) {
+          failed(res, {
+            code: 400,
+            status: 'Error',
+            message: 'Alias Country is already exist',
+            error: null,
+          });
+          return;
+        }
+      }
+      if (nameCountry != checkId.rows[0].name) {
+        if (checkName.rowCount > 0) {
+          failed(res, {
+            code: 400,
+            status: 'Error',
+            message: 'Name Country is already exist',
+            error: null,
+          });
+          return;
+        }
+      }
+      const result = await countryModel.updateCountry(
+        id,
+        nameCountry,
+        aliasCountry
+      );
       success(res, {
         code: 200,
         status: 'Success',
@@ -158,17 +203,36 @@ const countryController = {
     try {
       const id = req.params.countryId;
       const { isActive } = req.body;
-      if (isActive === '0') {
-        const result = await countryModel.countryNonActive(id);
-        if (result.rowCount === 0) {
+      const checkCountry = await countryModel.getCountry(id);
+      if (checkCountry.rowCount == 0) {
+        failed(res, {
+          code: 400,
+          status: 'Error',
+          message: `Country with Id ${id} not found`,
+          error: null,
+        });
+        return;
+      }
+      if (checkCountry.rows[0].is_active == isActive) {
+        if (isActive == '1') {
           failed(res, {
             code: 400,
             status: 'Error',
-            message: `Country with Id ${id} not found`,
+            message: `Booking with id ${id} have been active`,
             error: null,
           });
-          return;
+        } else {
+          failed(res, {
+            code: 400,
+            status: 'Error',
+            message: `Booking with id ${id} have been non active`,
+            error: null,
+          });
         }
+        return;
+      }
+      if (isActive === '0') {
+        const result = await countryModel.countryNonActive(id);
         success(res, {
           code: 200,
           status: 'Success',
@@ -177,15 +241,6 @@ const countryController = {
         });
       } else {
         const result = await countryModel.countryActive(id);
-        if (result.rowCount === 0) {
-          failed(res, {
-            code: 400,
-            status: 'Error',
-            message: `Country with Id ${id} not found`,
-            error: null,
-          });
-          return;
-        }
         success(res, {
           code: 200,
           status: 'Success',

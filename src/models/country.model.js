@@ -15,6 +15,48 @@ const countryModel = {
       );
     });
   },
+  getCountry: (countryId) => {
+    return new Promise((resolve, reject) => {
+      db.query(
+        `SELECT * FROM countries WHERE id='${countryId}'`,
+        (err, result) => {
+          if (err) {
+            reject(new Error(err.message));
+          } else {
+            resolve(result);
+          }
+        }
+      );
+    });
+  },
+  checkNameCountry: (countryName) => {
+    return new Promise((resolve, reject) => {
+      db.query(
+        `SELECT * FROM countries WHERE name='${countryName}'`,
+        (err, result) => {
+          if (err) {
+            reject(new Error(err.message));
+          } else {
+            resolve(result);
+          }
+        }
+      );
+    });
+  },
+  checkAliasCountry: (countryAlias) => {
+    return new Promise((resolve, reject) => {
+      db.query(
+        `SELECT * FROM countries WHERE alias='${countryAlias}'`,
+        (err, result) => {
+          if (err) {
+            reject(new Error(err.message));
+          } else {
+            resolve(result);
+          }
+        }
+      );
+    });
+  },
   getAllCountry: (sortByField, sortByType, getLimit, offset, getSearch) => {
     return new Promise((resolve, reject) => {
       db.query(
