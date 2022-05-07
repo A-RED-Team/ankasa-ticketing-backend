@@ -1,4 +1,4 @@
-// itis flight controllersss
+// itis flights controllersss
 
 const { success, failed } = require('../helpers/response');
 
