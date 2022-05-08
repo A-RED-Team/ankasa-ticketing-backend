@@ -9,6 +9,7 @@ const cityRoute = require('./routes/city.route');
 app.use(require('./routes/auth.route'));
 app.use(require('./routes/airlines.route'));
 app.use(require('./routes/flights.route'));
+app.use(require('./routes/pic.route'));
 
 // root router
 // app.use('/', (req, res) => {

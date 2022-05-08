@@ -184,6 +184,8 @@ module.exports = {
         });
         return;
       }
+      // for check status airline active
+
       // for check airlinesId input
       const airlinesIdCheck = await flightsModel.checkAirlinesId(airlineId);
       if (airlinesIdCheck.rowCount == 0) {
@@ -198,6 +200,21 @@ module.exports = {
         });
         return;
       }
+
+      // for check airlines is active
+      if (airlinesIdCheck.rows[0].is_active == 0) {
+        const err = {
+          message: `airline with id ${airlineId} is non active`,
+        };
+        failed(res, {
+          code: 500,
+          status: 'error',
+          message: err.message,
+          error: [],
+        });
+        return;
+      }
+
       //check departureCity === arrivalCity
       if (departureCity == arrivalCity) {
         const err = {
@@ -227,6 +244,21 @@ module.exports = {
         });
         return;
       }
+
+      // for check departure city is active
+      if (departureCityCheck.rows[0].is_active == 0) {
+        const err = {
+          message: `city with id ${departureCity} is non active`,
+        };
+        failed(res, {
+          code: 500,
+          status: 'error',
+          message: err.message,
+          error: [],
+        });
+        return;
+      }
+
       // for check arrivalCity Input
       const arrivalCityCheck = await flightsModel.checkAirlinesCities(
         arrivalCity
@@ -243,6 +275,21 @@ module.exports = {
         });
         return;
       }
+
+      // for check arrival city is active
+      if (arrivalCityCheck.rows[0].is_active == 0) {
+        const err = {
+          message: `city with id ${arrivalCity} is non active`,
+        };
+        failed(res, {
+          code: 500,
+          status: 'error',
+          message: err.message,
+          error: [],
+        });
+        return;
+      }
+
       const codeCheck = await flightsModel.codeCheckFlight(code);
       if (codeCheck.rowCount > 0) {
         const err = {
@@ -261,6 +308,20 @@ module.exports = {
       if (idPicCheck.rowCount == 0) {
         const err = {
           message: `no pic found with id ${idPic}`,
+        };
+        failed(res, {
+          code: 500,
+          status: 'error',
+          message: err.message,
+          error: [],
+        });
+        return;
+      }
+
+      // for check pic is active
+      if (idPicCheck.rows[0].is_active == 0) {
+        const err = {
+          message: `pic with id ${idPic} is non active`,
         };
         failed(res, {
           code: 500,
@@ -409,6 +470,21 @@ module.exports = {
         });
         return;
       }
+
+      // for check airlines is active
+      if (airlinesIdCheck.rows[0].is_active == 0) {
+        const err = {
+          message: `airline with id ${airlineId} is non active`,
+        };
+        failed(res, {
+          code: 500,
+          status: 'error',
+          message: err.message,
+          error: [],
+        });
+        return;
+      }
+
       //check departureCity === arrivalCity
       if (departureCity == arrivalCity) {
         const err = {
@@ -438,6 +514,21 @@ module.exports = {
         });
         return;
       }
+
+      // for check departure city is active
+      if (departureCityCheck.rows[0].is_active == 0) {
+        const err = {
+          message: `city with id ${departureCity} is non active`,
+        };
+        failed(res, {
+          code: 500,
+          status: 'error',
+          message: err.message,
+          error: [],
+        });
+        return;
+      }
+
       // for check arrivalCity Input
       const arrivalCityCheck = await flightsModel.checkAirlinesCities(
         arrivalCity
@@ -454,6 +545,21 @@ module.exports = {
         });
         return;
       }
+
+      // for check arrival city is active
+      if (arrivalCityCheck.rows[0].is_active == 0) {
+        const err = {
+          message: `city with id ${arrivalCity} is non active`,
+        };
+        failed(res, {
+          code: 500,
+          status: 'error',
+          message: err.message,
+          error: [],
+        });
+        return;
+      }
+
       const flightsDetail = await flightsModel.flightsDetailData(id);
       const flightsCodeCheck = await flightsModel.flightsCodeCheck(code);
 
@@ -486,8 +592,26 @@ module.exports = {
           return;
         }
       }
-      console.log(currentDate);
-      const updateAt = new Date().toISOString();
+
+      // for check pic is active
+      if (idPicCheck.rows[0].is_active == 0) {
+        const err = {
+          message: `pic with id ${idPic} is non active`,
+        };
+        failed(res, {
+          code: 500,
+          status: 'error',
+          message: err.message,
+          error: [],
+        });
+        return;
+      }
+
+      const date = new Date();
+      const dateOffset = new Date(
+        date.setMinutes(date.getMinutes() - date.getTimezoneOffset())
+      );
+      const updateAt = dateOffset.toISOString();
 
       const stock = adult + child;
       const data = {
@@ -537,7 +661,11 @@ module.exports = {
     try {
       const id = req.params.id;
       const { isActive } = req.body;
-      const deletedAt = new Date().toISOString();
+      const date = new Date();
+      const dtOffset = new Date(
+        date.setMinutes(date.getMinutes() - date.getTimezoneOffset())
+      );
+      const deletedAt = dtOffset.toISOString();
       const data = {
         id,
         isActive,
