@@ -45,18 +45,27 @@
 | 5   | PUT         | /api/users/status/:id           | Change status user active or non active (admin)|
 | 6   | PUT         | /api/users/level/:id            | Change user to admin or customer (admin)       |
 
-###  Endpoint
+### PIC  Endpoint
 
 | No  | HTTP Method | URL                             | Operation                                      |
 | --- | ----------- | ------------------------------- | -----------------------------------------------|
-| 1   | GET         | /api/users                      | Get all users (admin)                          |
-| 2   | GET         | /api/users/:id                  | Get detail user                                |
-| 3   | PUT         | /api/users/update/profile       | Update profile (user)                          |
-| 4   | PUT         | /api/users/update/photo         | Update photo (user)                            |
-| 5   | PUT         | /api/users/status/:id           | Change status user active or non active (admin)|
-| 6   | PUT         | /api/users/level/:id            | Change user to admin or customer (admin)       |
+| 1   | GET         | /api/pic                        | Get all pic (admin)                            |
+| 2   | GET         | /api/pic/:id                    | Get detail pic                                 |
+| 3   | POST        | /api/pic                        | Add pic (admin)                                |
+| 4   | PUT         | /api/pic/:id                    | Update pic (admin)                             |
+| 5   | PUT         | /api/pic-status/:id             | Change pic active or non active (admin)        |
 
+### Flight Endpoint
 
+| No  | HTTP Method | URL                             | Operation                                      |
+| --- | ----------- | ------------------------------- | -----------------------------------------------|
+| 1   | GET         | /api/flight                     | Get all flight (admin)                         |
+| 2   | GET         | /api/flight/:id                 | Get detail flight                              |
+| 3   | GET         | /api/flight-customers           | Get flight latest                              |
+| 4   | POST        | /api/flight                     | Create flight (admin)                          |
+| 5   | PUT         | /api/flight/:id                 | Update flight (admin)                          |
+| 6   | PUT         | /api/flight/mode/:id            | Change flight active or non active (admin)     |
+| 7   | DELETE      | /api/flight/:id                 | Delete flight (admin)                          |
 
 
 
