@@ -149,7 +149,7 @@ const countryController = {
         failed(res, {
           code: 400,
           status: 'Error',
-          message: `Country with Id ${flightId} not found`,
+          message: `Country with Id ${id} not found`,
           error: null,
         });
         return;
@@ -218,14 +218,14 @@ const countryController = {
           failed(res, {
             code: 400,
             status: 'Error',
-            message: `Booking with id ${id} have been active`,
+            message: `Country with id ${id} have been active`,
             error: null,
           });
         } else {
           failed(res, {
             code: 400,
             status: 'Error',
-            message: `Booking with id ${id} have been non active`,
+            message: `Country with id ${id} have been non active`,
             error: null,
           });
         }
