@@ -77,6 +77,26 @@
 | 4   | PUT         | /api/airline/:id                | Update airline (admin)                            |
 | 5   | PUT         | /api/airline/mode/:id           | Change status airline active or non active (admin)|
 
+### City Endpoint
+
+| No  | HTTP Method | URL                             | Operation                                      |
+| --- | ----------- | ------------------------------- | -----------------------------------------------|
+| 1   | GET         | /api/city                       | Get all city (admin)                           |
+| 2   | GET         | /api/city/public                | Get all city (user)                            |
+| 3   | GET         | /api/city/detail/:cityId        | Get detail city                                |
+| 4   | POST        | /api/city                       | Create city (admin)                            |
+| 5   | PUT         | /api/city/:cityId               | Update city (admin)                            |
+| 6   | PUT         | /api/city/status/:cityId        | Change status city active or non active (admin)|
+
+### City Endpoint
+
+| No  | HTTP Method | URL                             | Operation                                      |
+| --- | ----------- | ------------------------------- | -----------------------------------------------|
+| 1   | GET         | /api/country                    | Get all city (admin)                           |
+| 2   | GET         | /api/country/:countryId         | Get detail city                                |
+| 3   | POST        | /api/country                    | Create city (admin)                            |
+| 4   | PUT         | /api/country/:countryId         | Update city (admin)                            |
+| 5   | PUT         | /api/country/status/:countryId  | Change status city active or non active (admin)|
 
 
 
