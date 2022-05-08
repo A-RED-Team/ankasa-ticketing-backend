@@ -484,7 +484,7 @@ module.exports = {
           return;
         }
       }
-      console.log(currentDate);
+      // console.log(currentDate);
       const updateAt = new Date().toISOString();
 
       const stock = adult + child;
