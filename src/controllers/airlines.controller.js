@@ -244,6 +244,31 @@ module.exports = {
         isActive,
         deletedAt,
       };
+      const active = await airlinesModel.airlinesDetailData(id);
+      if (isActive == 1 && active.rows[0].is_active == 1) {
+        const err = {
+          message: `airline with id ${id} is already active`,
+        };
+        failed(res, {
+          code: 500,
+          status: 'error',
+          message: err.message,
+          error: [],
+        });
+        return;
+      }
+      if (isActive == 0 && active.rows[0].is_active == 0) {
+        const err = {
+          message: `airline with id ${id} is already nonactive`,
+        };
+        failed(res, {
+          code: 500,
+          status: 'error',
+          message: err.message,
+          error: [],
+        });
+        return;
+      }
       const mode = await airlinesModel.airlinesModeData(data);
       if (mode.rowCount === 0) {
         const err = {

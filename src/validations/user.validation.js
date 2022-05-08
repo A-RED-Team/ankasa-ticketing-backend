@@ -41,4 +41,22 @@ const profileValidation = [
   }),
 ];
 
-module.exports = { profileValidation };
+const levelValidation = [
+  // level
+  check('level', 'level cannot be empty').not().isEmpty(),
+  check('level', 'level only number 0 or 1').isNumeric(),
+  check('level', 'level require 1 characters').isLength({
+    min: 1,
+  }),
+];
+
+const isActiveValidation = [
+  // is active
+  check('status', 'status cannot be empty').not().isEmpty(),
+  check('status', 'status only number 0 or 1').isNumeric(),
+  check('status', 'status require 1 characters').isLength({
+    min: 1,
+  }),
+];
+
+module.exports = { profileValidation, isActiveValidation, levelValidation };

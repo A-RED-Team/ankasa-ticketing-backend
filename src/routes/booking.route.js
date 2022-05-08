@@ -3,6 +3,7 @@ const {
   insertBooking,
   allBooking,
   detailBooking,
+  detailBookingUser,
   listUserBooking,
   updateBooking,
   deleteBooking,
@@ -19,7 +20,7 @@ const router = express.Router();
 
 router
   .post(
-    '/insert-booking/:flightId',
+    '/insert-booking',
     jwtAuth,
     isCustomers,
     bookingValidation,
@@ -27,8 +28,14 @@ router
     insertBooking
   )
   .get('/get-all-booking', jwtAuth, isAdmin, allBooking)
-  .get('/detail-booking/:bookingId', jwtAuth, detailBooking)
-  .get('/detail-booking-user', jwtAuth, isCustomers, listUserBooking)
+  .get('/get-booking-user', jwtAuth, isCustomers, listUserBooking)
+  .get('/detail-booking/:bookingId', jwtAuth, isAdmin, detailBooking)
+  .get(
+    '/detail-booking-byuser/:bookingId',
+    jwtAuth,
+    isCustomers,
+    detailBookingUser
+  )
   .put(
     '/update-booking-payment/:bookingId',
     jwtAuth,
