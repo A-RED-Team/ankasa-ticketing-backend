@@ -59,6 +59,19 @@ const bookingController = {
           getTotal
         );
 
+        const newData = {
+          id,
+          userId,
+          flightId,
+          title,
+          fullName,
+          nationallity,
+          travelInsurance,
+          terminal,
+          gate,
+          getTotal,
+        };
+
         QRCode.toFile(
           `public/qrcode/${id}.png`,
           id,
@@ -77,7 +90,7 @@ const bookingController = {
           code: 200,
           status: 'Success',
           message: 'Insert booking success',
-          data: result,
+          data: newData,
         });
         const setStock = await bookingModel.setStock(flightId);
       }
@@ -286,7 +299,7 @@ const bookingController = {
         code: 200,
         status: 'Success',
         message: 'Update booking payment success',
-        data: result,
+        data: [],
       });
     } catch (err) {
       failed(res, {
