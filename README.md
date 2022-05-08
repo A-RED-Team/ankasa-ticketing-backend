@@ -88,33 +88,27 @@
 | 5   | PUT         | /api/city/:cityId               | Update city (admin)                            |
 | 6   | PUT         | /api/city/status/:cityId        | Change status city active or non active (admin)|
 
-### City Endpoint
+### Country Endpoint
+
+| No  | HTTP Method | URL                             | Operation                                         |
+| --- | ----------- | ------------------------------- | --------------------------------------------------|
+| 1   | GET         | /api/country                    | Get all country (admin)                           |
+| 2   | GET         | /api/country/:countryId         | Get detail country                                |
+| 3   | POST        | /api/country                    | Create country (admin)                            |
+| 4   | PUT         | /api/country/:countryId         | Update country (admin)                            |
+| 5   | PUT         | /api/country/status/:countryId  | Change status country active or non active (admin)|
+
+### Booking Endpoint
 
 | No  | HTTP Method | URL                             | Operation                                      |
 | --- | ----------- | ------------------------------- | -----------------------------------------------|
-| 1   | GET         | /api/country                    | Get all city (admin)                           |
-| 2   | GET         | /api/country/:countryId         | Get detail city                                |
-| 3   | POST        | /api/country                    | Create city (admin)                            |
-| 4   | PUT         | /api/country/:countryId         | Update city (admin)                            |
-| 5   | PUT         | /api/country/status/:countryId  | Change status city active or non active (admin)|
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+| 1   | GET         | /api/booking                    | Get all booking (admin)                        |
+| 2   | GET         | /api/mybooking                  | Get all my booking (user)                      |
+| 3   | GET         | /api/booking/:bookingId         | Get detail booking (admin)                     |
+| 4   | GET         | /api/bookingbyuser/:bookingId   | Get detail booking (user)                      |
+| 5   | POST        | /api/booking                    | Create booking (user)                          |
+| 6   | PUT         | /api/booking/payment/:bookingId | Update booking payment (user)                  |
+| 7   | PUT         | /api/booking/status/:bookingId  | Change booking active or non active (admin)    |
 
 
 
