@@ -18,7 +18,7 @@ const router = express.Router();
 
 router
   .get('/country', jwtAuth, isAdmin, getAllCountry)
-  .get('/country/:countryId', jwtAuth, isAdmin, getDetailCountry)
+  .get('/country/:countryId', jwtAuth, getDetailCountry)
   .post(
     '/country',
     jwtAuth,
