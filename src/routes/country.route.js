@@ -17,10 +17,10 @@ const {
 const router = express.Router();
 
 router
-  .get('/get-all-country', jwtAuth, isAdmin, getAllCountry)
-  .get('/get-detail-country/:countryId', jwtAuth, isAdmin, getDetailCountry)
+  .get('/country', jwtAuth, isAdmin, getAllCountry)
+  .get('/country/:countryId', jwtAuth, isAdmin, getDetailCountry)
   .post(
-    '/insert-country',
+    '/country',
     jwtAuth,
     isAdmin,
     countryValidation,
@@ -28,7 +28,7 @@ router
     insertCountry
   )
   .put(
-    '/update-country/:countryId',
+    '/country/:countryId',
     jwtAuth,
     isAdmin,
     countryValidation,
@@ -36,7 +36,7 @@ router
     updateCountry
   )
   .put(
-    '/country-isactive/:countryId',
+    '/country/status/:countryId',
     jwtAuth,
     isAdmin,
     countryIsActive,

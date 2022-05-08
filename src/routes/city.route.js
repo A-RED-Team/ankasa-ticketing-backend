@@ -20,11 +20,11 @@ const {
 const router = express.Router();
 
 router
-  .get('/get-all-city', jwtAuth, isAdmin, getAllCity)
-  .get('/get-city-public', jwtAuth, isCustomers, getCityPublic)
-  .get('/get-detail-city/:cityId', jwtAuth, getDetailCity)
+  .get('/city', jwtAuth, isAdmin, getAllCity)
+  .get('/city/public', jwtAuth, isCustomers, getCityPublic)
+  .get('/city/detail/:cityId', jwtAuth, getDetailCity)
   .post(
-    '/insert-city',
+    '/city',
     jwtAuth,
     isAdmin,
     cityUpload,
@@ -33,7 +33,7 @@ router
     insertCity
   )
   .put(
-    '/update-city/:cityId',
+    '/city/:cityId',
     jwtAuth,
     isAdmin,
     cityUpload,
@@ -42,7 +42,7 @@ router
     updateCity
   )
   .put(
-    '/delete-city/:cityId',
+    '/city/status/:cityId',
     jwtAuth,
     isAdmin,
     cityIsActive,

@@ -23,16 +23,16 @@ router
   .get('/users', jwtAuth, isAdmin, listAllUser)
   .get('/users/:id', jwtAuth, detailUserId)
   .put(
-    '/users-update',
+    '/users/update/profile',
     jwtAuth,
     isCustomers,
     profileValidation,
     validation,
     updateProfile
   )
-  .put('/users-photo', jwtAuth, isCustomers, upload, updatePhoto)
+  .put('/users/update/photo', jwtAuth, isCustomers, upload, updatePhoto)
   .put(
-    '/users-status/:id',
+    '/users/status/:id',
     jwtAuth,
     isAdmin,
     isActiveValidation,
@@ -40,7 +40,7 @@ router
     updateStatus
   )
   .put(
-    '/users-level/:id',
+    '/users/level/:id',
     jwtAuth,
     isAdmin,
     levelValidation,
