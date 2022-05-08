@@ -46,6 +46,34 @@ const bookingModel = {
       );
     });
   },
+  getCountBookingById: (bookingId) => {
+    return new Promise((resolve, reject) => {
+      db.query(
+        `SELECT COUNT('${bookingId}') AS totalBooking FROM bookings WHERE is_active=1`,
+        (err, result) => {
+          if (err) {
+            reject(new Error(err.message));
+          } else {
+            resolve(result);
+          }
+        }
+      );
+    });
+  },
+  bookingDetaiId: (bookingId) => {
+    return new Promise((resolve, reject) => {
+      db.query(
+        `SELECT * FROM bookings WHERE id='${bookingId}'`,
+        (err, result) => {
+          if (err) {
+            reject(new Error(err.message));
+          } else {
+            resolve(result);
+          }
+        }
+      );
+    });
+  },
   insertBooking: (
     id,
     userId,
@@ -77,7 +105,7 @@ const bookingModel = {
         `SELECT users.id AS users_id, users.username, users.email, users.city AS users_city, users.address,
       bookings.id AS booking_id, bookings.full_name AS name_booking, flights.departure_date, flights.departure_time, airlines.name AS airline_name,
       country1.alias AS from_contry, country2.alias AS to_contry, bookings.terminal, bookings.gate,
-      flights.class, bookings.payment_status
+      flights.class, bookings.payment_status, bookings.is_active
       FROM flights
       INNER JOIN bookings ON flights.id = bookings.flight_id
       INNER JOIN cities AS city1 ON city1.id = flights.departure_city
@@ -101,7 +129,7 @@ const bookingModel = {
   detailBooking: (bookingId) => {
     return new Promise((resolve, reject) => {
       db.query(
-        `SELECT flights.departure_date, flights.departure_time, airlines.name AS airline_name, country1.alias AS from_contry, country2.alias AS to_contry, bookings.terminal, bookings.gate, flights.class, bookings.payment_status FROM flights INNER JOIN bookings ON flights.id = bookings.flight_id INNER JOIN cities AS city1 ON city1.id = flights.departure_city INNER JOIN cities AS city2 ON city2.id = flights.arrival_city INNER JOIN countries AS country1 ON country1.id = city1.country_id INNER JOIN countries AS country2 ON country2.id = city2.country_id INNER JOIN airlines ON flights.airline_id = airlines.id WHERE bookings.id='${bookingId}'`,
+        `SELECT flights.departure_date, flights.departure_time, airlines.name AS airline_name, country1.alias AS from_contry, country2.alias AS to_contry, bookings.terminal, bookings.gate, flights.class, bookings.payment_status, bookings.is_active FROM flights INNER JOIN bookings ON flights.id = bookings.flight_id INNER JOIN cities AS city1 ON city1.id = flights.departure_city INNER JOIN cities AS city2 ON city2.id = flights.arrival_city INNER JOIN countries AS country1 ON country1.id = city1.country_id INNER JOIN countries AS country2 ON country2.id = city2.country_id INNER JOIN airlines ON flights.airline_id = airlines.id WHERE bookings.id='${bookingId}'`,
         (err, result) => {
           if (err) {
             reject(new Error(err.message));
@@ -112,10 +140,24 @@ const bookingModel = {
       );
     });
   },
-  listUserBooking: (userId) => {
+  detailBookingUser: (bookingId) => {
     return new Promise((resolve, reject) => {
       db.query(
-        `SELECT bookings.id AS booking_id, flights.departure_date, flights.departure_time, airlines.name AS airline_name, country1.alias AS from_contry, country2.alias AS to_contry, bookings.terminal, bookings.gate, flights.class, bookings.payment_status FROM flights INNER JOIN bookings ON flights.id = bookings.flight_id INNER JOIN cities AS city1 ON city1.id = flights.departure_city INNER JOIN cities AS city2 ON city2.id = flights.arrival_city INNER JOIN countries AS country1 ON country1.id = city1.country_id INNER JOIN countries AS country2 ON country2.id = city2.country_id INNER JOIN airlines ON flights.airline_id = airlines.id WHERE bookings.user_id='${userId}'`,
+        `SELECT flights.departure_date, flights.departure_time, airlines.name AS airline_name, country1.alias AS from_contry, country2.alias AS to_contry, bookings.terminal, bookings.gate, flights.class, bookings.payment_status FROM flights INNER JOIN bookings ON flights.id = bookings.flight_id INNER JOIN cities AS city1 ON city1.id = flights.departure_city INNER JOIN cities AS city2 ON city2.id = flights.arrival_city INNER JOIN countries AS country1 ON country1.id = city1.country_id INNER JOIN countries AS country2 ON country2.id = city2.country_id INNER JOIN airlines ON flights.airline_id = airlines.id WHERE bookings.id='${bookingId}' AND bookings.payment_status=1 AND bookings.is_active=1`,
+        (err, result) => {
+          if (err) {
+            reject(new Error(err.message));
+          } else {
+            resolve(result);
+          }
+        }
+      );
+    });
+  },
+  listUserBooking: (userId, getLimit, offset) => {
+    return new Promise((resolve, reject) => {
+      db.query(
+        `SELECT bookings.id AS booking_id, flights.departure_date, flights.departure_time, airlines.name AS airline_name, country1.alias AS from_contry, country2.alias AS to_contry, bookings.terminal, bookings.gate, flights.class, bookings.payment_status FROM flights INNER JOIN bookings ON flights.id = bookings.flight_id INNER JOIN cities AS city1 ON city1.id = flights.departure_city INNER JOIN cities AS city2 ON city2.id = flights.arrival_city INNER JOIN countries AS country1 ON country1.id = city1.country_id INNER JOIN countries AS country2 ON country2.id = city2.country_id INNER JOIN airlines ON flights.airline_id = airlines.id WHERE bookings.user_id='${userId}' AND bookings.is_active=1 LIMIT ${getLimit} OFFSET ${offset}`,
         (err, result) => {
           if (err) {
             reject(new Error(err.message));
