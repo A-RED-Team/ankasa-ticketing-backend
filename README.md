@@ -28,8 +28,20 @@
 
 ### Auth Endpoint
 
+| No  | HTTP Method | URI                             | Operation                           |
+| --- | ----------- | ------------------------------- | ----------------------------------- |
+| 1   | POST        | /api/auth/register              | Register new user                   |
+| 2   | POST        | /api/auth/login                 | Login user                          |
+| 3   | GET         | /api/auth/verify-email          | Verify email user                   |
+
+
+### Auth Endpoint
+
 | No  | HTTP Method | URI                             | Operation                         |
 | --- | ----------- | ------------------------------- | --------------------------------- |
+| 1   | POST        | /api/auth/register              | Register new user                 |
+| 2   | POST        | /api/auth/login                 | Login user                        |
+| 3   | GET         | /api/auth/verify-email          | Verify email user                 |
 | 1   | POST        | /api/auth/register              | Register new user                 |
 | 2   | POST        | /api/auth/login                 | Login user                        |
 | 3   | GET         | /api/auth/verify-email          | Verify email user                 |
