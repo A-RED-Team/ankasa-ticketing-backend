@@ -109,7 +109,3 @@
 | 5   | POST        | /api/booking                    | Create booking (user)                          |
 | 6   | PUT         | /api/booking/payment/:bookingId | Update booking payment (user)                  |
 | 7   | PUT         | /api/booking/status/:bookingId  | Change booking active or non active (admin)    |
-
-
-
-
