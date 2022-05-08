@@ -105,7 +105,7 @@
 | 1   | GET         | /api/booking                    | Get all booking (admin)                        |
 | 2   | GET         | /api/mybooking                  | Get all my booking (user)                      |
 | 3   | GET         | /api/booking/:bookingId         | Get detail booking (admin)                     |
-| 4   | GET         | /api/bookingbyuser/:bookingId   | Get detail booking (user)                      |
+| 4   | GET         | /api/booking/byuser/:bookingId  | Get detail booking (user)                      |
 | 5   | POST        | /api/booking                    | Create booking (user)                          |
 | 6   | PUT         | /api/booking/payment/:bookingId | Update booking payment (user)                  |
 | 7   | PUT         | /api/booking/status/:bookingId  | Change booking active or non active (admin)    |
