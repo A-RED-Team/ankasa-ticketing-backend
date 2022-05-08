@@ -55,7 +55,7 @@
 | 4   | PUT         | /api/pic/:id                    | Update pic (admin)                             |
 | 5   | PUT         | /api/pic-status/:id             | Change pic active or non active (admin)        |
 
-### flight Endpoint
+### Flight Endpoint
 
 | No  | HTTP Method | URL                             | Operation                                      |
 | --- | ----------- | ------------------------------- | -----------------------------------------------|
