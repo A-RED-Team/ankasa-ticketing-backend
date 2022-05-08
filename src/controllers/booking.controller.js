@@ -20,6 +20,24 @@ const bookingController = {
         });
         return;
       }
+      if (getFlight.rows[0].is_active == 0) {
+        failed(res, {
+          code: 400,
+          status: 'Error',
+          message: `Flight with Id ${flightId} not operating`,
+          error: null,
+        });
+        return;
+      }
+      if (getFlight.rows[0].stock <= 0) {
+        failed(res, {
+          code: 400,
+          status: 'Error',
+          message: 'Ticket stock is out',
+          error: null,
+        });
+        return;
+      }
       const getCode = getFlight.rows[0].code;
       let terminal;
       let gate;
@@ -30,57 +48,32 @@ const bookingController = {
         terminal = getCode.substring(0, 2);
         gate = getCode.substring(3, 6);
       }
-      if (getFlight.rows[0].stock <= 0) {
-        failed(res, {
-          code: 400,
-          status: 'Error',
-          message: 'Ticket stock is out',
-          error: null,
-        });
-        return;
+      let getTotal = '';
+      if (travelInsurance == '0') {
+        getTotal = getFlight.rows[0].price;
       } else {
-        let getTotal = '';
-        if (travelInsurance == '0') {
-          getTotal = getFlight.rows[0].price;
-        } else {
-          const asuransi = 2;
-          getTotal = getFlight.rows[0].price + asuransi;
-        }
-        const result = await bookingModel.insertBooking(
-          id,
-          userId,
-          flightId,
-          title,
-          fullName,
-          nationallity,
-          travelInsurance,
-          terminal,
-          gate,
-          getTotal
-        );
-
-        QRCode.toFile(
-          `public/qrcode/${id}.png`,
-          id,
-          {
-            color: {
-              dark: '#000',
-              light: '#ffff',
-            },
-          },
-          function (err) {
-            if (err) throw err;
-          }
-        );
-
-        success(res, {
-          code: 200,
-          status: 'Success',
-          message: 'Insert booking success',
-          data: result,
-        });
-        const setStock = await bookingModel.setStock(flightId);
+        const asuransi = 2;
+        getTotal = getFlight.rows[0].price + asuransi;
       }
+      const result = await bookingModel.insertBooking(
+        id,
+        userId,
+        flightId,
+        title,
+        fullName,
+        nationallity,
+        travelInsurance,
+        terminal,
+        gate,
+        getTotal
+      );
+      success(res, {
+        code: 200,
+        status: 'Success',
+        message: 'Insert booking success',
+        data: result,
+      });
+      const setStock = await bookingModel.setStock(flightId);
     } catch (err) {
       failed(res, {
         code: 400,
@@ -282,6 +275,19 @@ const bookingController = {
         });
         return;
       }
+      QRCode.toFile(
+        `public/qrcode/${bookingId}.png`,
+        bookingId,
+        {
+          color: {
+            dark: '#000',
+            light: '#ffff',
+          },
+        },
+        function (err) {
+          if (err) throw err;
+        }
+      );
       success(res, {
         code: 200,
         status: 'Success',
@@ -292,7 +298,7 @@ const bookingController = {
       failed(res, {
         code: 400,
         status: 'Error',
-        message: 'Update booking failed',
+        message: 'Update booking payment failed',
         error: err.message,
       });
     }
