@@ -130,9 +130,9 @@ dist
 .pnp.*
 
 # local image
-/public/uploads/users
-/public/uploads/cities
-/public/uploads/airlines
+public/uploads/users
+public/uploads/cities
+public/uploads/airlines
 
 # rifan
 /dev.rifan
