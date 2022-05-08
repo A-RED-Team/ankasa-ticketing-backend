@@ -96,7 +96,7 @@ const bookingController = {
       page = Number(page);
       limit = Number(limit);
       const getSearch = !search ? '' : search;
-      const sortByField = !sortField ? 'name_booking' : sortField;
+      const sortByField = !sortField ? 'bookings.full_name' : sortField;
       const sortByType =
         sortType === 'ASC' || sortType === 'DESC' ? sortType : 'ASC';
       const getPage = !page ? 1 : page;
@@ -184,10 +184,55 @@ const bookingController = {
       });
     }
   },
+  detailBookingUser: async (req, res) => {
+    try {
+      const bookingId = req.params.bookingId;
+      const result = await bookingModel.detailBookingUser(bookingId);
+      if (result.rowCount === 0) {
+        failed(res, {
+          code: 400,
+          status: 'Error',
+          message: `Booking with Id ${bookingId} not found`,
+          error: null,
+        });
+        return;
+      }
+      success(res, {
+        code: 200,
+        status: 'Success',
+        message: 'Get detail booking success',
+        data: result.rows[0],
+      });
+    } catch (err) {
+      failed(res, {
+        code: 400,
+        status: 'Error',
+        message: 'Get detail booking failed',
+        error: err.message,
+      });
+    }
+  },
   listUserBooking: async (req, res) => {
     try {
       const userId = req.APP_DATA.tokenDecoded.id;
-      const result = await bookingModel.listUserBooking(userId);
+      let { page, limit } = req.query;
+      page = Number(page);
+      limit = Number(limit);
+      const getPage = !page ? 1 : page;
+      const getLimit = !limit ? 10 : limit;
+      const offset = (getPage - 1) * getLimit;
+      const allData = await bookingModel.getCountBookingById(userId);
+      const totalData = Number(allData.rows[0].totalbooking);
+      const pagination = {
+        currentPage: getPage,
+        currentLimit: getLimit,
+        totalPage: Math.ceil(totalData / getLimit),
+      };
+      const result = await bookingModel.listUserBooking(
+        userId,
+        getLimit,
+        offset
+      );
       if (result.rowCount === 0) {
         failed(res, {
           code: 400,
@@ -200,8 +245,9 @@ const bookingController = {
       success(res, {
         code: 200,
         status: 'Success',
-        message: 'Get detail user booking success',
+        message: 'Get list booking by user success',
         data: result.rows,
+        pagination,
       });
     } catch (err) {
       failed(res, {
@@ -216,7 +262,7 @@ const bookingController = {
     try {
       const bookingId = req.params.bookingId;
       const userId = req.APP_DATA.tokenDecoded.id;
-      const checkPayment = await bookingModel.detailBooking(bookingId);
+      const checkPayment = await bookingModel.bookingDetaiId(bookingId);
       if (checkPayment.rows[0].payment_status == 1) {
         failed(res, {
           code: 400,
@@ -255,17 +301,36 @@ const bookingController = {
     try {
       const bookingId = req.params.bookingId;
       const { isActive } = req.body;
-      if (isActive === '0') {
-        const result = await bookingModel.bookingNonActive(bookingId);
-        if (result.rowCount === 0) {
+      const checkIsActive = await bookingModel.bookingDetaiId(bookingId);
+      if (checkIsActive.rowCount === 0) {
+        failed(res, {
+          code: 400,
+          status: 'Error',
+          message: `Booking with Id ${bookingId} not found`,
+          error: null,
+        });
+        return;
+      }
+      if (checkIsActive.rows[0].is_active == isActive) {
+        if (isActive == '1') {
           failed(res, {
             code: 400,
             status: 'Error',
-            message: `Booking with Id ${bookingId} not found`,
+            message: `Booking with id ${bookingId} have been active`,
             error: null,
           });
-          return;
+        } else {
+          failed(res, {
+            code: 400,
+            status: 'Error',
+            message: `Booking with id ${bookingId} have been non active`,
+            error: null,
+          });
         }
+        return;
+      }
+      if (isActive === '0') {
+        const result = await bookingModel.bookingNonActive(bookingId);
         success(res, {
           code: 200,
           status: 'Success',
@@ -274,15 +339,6 @@ const bookingController = {
         });
       } else {
         const result = await bookingModel.bookingActive(bookingId);
-        if (result.rowCount === 0) {
-          failed(res, {
-            code: 400,
-            status: 'Error',
-            message: `Booking with Id ${bookingId} not found`,
-            error: null,
-          });
-          return;
-        }
         success(res, {
           code: 200,
           status: 'Success',

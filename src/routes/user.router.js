@@ -7,7 +7,11 @@ const {
   updateStatus,
   updateLevel,
 } = require('../controllers/user.controller');
-const { profileValidation } = require('../validations/user.validation');
+const {
+  profileValidation,
+  isActiveValidation,
+  levelValidation,
+} = require('../validations/user.validation');
 const validation = require('../middlewares/validation');
 const jwtAuth = require('../middlewares/jwtAuth');
 const { isAdmin, isCustomers } = require('../middlewares/authorization');
@@ -27,7 +31,21 @@ router
     updateProfile
   )
   .put('/users-photo', jwtAuth, isCustomers, upload, updatePhoto)
-  .put('/users-status/:id', jwtAuth, isAdmin, updateStatus)
-  .put('/users-level/:id', jwtAuth, isAdmin, updateLevel);
+  .put(
+    '/users-status/:id',
+    jwtAuth,
+    isAdmin,
+    isActiveValidation,
+    validation,
+    updateStatus
+  )
+  .put(
+    '/users-level/:id',
+    jwtAuth,
+    isAdmin,
+    levelValidation,
+    validation,
+    updateLevel
+  );
 
 module.exports = router;
