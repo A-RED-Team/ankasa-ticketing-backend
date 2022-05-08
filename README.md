@@ -30,18 +30,54 @@
 
 | No  | HTTP Method | URL                             | Operation                           |
 | --- | ----------- | ------------------------------- | ----------------------------------- |
-| 1   | POST        | /api/auth/register              | Register new user                   |
-| 2   | POST        | /api/auth/login                 | Login user                          |
-| 3   | GET         | /api/auth/verify-email          | Verify email user                   |
-
+| 1   | GET         | /api/auth/verify-email          | Verify email user                   |
+| 2   | POST        | /api/auth/register              | Register new user                   |
+| 3   | POST        | /api/auth/login                 | Login user                          |
 
 ### User Endpoint
 
-| No  | HTTP Method | URL                             | Operation                         |
-| --- | ----------- | ------------------------------- | --------------------------------- |
-| 1   | POST        | /api/auth/register              | Register new user                 |
-| 2   | POST        | /api/auth/login                 | Login user                        |
-| 3   | GET         | /api/auth/verify-email          | Verify email user                 |
-| 4   | POST        | /api/auth/register              | Register new user                 |
-| 5   | POST        | /api/auth/login                 | Login user                        |
-| 6   | GET         | /api/auth/verify-email          | Verify email user                 |
+| No  | HTTP Method | URL                             | Operation                                      |
+| --- | ----------- | ------------------------------- | -----------------------------------------------|
+| 1   | GET         | /api/users                      | Get all users (admin)                          |
+| 2   | GET         | /api/users/:id                  | Get detail user                                |
+| 3   | PUT         | /api/users/update/profile       | Update profile (user)                          |
+| 4   | PUT         | /api/users/update/photo         | Update photo (user)                            |
+| 5   | PUT         | /api/users/status/:id           | Change status user active or non active (admin)|
+| 6   | PUT         | /api/users/level/:id            | Change user to admin or customer (admin)       |
+
+###  Endpoint
+
+| No  | HTTP Method | URL                             | Operation                                      |
+| --- | ----------- | ------------------------------- | -----------------------------------------------|
+| 1   | GET         | /api/users                      | Get all users (admin)                          |
+| 2   | GET         | /api/users/:id                  | Get detail user                                |
+| 3   | PUT         | /api/users/update/profile       | Update profile (user)                          |
+| 4   | PUT         | /api/users/update/photo         | Update photo (user)                            |
+| 5   | PUT         | /api/users/status/:id           | Change status user active or non active (admin)|
+| 6   | PUT         | /api/users/level/:id            | Change user to admin or customer (admin)       |
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
