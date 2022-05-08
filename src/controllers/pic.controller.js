@@ -2,30 +2,30 @@ const { success, failed } = require('../helpers/response');
 
 const { v4: uuidv4 } = require('uuid');
 
-const deleteFile = require('../utils/deleteFile');
-
-const airlinesModel = require('../models/airlines.model');
+const picModel = require('../models/pic.model');
 
 module.exports = {
-  airlinesAll: async (req, res) => {
+  picAll: async (req, res) => {
     try {
-      const { search, page, limit, sort, mode } = req.query;
+      const { field, search, page, limit, sort, mode } = req.query;
+      const fieldQuery = field ? field : 'name';
       const searchQuery = search || '';
       const pageValue = page ? Number(page) : 1;
-      const limitValue = limit ? Number(limit) : 5;
+      const limitValue = limit ? Number(limit) : 10;
       const offsetValue = (pageValue - 1) * limitValue;
       const sortQuery = sort ? sort : 'name';
       const modeQuery = mode ? mode : 'ASC';
-      const allData = await airlinesModel.allData();
+      const allData = await picModel.allData();
       const totalData = Number(allData.rows[0].total);
       const data = {
+        fieldQuery,
         searchQuery,
         offsetValue,
         limitValue,
         sortQuery,
         modeQuery,
       };
-      const goQuery = await airlinesModel.airlinesAllData(data);
+      const goQuery = await picModel.picAllData(data);
       if (goQuery.rowCount === 0) {
         const err = {
           message: `data not found`,
@@ -47,7 +47,7 @@ module.exports = {
         success(res, {
           code: 200,
           status: 'success',
-          message: `Success get data airlines`,
+          message: `Success get data pic`,
           data: goQuery.rows,
           pagination: pagination,
         });
@@ -61,7 +61,7 @@ module.exports = {
         success(res, {
           code: 200,
           status: 'success',
-          message: `Success get data airlines`,
+          message: `Success get data pic`,
           data: goQuery.rows,
           pagination: pagination,
         });
@@ -76,13 +76,13 @@ module.exports = {
       return;
     }
   },
-  airlinesDetail: async (req, res) => {
+  picDetail: async (req, res) => {
     try {
       const id = req.params.id;
-      const data = await airlinesModel.airlinesDetailData(id);
+      const data = await picModel.picDetailData(id);
       if (data.rowCount === 0) {
         const err = {
-          message: `Airlines with id ${id} not found`,
+          message: `pic with id ${id} not found`,
         };
         failed(res, {
           code: 500,
@@ -95,7 +95,7 @@ module.exports = {
       success(res, {
         code: 200,
         status: 'success',
-        message: `Success get airlines with id ${id}`,
+        message: `Success get pic pic id ${id}`,
         data: data.rows[0],
         paggination: [],
       });
@@ -109,12 +109,13 @@ module.exports = {
       return;
     }
   },
-  airlinesInsert: async (req, res) => {
+  picInsert: async (req, res) => {
     try {
-      const { name } = req.body;
-      if (!req.file) {
+      const { name, email, phoneNumber } = req.body;
+      const nameCheck = await picModel.picNameCheck(name);
+      if (nameCheck.rowCount > 0) {
         const err = {
-          message: 'Image is required',
+          message: 'name is already exist',
         };
         failed(res, {
           code: 500,
@@ -124,10 +125,10 @@ module.exports = {
         });
         return;
       }
-      const airlinesNameCheck = await airlinesModel.airlinesNameCheck(name);
-      if (airlinesNameCheck.rowCount > 0) {
+      const emailCheck = await picModel.picEmailCheck(email);
+      if (emailCheck.rowCount > 0) {
         const err = {
-          message: 'Name is already exist',
+          message: 'email is already exist',
         };
         failed(res, {
           code: 500,
@@ -137,22 +138,35 @@ module.exports = {
         });
         return;
       }
-      const id = uuidv4();
-      const image = req.file.filename;
-      const isActive = 1;
+      const phoneNumberCheck = await picModel.picPhoneNumberCheck(phoneNumber);
+      if (phoneNumberCheck.rowCount > 0) {
+        const err = {
+          message: 'phone number is already exist',
+        };
+        failed(res, {
+          code: 500,
+          status: 'error',
+          message: err.message,
+          error: [],
+        });
+        return;
+      }
+
       // insert data
+      const id = uuidv4();
+      const isActive = 1;
       const data = {
         id,
         name,
-        image,
+        email,
+        phoneNumber,
         isActive,
       };
-
-      await airlinesModel.airlinesInsertData(data);
+      await picModel.picInsertData(data);
       success(res, {
         code: 200,
         status: 'success',
-        message: 'create airlines success',
+        message: 'create pic success',
         data: data,
         paggination: [],
       });
@@ -166,18 +180,13 @@ module.exports = {
       return;
     }
   },
-  airlinesUpdate: async (req, res) => {
+  picUpdate: async (req, res) => {
     try {
       const id = req.params.id;
-      const { name } = req.body;
-      let image;
-      const airlinesData = await airlinesModel.airlinesDetailData(id);
-      const airlinesNameCheck = await airlinesModel.airlinesNameCheck(name);
-      // check id
-      const checkId = await airlinesModel.airlinesDetailData(id);
-      if (checkId.rowCount === 0) {
+      const picData = await picModel.picDetailData(id);
+      if (picData.rowCount == 0) {
         const err = {
-          message: `Airlines with id ${id} not found`,
+          message: `Pic with id ${id} not found`,
         };
         failed(res, {
           code: 500,
@@ -187,9 +196,11 @@ module.exports = {
         });
         return;
       }
-      // airlines name check
-      if (name != airlinesData.rows[0].name) {
-        if (airlinesNameCheck.rowCount > 0) {
+      const { name, email, phoneNumber } = req.body;
+      console.log(picData.rows[0]);
+      if (name != picData.rows[0].name) {
+        const picNameCheck = await picModel.picNameCheck(name);
+        if (picNameCheck.rowCount > 0) {
           const err = {
             message: 'Name is already exist',
           };
@@ -202,11 +213,37 @@ module.exports = {
           return;
         }
       }
-      if (req.file) {
-        image = req.file.filename;
-        deleteFile(`public/uploads/airlines/${airlinesData.rows[0].image}`);
-      } else {
-        image = airlinesData.rows[0].image;
+      if (email != picData.rows[0].email) {
+        const picEmailCheck = await picModel.picEmailCheck(email);
+        if (picEmailCheck.rowCount > 0) {
+          const err = {
+            message: 'Email is already exist',
+          };
+          failed(res, {
+            code: 500,
+            status: 'error',
+            message: err.message,
+            error: [],
+          });
+          return;
+        }
+      }
+      if (phoneNumber != picData.rows[0].phone_number) {
+        const picPhoneNumberCheck = await picModel.picPhoneNumberCheck(
+          phoneNumber
+        );
+        if (picPhoneNumberCheck.rowCount > 0) {
+          const err = {
+            message: 'phone number is already exist',
+          };
+          failed(res, {
+            code: 500,
+            status: 'error',
+            message: err.message,
+            error: [],
+          });
+          return;
+        }
       }
       const date = new Date();
       const dateOffset = new Date(
@@ -216,15 +253,15 @@ module.exports = {
       const data = {
         id,
         name,
+        email,
+        phoneNumber,
         updateAt,
-        image,
       };
-
-      await airlinesModel.airlinesUpdateData(data);
+      await picModel.picUpdateData(data);
       success(res, {
         code: 200,
         status: 'success',
-        message: `update airlines id ${id} success`,
+        message: `update pic id ${id} success`,
         data: data,
         paggination: [],
       });
@@ -238,7 +275,7 @@ module.exports = {
       return;
     }
   },
-  airlinesMode: async (req, res) => {
+  picMode: async (req, res) => {
     try {
       const id = req.params.id;
       const { isActive } = req.body;
@@ -252,8 +289,8 @@ module.exports = {
         isActive,
         deletedAt,
       };
-      const mode = await airlinesModel.airlinesModeData(data);
-      if (mode.rowCount === 0) {
+      const active = await picModel.picDetailData(id);
+      if (active.rowCount === 0) {
         const err = {
           message: `id ${id} not found`,
         };
@@ -265,10 +302,9 @@ module.exports = {
         });
         return;
       }
-      const active = await airlinesModel.airlinesDetailData(id);
       if (isActive == 1 && active.rows[0].is_active == 1) {
         const err = {
-          message: `airline with id ${id} is already active`,
+          message: `pic with id ${id} is already active`,
         };
         failed(res, {
           code: 500,
@@ -280,7 +316,7 @@ module.exports = {
       }
       if (isActive == 0 && active.rows[0].is_active == 0) {
         const err = {
-          message: `airline with id ${id} is already nonactive`,
+          message: `pic with id ${id} is already nonactive`,
         };
         failed(res, {
           code: 500,
@@ -290,10 +326,11 @@ module.exports = {
         });
         return;
       }
+      await picModel.picModeData(data);
       success(res, {
         code: 200,
         status: 'success',
-        message: `update mode airlines id ${id} success`,
+        message: `update mode pic id ${id} success`,
         data: data,
         paggination: [],
       });

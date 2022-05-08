@@ -5,7 +5,7 @@
 -- Dumped from database version 14.2
 -- Dumped by pg_dump version 14.2
 
--- Started on 2022-05-01 14:09:34
+-- Started on 2022-05-08 17:18:38
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -55,8 +55,7 @@ CREATE TABLE public.bookings (
     travel_insurance character varying(10),
     terminal character(3),
     gate character(3),
-    refundable integer,
-    resechedule integer,
+    payment_status integer,
     total_payment integer,
     is_active integer,
     created_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
@@ -190,15 +189,17 @@ CREATE TABLE public.users (
 ALTER TABLE public.users OWNER TO postgres;
 
 --
--- TOC entry 3345 (class 0 OID 43853)
+-- TOC entry 3349 (class 0 OID 43853)
 -- Dependencies: 211
 -- Data for Name: airlines; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
+INSERT INTO public.airlines (id, name, image, is_active, created_at, updated_at, deleted_at) VALUES ('c57ecfda-0c00-4ff7-a430-3ac62294558e', 'new era', '1651714757252.png', 0, '2022-05-05 08:37:46.846513', '2022-05-05 01:39:17.505', '2022-05-05 01:44:53.935');
+INSERT INTO public.airlines (id, name, image, is_active, created_at, updated_at, deleted_at) VALUES ('26a6bfc5-7a19-4a43-9a22-3965684b0a55', 'tester', '1651715377510.png', 1, '2022-05-05 08:49:38.000802', NULL, NULL);
 
 
 --
--- TOC entry 3346 (class 0 OID 43862)
+-- TOC entry 3350 (class 0 OID 43862)
 -- Dependencies: 212
 -- Data for Name: bookings; Type: TABLE DATA; Schema: public; Owner: postgres
 --
@@ -206,7 +207,7 @@ ALTER TABLE public.users OWNER TO postgres;
 
 
 --
--- TOC entry 3343 (class 0 OID 43837)
+-- TOC entry 3347 (class 0 OID 43837)
 -- Dependencies: 209
 -- Data for Name: cities; Type: TABLE DATA; Schema: public; Owner: postgres
 --
@@ -214,7 +215,7 @@ ALTER TABLE public.users OWNER TO postgres;
 
 
 --
--- TOC entry 3344 (class 0 OID 43845)
+-- TOC entry 3348 (class 0 OID 43845)
 -- Dependencies: 210
 -- Data for Name: countries; Type: TABLE DATA; Schema: public; Owner: postgres
 --
@@ -222,7 +223,7 @@ ALTER TABLE public.users OWNER TO postgres;
 
 
 --
--- TOC entry 3347 (class 0 OID 43879)
+-- TOC entry 3351 (class 0 OID 43879)
 -- Dependencies: 213
 -- Data for Name: flights; Type: TABLE DATA; Schema: public; Owner: postgres
 --
@@ -230,7 +231,7 @@ ALTER TABLE public.users OWNER TO postgres;
 
 
 --
--- TOC entry 3348 (class 0 OID 43886)
+-- TOC entry 3352 (class 0 OID 43886)
 -- Dependencies: 214
 -- Data for Name: pic; Type: TABLE DATA; Schema: public; Owner: postgres
 --
@@ -238,15 +239,25 @@ ALTER TABLE public.users OWNER TO postgres;
 
 
 --
--- TOC entry 3349 (class 0 OID 43893)
+-- TOC entry 3353 (class 0 OID 43893)
 -- Dependencies: 215
 -- Data for Name: users; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
+INSERT INTO public.users (id, username, email, password, name, phone_number, city, address, post_code, photo, verify_token, is_verified, is_active, level, created_at, updated_at, deleted_at) VALUES ('c39c53c6-ee87-447b-8c5f-9d11ce007ceb', 'Master Programmer', 'masterprogrammer123@gmail.com', '$2b$10$qGutdwxWCYMKhYidnZDjPO/3e7glh4ptB1ZbqUM4bkM2sq1ZwD92K', NULL, NULL, NULL, NULL, NULL, '1651749321000.png', NULL, 1, 1, 0, '2022-05-03 11:45:24.934934', '2022-05-05 18:15:21.673757', NULL);
 
 
 --
--- TOC entry 3199 (class 2606 OID 43868)
+-- TOC entry 3199 (class 2606 OID 44011)
+-- Name: airlines airlines_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.airlines
+    ADD CONSTRAINT airlines_pkey PRIMARY KEY (id);
+
+
+--
+-- TOC entry 3201 (class 2606 OID 43868)
 -- Name: bookings bookings_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -273,7 +284,7 @@ ALTER TABLE ONLY public.countries
 
 
 --
--- TOC entry 3201 (class 2606 OID 43885)
+-- TOC entry 3203 (class 2606 OID 43885)
 -- Name: flights flights_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -282,7 +293,7 @@ ALTER TABLE ONLY public.flights
 
 
 --
--- TOC entry 3203 (class 2606 OID 43892)
+-- TOC entry 3205 (class 2606 OID 43892)
 -- Name: pic pic_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -290,7 +301,16 @@ ALTER TABLE ONLY public.pic
     ADD CONSTRAINT pic_pkey PRIMARY KEY (id);
 
 
--- Completed on 2022-05-01 14:09:38
+--
+-- TOC entry 3207 (class 2606 OID 44013)
+-- Name: users users_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.users
+    ADD CONSTRAINT users_pkey PRIMARY KEY (id);
+
+
+-- Completed on 2022-05-08 17:18:41
 
 --
 -- PostgreSQL database dump complete

@@ -43,7 +43,7 @@ const userController = {
           code: 200,
           status: 'Success',
           message: 'Get user success',
-          data: result.rows[0],
+          data: result.rows,
           pagination,
         });
       } else {
@@ -56,7 +56,7 @@ const userController = {
           code: 200,
           status: 'Success',
           message: 'Get all users success',
-          data: result.rows[0],
+          data: result.rows,
           pagination,
         });
       }
@@ -179,17 +179,36 @@ const userController = {
     try {
       const id = req.params.id;
       const { status } = req.body;
-      if (status === '0') {
-        const result = await userModel.updateIsActive(status, id);
-        if (result.rowCount === 0) {
+      const getUserDetail = await userModel.getDetail(id);
+      if (getUserDetail.rowCount == 0) {
+        failed(res, {
+          code: 400,
+          status: 'Error',
+          message: `User with Id ${id} not found`,
+          error: null,
+        });
+        return;
+      }
+      if (getUserDetail.rows[0].is_active == status) {
+        if (status == '1') {
           failed(res, {
             code: 400,
             status: 'Error',
-            message: 'Id not found',
+            message: `User with id ${id} have been active`,
             error: null,
           });
-          return;
+        } else {
+          failed(res, {
+            code: 400,
+            status: 'Error',
+            message: `User with id ${id} have been non active`,
+            error: null,
+          });
         }
+        return;
+      }
+      if (status === '0') {
+        const result = await userModel.updateIsActive(status, id);
         success(res, {
           code: 200,
           status: 'Success',
@@ -198,15 +217,6 @@ const userController = {
         });
       } else {
         const result = await userModel.updateNonActive(status, id);
-        if (result.rowCount === 0) {
-          failed(res, {
-            code: 400,
-            status: 'Error',
-            message: 'Id not found',
-            error: null,
-          });
-          return;
-        }
         success(res, {
           code: 200,
           status: 'Success',
@@ -227,16 +237,35 @@ const userController = {
     try {
       const id = req.params.id;
       const { level } = req.body;
-      const result = await userModel.updateLevel(level, id);
-      if (result.rowCount === 0) {
+      const getUserDetail = await userModel.getDetail(id);
+      if (getUserDetail.rowCount == 0) {
         failed(res, {
           code: 400,
           status: 'Error',
-          message: 'Id not found',
+          message: `User with Id ${id} not found`,
           error: null,
         });
         return;
       }
+      if (getUserDetail.rows[0].level == level) {
+        if (level == '1') {
+          failed(res, {
+            code: 400,
+            status: 'Error',
+            message: `User with id ${id} have become admin`,
+            error: null,
+          });
+        } else {
+          failed(res, {
+            code: 400,
+            status: 'Error',
+            message: `User with id ${id} have become customer`,
+            error: null,
+          });
+        }
+        return;
+      }
+      const result = await userModel.updateLevel(level, id);
       success(res, {
         code: 200,
         status: 'Success',
