@@ -21,7 +21,7 @@
 <p align="center">
   <a href="https://reactjs.org/">
     <img src="https://img.shields.io/badge/Express-v4.18-green?style=flat">
-  </a>                                    
+  </a>                                  
 </p>
 
 ## API Documentation
@@ -32,4 +32,4 @@
 | --- | ----------- | ------------------------------- | --------------------------------- |
 | 1   | POST        | /api/auth/register              | Register new user                 |
 | 2   | POST        | /api/auth/login                 | Login user                        |
-| 3   | GET         | /api/auth/verify-email          | Request forgot password via email |
+| 3   | GET         | /api/auth/verify-email          | Verify email user                 |
