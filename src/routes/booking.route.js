@@ -28,7 +28,7 @@ router
     insertBooking
   )
   .get('/get-all-booking', jwtAuth, isAdmin, allBooking)
-  .get('/get-booking-user', jwtAuth, isCustomers, listUserBooking)
+  .get('/mybooking-user', jwtAuth, isCustomers, listUserBooking)
   .get('/detail-booking/:bookingId', jwtAuth, isAdmin, detailBooking)
   .get(
     '/detail-booking-byuser/:bookingId',
