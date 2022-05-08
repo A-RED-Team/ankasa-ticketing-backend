@@ -55,7 +55,7 @@
 | 4   | PUT         | /api/pic/:id                    | Update pic (admin)                             |
 | 5   | PUT         | /api/pic-status/:id             | Change pic active or non active (admin)        |
 
-### Flight Endpoint
+### flight Endpoint
 
 | No  | HTTP Method | URL                             | Operation                                      |
 | --- | ----------- | ------------------------------- | -----------------------------------------------|
@@ -67,6 +67,15 @@
 | 6   | PUT         | /api/flight/mode/:id            | Change flight active or non active (admin)     |
 | 7   | DELETE      | /api/flight/:id                 | Delete flight (admin)                          |
 
+### Airlane Endpoint
+
+| No  | HTTP Method | URL                             | Operation                                         |
+| --- | ----------- | ------------------------------- | --------------------------------------------------|
+| 1   | GET         | /api/airline                    | Get all airline (admin)                           |
+| 2   | GET         | /api/airline/:id                | Get detail airline (admin)                        |
+| 3   | POST        | /api/airline                    | Create airline (admin)                            |
+| 4   | PUT         | /api/airline/:id                | Update airline (admin)                            |
+| 5   | PUT         | /api/airline/mode/:id           | Change status airline active or non active (admin)|
 
 
 
