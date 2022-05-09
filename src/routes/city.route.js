@@ -21,7 +21,7 @@ const router = express.Router();
 
 router
   .get('/city', jwtAuth, isAdmin, getAllCity)
-  .get('/city/public', jwtAuth, isCustomers, getCityPublic)
+  .get('/city/public', getCityPublic)
   .get('/city/detail/:cityId', jwtAuth, getDetailCity)
   .post(
     '/city',
