@@ -71,7 +71,6 @@ const bookingController = {
           gate,
           getTotal
         );
-
         const newData = {
           id,
           userId,
@@ -84,21 +83,6 @@ const bookingController = {
           gate,
           getTotal,
         };
-
-        QRCode.toFile(
-          `public/qrcode/${id}.png`,
-          id,
-          {
-            color: {
-              dark: '#000',
-              light: '#ffff',
-            },
-          },
-          function (err) {
-            if (err) throw err;
-          }
-        );
-
         success(res, {
           code: 200,
           status: 'Success',
