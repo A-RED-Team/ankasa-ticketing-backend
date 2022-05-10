@@ -102,7 +102,15 @@ module.exports = {
                   });
                 } else {
                   // login gagal
-                  failed(res, null, 'failed', 'email atau password salah');
+                  const err = {
+                    message: 'wrong email or password',
+                  };
+                  failed(res, {
+                    code: 500,
+                    status: 'error',
+                    message: err.message,
+                    error: [],
+                  });
                 }
               });
           } else {
