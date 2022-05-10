@@ -103,41 +103,48 @@ const userController = {
       const { email, username, phone, city, address, postCode } = req.body;
       const emailCheck = await userModel.emailCheck(email);
       const usernameCheck = await userModel.usernameCheck(username);
-      if (
-        username == req.APP_DATA.tokenDecoded.username &&
-        email == req.APP_DATA.tokenDecoded.email
-      ) {
-        const result = await userModel.updateProfile(
-          email,
-          username,
-          phone,
-          city,
-          address,
-          postCode,
-          id
-        );
-        success(res, {
-          code: 200,
-          status: 'Success',
-          message: 'Update user success',
-          data: result,
-        });
-        return;
+      if (username != req.APP_DATA.tokenDecoded.username) {
+        if (usernameCheck.rowCount > 0) {
+          failed(res, {
+            code: 400,
+            status: 'Error',
+            message: 'User name is already exist',
+            error: null,
+          });
+          return;
+        }
       }
-      if (emailCheck.rowCount > 0 || usernameCheck.rowCount > 0) {
-        failed(res, {
-          code: 400,
-          status: 'error',
-          message: 'Username or Email already exist',
-          error: null,
-        });
-        return;
+      if (email != req.APP_DATA.tokenDecoded.email) {
+        if (emailCheck.rowCount > 0) {
+          failed(res, {
+            code: 400,
+            status: 'Error',
+            message: 'Email is already exist',
+            error: null,
+          });
+          return;
+        }
       }
+      const result = await userModel.updateProfile(
+        email,
+        username,
+        phone,
+        city,
+        address,
+        postCode,
+        id
+      );
+      success(res, {
+        code: 200,
+        status: 'Success',
+        message: 'Update profile user success',
+        data: result,
+      });
     } catch (err) {
       failed(res, {
         code: 400,
         status: 'Failed',
-        message: 'Update failed',
+        message: 'Update profile user failed',
         error: err.message,
       });
     }
