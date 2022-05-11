@@ -5,8 +5,9 @@ const {
   detailBooking,
   detailBookingUser,
   listUserBooking,
-  updateBooking,
+  updateBookingPayment,
   deleteBooking,
+  bookingCanceled,
 } = require('../controllers/booking.controller');
 const jwtAuth = require('../middlewares/jwtAuth');
 const { isAdmin, isCustomers } = require('../middlewares/authorization');
@@ -31,7 +32,12 @@ router
   .get('/mybooking', jwtAuth, isCustomers, listUserBooking)
   .get('/booking/:bookingId', jwtAuth, isAdmin, detailBooking)
   .get('/booking/byuser/:bookingId', jwtAuth, isCustomers, detailBookingUser)
-  .put('/booking/payment/:bookingId', jwtAuth, isCustomers, updateBooking)
+  .put(
+    '/booking/payment/:bookingId',
+    jwtAuth,
+    isCustomers,
+    updateBookingPayment
+  )
   .put(
     '/booking/status/:bookingId',
     jwtAuth,
@@ -39,6 +45,7 @@ router
     bookingIsActive,
     validation,
     deleteBooking
-  );
+  )
+  .put('/booking/canceled/:bookingId', jwtAuth, isCustomers, bookingCanceled);
 
 module.exports = router;
