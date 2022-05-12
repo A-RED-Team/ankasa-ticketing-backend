@@ -99,11 +99,12 @@ const bookingModel = {
     terminal,
     gate,
     total,
-    isPayment
+    isPayment,
+    totalTicket
   ) => {
     return new Promise((resolve, reject) => {
       db.query(
-        `INSERT INTO bookings (id, user_id, flight_id, title, full_name, nationality, travel_insurance, terminal, gate, total_payment, is_active, payment_status) VALUES ('${id}','${userId}','${flightId}','${title}','${fullName}','${nationallity}','${insurance}','${terminal}','${gate}',${total},1,${isPayment})`,
+        `INSERT INTO bookings (id, user_id, flight_id, title, full_name, nationality, travel_insurance, terminal, gate, total_payment, is_active, payment_status, total_ticket) VALUES ('${id}','${userId}','${flightId}','${title}','${fullName}','${nationallity}','${insurance}','${terminal}','${gate}',${total},1,${isPayment},${totalTicket})`,
         (err, result) => {
           if (err) {
             reject(new Error(err.message));
