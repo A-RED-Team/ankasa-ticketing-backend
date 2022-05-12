@@ -14,12 +14,14 @@ const bookingController = {
         nationallity,
         travelInsurance,
         flightId,
-        total,
+        adult,
+        child,
         payment,
       } = req.body;
-      total = Number(total);
-      const totalTicket = !total ? 1 : total;
-      const isPayment = !payment ? 0 : payment;
+      adult = Number(adult);
+      if (!child) child = 0;
+      child = Number(child);
+      const totalTicket = adult + child;
       const getFlight = await bookingModel.getFlight(flightId);
       if (getFlight.rowCount == 0) {
         failed(res, {
@@ -77,7 +79,7 @@ const bookingController = {
         const insurance = 2;
         getTotal = (getFlight.rows[0].price + insurance) * totalTicket;
       }
-      if (isPayment == 1) {
+      if (payment == 1) {
         QRCode.toFile(
           `public/qrcode/${id}.png`,
           id,
@@ -103,8 +105,10 @@ const bookingController = {
         terminal,
         gate,
         getTotal,
-        isPayment,
-        totalTicket
+        payment,
+        totalTicket,
+        adult,
+        child
       );
       const newData = {
         id,
@@ -116,6 +120,8 @@ const bookingController = {
         travelInsurance,
         terminal,
         gate,
+        adult,
+        child,
         getTotal,
       };
       success(res, {
