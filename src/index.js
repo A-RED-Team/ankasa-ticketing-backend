@@ -5,6 +5,7 @@ const userRoute = require('./routes/user.router');
 const bookingRoute = require('./routes/booking.route');
 const countryRoute = require('./routes/country.route');
 const cityRoute = require('./routes/city.route');
+require('dotenv').config();
 
 app.use(require('./routes/auth.route'));
 app.use(require('./routes/airlines.route'));

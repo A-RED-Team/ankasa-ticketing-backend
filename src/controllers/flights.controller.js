@@ -9,17 +9,84 @@ const flightsModel = require('../models/flights.model');
 module.exports = {
   flightsAll: async (req, res) => {
     try {
-      const { field, search, page, limit, sort, mode } = req.query;
-      const fieldQuery = field ? field : 'code';
+      const {
+        departureCity,
+        arrivalCity,
+        type,
+        flightClass,
+        departureDate,
+        child,
+        adult,
+        airlinesName,
+        luggage,
+        meal,
+        wifi,
+        direct,
+        transit,
+        moreTransit,
+        departureTimeFrom,
+        departureTimeTo,
+        arrivedTimeFrom,
+        arrivedTimeTo,
+        priceFrom,
+        priceTo,
+        field,
+        search,
+        page,
+        limit,
+        sort,
+        mode,
+      } = req.query;
+      const departureCityQuery = departureCity || '';
+      const arrivalCityQuery = arrivalCity || '';
+      const typeQuery = type || '';
+      const flightClassQuery = flightClass || '';
+      const departureDateQuery = departureDate || '';
+      const childQuery = child || 0;
+      const adultQuery = adult || 0;
+      const airlinesNameQuery = airlinesName || '';
+      const luggageQuery = luggage || '';
+      const mealQuery = meal || '';
+      const wifiQuery = wifi || '';
+      const directQuery = direct || '';
+      const transitQuery = transit || '';
+      const moreTransitQuery = moreTransit || '';
+      const departureTimeFromQuery = departureTimeFrom || '00:00:00';
+      const departureTimeToQuery = departureTimeTo || '24:00:00';
+      const arrivedTimeFromQuery = arrivedTimeFrom || '00:00:00';
+      const arrivedTimeToQuery = arrivedTimeTo || '24:00:00';
+      const priceFromQuery = priceFrom || 0;
+      const priceToQuery = priceTo || 9999;
       const searchQuery = search || '';
+      const fieldQuery = field || 'airlines.name';
       const pageValue = page ? Number(page) : 1;
       const limitValue = limit ? Number(limit) : 10;
       const offsetValue = (pageValue - 1) * limitValue;
-      const sortQuery = sort ? sort : 'code';
+      const sortQuery = sort ? sort : 'airlines.name';
       const modeQuery = mode ? mode : 'ASC';
       const allData = await flightsModel.allData();
       const totalData = Number(allData.rows[0].total);
       const data = {
+        departureCityQuery,
+        arrivalCityQuery,
+        typeQuery,
+        flightClassQuery,
+        departureDateQuery,
+        childQuery,
+        adultQuery,
+        airlinesNameQuery,
+        luggageQuery,
+        mealQuery,
+        wifiQuery,
+        directQuery,
+        transitQuery,
+        moreTransitQuery,
+        departureTimeFromQuery,
+        departureTimeToQuery,
+        arrivedTimeFromQuery,
+        arrivedTimeToQuery,
+        priceFromQuery,
+        priceToQuery,
         fieldQuery,
         searchQuery,
         offsetValue,
@@ -761,17 +828,84 @@ module.exports = {
   },
   flightsActive: async (req, res) => {
     try {
-      const { field, search, page, limit, sort, mode } = req.query;
-      const fieldQuery = field ? field : 'code';
+      const {
+        departureCity,
+        arrivalCity,
+        type,
+        flightClass,
+        departureDate,
+        child,
+        adult,
+        airlinesName,
+        luggage,
+        meal,
+        wifi,
+        direct,
+        transit,
+        moreTransit,
+        departureTimeFrom,
+        departureTimeTo,
+        arrivedTimeFrom,
+        arrivedTimeTo,
+        priceFrom,
+        priceTo,
+        field,
+        search,
+        page,
+        limit,
+        sort,
+        mode,
+      } = req.query;
+      const departureCityQuery = departureCity || '';
+      const arrivalCityQuery = arrivalCity || '';
+      const typeQuery = type || '';
+      const flightClassQuery = flightClass || '';
+      const departureDateQuery = departureDate || '';
+      const childQuery = child || 0;
+      const adultQuery = adult || 0;
+      const airlinesNameQuery = airlinesName || '';
+      const luggageQuery = luggage || '';
+      const mealQuery = meal || '';
+      const wifiQuery = wifi || '';
+      const directQuery = direct || '';
+      const transitQuery = transit || '';
+      const moreTransitQuery = moreTransit || '';
+      const departureTimeFromQuery = departureTimeFrom || '00:00:00';
+      const departureTimeToQuery = departureTimeTo || '24:00:00';
+      const arrivedTimeFromQuery = arrivedTimeFrom || '00:00:00';
+      const arrivedTimeToQuery = arrivedTimeTo || '24:00:00';
+      const priceFromQuery = priceFrom || 0;
+      const priceToQuery = priceTo || 9999;
       const searchQuery = search || '';
+      const fieldQuery = field || 'airlines.name';
       const pageValue = page ? Number(page) : 1;
-      const limitValue = limit ? Number(limit) : 6;
+      const limitValue = limit ? Number(limit) : 10;
       const offsetValue = (pageValue - 1) * limitValue;
-      const sortQuery = sort ? sort : 'code';
+      const sortQuery = sort ? sort : 'airlines.name';
       const modeQuery = mode ? mode : 'ASC';
       const allData = await flightsModel.allData();
       const totalData = Number(allData.rows[0].total);
       const data = {
+        departureCityQuery,
+        arrivalCityQuery,
+        typeQuery,
+        flightClassQuery,
+        departureDateQuery,
+        childQuery,
+        adultQuery,
+        airlinesNameQuery,
+        luggageQuery,
+        mealQuery,
+        wifiQuery,
+        directQuery,
+        transitQuery,
+        moreTransitQuery,
+        departureTimeFromQuery,
+        departureTimeToQuery,
+        arrivedTimeFromQuery,
+        arrivedTimeToQuery,
+        priceFromQuery,
+        priceToQuery,
         fieldQuery,
         searchQuery,
         offsetValue,
