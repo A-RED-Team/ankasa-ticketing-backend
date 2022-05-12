@@ -30,6 +30,20 @@ const bookingModel = {
       );
     });
   },
+  setStockPlus: (flightId, stock) => {
+    return new Promise((resolve, reject) => {
+      db.query(
+        `UPDATE flights SET stock=stock+${stock} WHERE id='${flightId}'`,
+        (err, result) => {
+          if (err) {
+            reject(new Error(err.message));
+          } else {
+            resolve(result);
+          }
+        }
+      );
+    });
+  },
 
   // table booking
   getCountBooking: () => {
@@ -60,7 +74,7 @@ const bookingModel = {
       );
     });
   },
-  bookingDetaiId: (bookingId) => {
+  bookingDetailId: (bookingId) => {
     return new Promise((resolve, reject) => {
       db.query(
         `SELECT * FROM bookings WHERE id='${bookingId}'`,
@@ -84,11 +98,15 @@ const bookingModel = {
     insurance,
     terminal,
     gate,
-    total
+    totalPayment,
+    paymentStatus,
+    totalTicket,
+    adult,
+    child
   ) => {
     return new Promise((resolve, reject) => {
       db.query(
-        `INSERT INTO bookings (id, user_id, flight_id, title, full_name, nationality, travel_insurance, terminal, gate, total_payment, is_active, payment_status) VALUES ('${id}','${userId}','${flightId}','${title}','${fullName}','${nationallity}','${insurance}','${terminal}','${gate}',${total},1,0)`,
+        `INSERT INTO bookings (id, user_id, flight_id, title, full_name, nationality, travel_insurance, terminal, gate, total_payment, is_active, payment_status, total_ticket, adult, child) VALUES ('${id}','${userId}','${flightId}','${title}','${fullName}','${nationallity}','${insurance}','${terminal}','${gate}',${totalPayment},1,${paymentStatus},${totalTicket}, ${adult}, ${child})`,
         (err, result) => {
           if (err) {
             reject(new Error(err.message));
@@ -103,7 +121,7 @@ const bookingModel = {
     return new Promise((resolve, reject) => {
       db.query(
         `SELECT users.id AS users_id, users.username, users.email, users.city AS users_city, users.address,
-      bookings.id AS booking_id, bookings.full_name AS name_booking, flights.departure_date, flights.departure_time, airlines.name AS airline_name,
+      bookings.id AS booking_id, bookings.full_name AS name_booking, bookings.total_ticket, flights.departure_date, flights.departure_time, airlines.name AS airline_name,
       country1.alias AS from_contry, country2.alias AS to_contry, bookings.terminal, bookings.gate,
       flights.class, bookings.payment_status, bookings.is_active
       FROM flights
@@ -129,7 +147,7 @@ const bookingModel = {
   detailBooking: (bookingId) => {
     return new Promise((resolve, reject) => {
       db.query(
-        `SELECT flights.departure_date, flights.departure_time, airlines.name AS airline_name, country1.alias AS from_contry, country2.alias AS to_contry, bookings.terminal, bookings.gate, flights.class, bookings.payment_status, bookings.is_active FROM flights INNER JOIN bookings ON flights.id = bookings.flight_id INNER JOIN cities AS city1 ON city1.id = flights.departure_city INNER JOIN cities AS city2 ON city2.id = flights.arrival_city INNER JOIN countries AS country1 ON country1.id = city1.country_id INNER JOIN countries AS country2 ON country2.id = city2.country_id INNER JOIN airlines ON flights.airline_id = airlines.id WHERE bookings.id='${bookingId}'`,
+        `SELECT flights.departure_date, flights.departure_time, airlines.name AS airline_name, country1.alias AS from_contry, country2.alias AS to_contry, bookings.terminal, bookings.gate, bookings.total_ticket, flights.class, bookings.payment_status, bookings.is_active FROM flights INNER JOIN bookings ON flights.id = bookings.flight_id INNER JOIN cities AS city1 ON city1.id = flights.departure_city INNER JOIN cities AS city2 ON city2.id = flights.arrival_city INNER JOIN countries AS country1 ON country1.id = city1.country_id INNER JOIN countries AS country2 ON country2.id = city2.country_id INNER JOIN airlines ON flights.airline_id = airlines.id WHERE bookings.id='${bookingId}'`,
         (err, result) => {
           if (err) {
             reject(new Error(err.message));
@@ -140,10 +158,10 @@ const bookingModel = {
       );
     });
   },
-  detailBookingUser: (bookingId) => {
+  detailBookingUser: (bookingId, userId) => {
     return new Promise((resolve, reject) => {
       db.query(
-        `SELECT flights.departure_date, flights.departure_time, airlines.name AS airline_name, country1.alias AS from_contry, country2.alias AS to_contry, bookings.terminal, bookings.gate, flights.class, bookings.payment_status FROM flights INNER JOIN bookings ON flights.id = bookings.flight_id INNER JOIN cities AS city1 ON city1.id = flights.departure_city INNER JOIN cities AS city2 ON city2.id = flights.arrival_city INNER JOIN countries AS country1 ON country1.id = city1.country_id INNER JOIN countries AS country2 ON country2.id = city2.country_id INNER JOIN airlines ON flights.airline_id = airlines.id WHERE bookings.id='${bookingId}' AND bookings.payment_status=1 AND bookings.is_active=1`,
+        `SELECT flights.departure_date, flights.departure_time, airlines.name AS airline_name, airlines.image, country1.alias AS from_contry, country2.alias AS to_contry, bookings.terminal, bookings.gate, bookings.total_ticket, bookings.payment_status, bookings.total_ticket, bookings.is_active, flights.class, bookings.payment_status FROM flights INNER JOIN bookings ON flights.id = bookings.flight_id INNER JOIN cities AS city1 ON city1.id = flights.departure_city INNER JOIN cities AS city2 ON city2.id = flights.arrival_city INNER JOIN countries AS country1 ON country1.id = city1.country_id INNER JOIN countries AS country2 ON country2.id = city2.country_id INNER JOIN airlines ON flights.airline_id = airlines.id WHERE bookings.id='${bookingId}' AND bookings.user_id='${userId}'`,
         (err, result) => {
           if (err) {
             reject(new Error(err.message));
@@ -157,7 +175,7 @@ const bookingModel = {
   listUserBooking: (userId, getLimit, offset) => {
     return new Promise((resolve, reject) => {
       db.query(
-        `SELECT bookings.id AS booking_id, flights.departure_date, flights.departure_time, airlines.name AS airline_name, country1.alias AS from_contry, country2.alias AS to_contry, bookings.terminal, bookings.gate, flights.class, bookings.payment_status FROM flights INNER JOIN bookings ON flights.id = bookings.flight_id INNER JOIN cities AS city1 ON city1.id = flights.departure_city INNER JOIN cities AS city2 ON city2.id = flights.arrival_city INNER JOIN countries AS country1 ON country1.id = city1.country_id INNER JOIN countries AS country2 ON country2.id = city2.country_id INNER JOIN airlines ON flights.airline_id = airlines.id WHERE bookings.user_id='${userId}' AND bookings.is_active=1 LIMIT ${getLimit} OFFSET ${offset}`,
+        `SELECT bookings.id AS booking_id, bookings.total_ticket, flights.departure_date, flights.departure_time, airlines.name AS airline_name, country1.alias AS from_contry, country2.alias AS to_contry, bookings.terminal, bookings.gate, flights.class, bookings.payment_status, bookings.total_ticket, bookings.is_active FROM flights INNER JOIN bookings ON flights.id = bookings.flight_id INNER JOIN cities AS city1 ON city1.id = flights.departure_city INNER JOIN cities AS city2 ON city2.id = flights.arrival_city INNER JOIN countries AS country1 ON country1.id = city1.country_id INNER JOIN countries AS country2 ON country2.id = city2.country_id INNER JOIN airlines ON flights.airline_id = airlines.id WHERE bookings.user_id='${userId}' LIMIT ${getLimit} OFFSET ${offset}`,
         (err, result) => {
           if (err) {
             reject(new Error(err.message));
@@ -168,7 +186,7 @@ const bookingModel = {
       );
     });
   },
-  updateBooking: (bookingId, userId) => {
+  updateBookingPayment: (bookingId, userId) => {
     return new Promise((resolve, reject) => {
       db.query(
         `UPDATE bookings SET payment_status=1, updated_at=NOW() WHERE id='${bookingId}' AND user_id='${userId}'`,
@@ -200,6 +218,20 @@ const bookingModel = {
     return new Promise((resolve, reject) => {
       db.query(
         `UPDATE bookings SET is_active=1, updated_at=NOW() WHERE id='${bookingId}'`,
+        (err, result) => {
+          if (err) {
+            reject(new Error(err.message));
+          } else {
+            resolve(result);
+          }
+        }
+      );
+    });
+  },
+  bookingCanceled: (bookingId) => {
+    return new Promise((resolve, reject) => {
+      db.query(
+        `UPDATE bookings SET is_active=0, total_ticket=0, deleted_at=NOW() WHERE id='${bookingId}'`,
         (err, result) => {
           if (err) {
             reject(new Error(err.message));
