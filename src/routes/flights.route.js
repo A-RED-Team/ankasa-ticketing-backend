@@ -57,6 +57,6 @@ router
     validation,
     flightsMode
   ) // for active/non active flight (ADMIN ONLY)
-  .delete('/flight/:id', jwtAuth, isAdmin, flightsDelete); // for delete flight (ADMIN ONLY)
-
+  .delete('/flight/:id', jwtAuth, isAdmin, flightsDelete) // for delete flight (ADMIN ONLY)
+  .get('/flight-active', jwtAuth, isCustomers, flightsActive); // for get flight active (customer only)
 module.exports = router;
