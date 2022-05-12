@@ -77,6 +77,21 @@ const bookingController = {
         const insurance = 2;
         getTotal = (getFlight.rows[0].price + insurance) * totalTicket;
       }
+      if (isPayment == 1) {
+        QRCode.toFile(
+          `public/qrcode/${id}.png`,
+          id,
+          {
+            color: {
+              dark: '#000',
+              light: '#ffff',
+            },
+          },
+          function (err) {
+            if (err) throw err;
+          }
+        );
+      }
       const result = await bookingModel.insertBooking(
         id,
         userId,
@@ -88,7 +103,8 @@ const bookingController = {
         terminal,
         gate,
         getTotal,
-        isPayment
+        isPayment,
+        totalTicket
       );
       const newData = {
         id,
