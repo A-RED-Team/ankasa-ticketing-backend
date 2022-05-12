@@ -231,7 +231,8 @@ const bookingController = {
   detailBookingUser: async (req, res) => {
     try {
       const bookingId = req.params.bookingId;
-      const result = await bookingModel.detailBookingUser(bookingId);
+      const userId = req.APP_DATA.tokenDecoded.id;
+      const result = await bookingModel.detailBookingUser(bookingId, userId);
       if (result.rowCount == 0) {
         failed(res, {
           code: 400,
