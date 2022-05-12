@@ -14,6 +14,26 @@ const flightsModel = {
   flightsAllData: (data) => {
     return new Promise((resolve, reject) => {
       const {
+        departureCityQuery,
+        arrivalCityQuery,
+        typeQuery,
+        flightClassQuery,
+        departureDateQuery,
+        childQuery,
+        adultQuery,
+        airlinesNameQuery,
+        luggageQuery,
+        mealQuery,
+        wifiQuery,
+        directQuery,
+        transitQuery,
+        moreTransitQuery,
+        departureTimeFromQuery,
+        departureTimeToQuery,
+        arrivedTimeFromQuery,
+        arrivedTimeToQuery,
+        priceFromQuery,
+        priceToQuery,
         fieldQuery,
         searchQuery,
         offsetValue,
@@ -22,12 +42,84 @@ const flightsModel = {
         modeQuery,
       } = data;
       db.query(
-        `SELECT * FROM flights WHERE LOWER(${fieldQuery}) LIKE LOWER ('%${searchQuery}%') ORDER BY ${sortQuery} ${modeQuery} LIMIT ${limitValue} OFFSET ${offsetValue}`,
+        `SELECT
+        flights.id AS flightId,flights.airline_id,airlines.name AS airlinesName,airlines.image AS airlinesImage,
+        departureCity.id AS departureCityId,departureCity.name AS departureCityName,departureCountry.name AS departureCountryName
+        ,flights.arrival_city AS arrivalCity,arrivalCity.name AS arrivalCityName,arrivalCountry.name AS arrivalCountryName,
+        flights.departure_time,flights.arrival_time,flights.code,
+        flights.class,flights.type,to_char(flights.departure_date, 'DD-MM-YYYY') AS departureDate,flights.adult,flights.child,flights.direct,flights.transit,flights.more_transit,flights.luggage,
+        flights.meal,flights.wifi,flights.price,flights.stock,flights.rating,flights.total_reviewed,
+        flights.id_pic,pic.name,
+        flights.is_active,flights.created_at,
+        flights.updated_at,flights.deleted_at
+        FROM flights
+        INNER JOIN airlines ON flights.airline_id = airlines.id
+        INNER JOIN cities AS departureCity on flights.departure_city = departureCity.id
+        INNER JOIN countries AS departureCountry on departureCity.country_id = departureCountry.id
+        INNER JOIN cities AS arrivalCity on flights.arrival_city = arrivalCity.id
+        INNER JOIN countries AS arrivalCountry on arrivalCity.country_id = arrivalCountry.id
+        INNER JOIN pic on flights.id_pic = pic.id
+        WHERE LOWER (departureCity.name) LIKE LOWER ('%${departureCityQuery}%') 
+        AND LOWER(arrivalCity.name) LIKE LOWER ('%${arrivalCityQuery}%')
+        AND CAST (flights.type AS VARCHAR(20)) LIKE '%${typeQuery}'
+        AND CAST (flights.class AS VARCHAR(20)) LIKE '%${flightClassQuery}'
+        AND CAST (flights.departure_date AS VARCHAR) LIKE '%${departureDateQuery}%'
+        AND CHILD >= ${childQuery}
+        AND ADULT >= ${adultQuery}
+        AND LOWER (airlines.name) LIKE LOWER ('%${airlinesNameQuery}%')
+        AND CAST (flights.luggage AS VARCHAR) LIKE '%${luggageQuery}'
+        AND CAST (flights.meal AS VARCHAR) LIKE '%${mealQuery}'
+        AND CAST (flights.wifi AS VARCHAR) LIKE '%${wifiQuery}'
+        AND CAST (flights.direct AS VARCHAR) LIKE '%${directQuery}'
+        AND CAST (flights.transit AS VARCHAR) LIKE '%${transitQuery}'
+        AND CAST (flights.more_transit AS VARCHAR) LIKE '%${moreTransitQuery}'
+        AND CAST (flights.departure_time AS TIME) BETWEEN '${departureTimeFromQuery}' AND '${departureTimeToQuery}'
+        AND CAST (flights.arrival_time AS TIME) BETWEEN '${arrivedTimeFromQuery}' AND '${arrivedTimeToQuery}'
+        AND flights.price BETWEEN ${priceFromQuery} AND ${priceToQuery}
+        AND LOWER(${fieldQuery}) LIKE LOWER ('%${searchQuery}%') ORDER BY ${sortQuery} ${modeQuery} LIMIT ${limitValue} OFFSET ${offsetValue}`,
         (err, result) => {
           if (err) {
             reject(err);
           }
           resolve(result);
+        }
+      );
+    });
+  },
+  flightsAllDatatest: (data) => {
+    const {
+      fieldQuery,
+      searchQuery,
+      offsetValue,
+      limitValue,
+      sortQuery,
+      modeQuery,
+    } = data;
+    return new Promise((resolve, reject) => {
+      db.query(
+        `SELECT flights.id AS idFlights,airlines.id,airlines.name,airlines.image AS airlinesImage,departureCity.id,
+        departureCity.name AS departureCityName, departureCountry.id,departureCountry.name AS departureCountryName,
+        departureCountry.alias AS departureCountryAlias,
+        arrivalCity.id AS arrivalCityId, arrivalCity.name as arrivalCityName, 
+        arrivalCountry.id AS arrivalCountryId,
+        arrivalCountry.name AS arrivalCountryName,arrivalCountry.alias AS arrivalCountryAlias,
+        code,flights.class AS flightsClass,flights.type AS flightsType,child,
+      adult,transit,direct,more_transit,luggage,meal,wifi,departure_date,
+      price,rating,total_reviewed,
+      flights.created_at FROM (((((flights INNER JOIN airlines ON flights.airline_id=airlines.id)
+      INNER JOIN cities AS departureCity ON flights.departure_city=departureCity.id)
+      INNER JOIN countries AS departureCountry ON departureCity.country_id=departureCountry.id)
+      INNER JOIN cities AS arrivalCity ON flights.arrival_city=arrivalCity.id)
+      INNER JOIN countries AS arrivalCountry ON arrivalCity.country_id=arrivalCountry.id)
+      WHERE LOWER(${fieldQuery}) LIKE LOWER ('%${searchQuery}%') ORDER BY ${sortQuery} ${modeQuery} LIMIT ${limitValue} OFFSET ${offsetValue}
+      `,
+        (err, res) => {
+          if (err) {
+            console.log(err);
+            reject(err);
+          }
+          console.log(res);
+          // resolve(res);
         }
       );
     });
@@ -207,6 +299,26 @@ const flightsModel = {
   flightsActiveData: (data) => {
     return new Promise((resolve, reject) => {
       const {
+        departureCityQuery,
+        arrivalCityQuery,
+        typeQuery,
+        flightClassQuery,
+        departureDateQuery,
+        childQuery,
+        adultQuery,
+        airlinesNameQuery,
+        luggageQuery,
+        mealQuery,
+        wifiQuery,
+        directQuery,
+        transitQuery,
+        moreTransitQuery,
+        departureTimeFromQuery,
+        departureTimeToQuery,
+        arrivedTimeFromQuery,
+        arrivedTimeToQuery,
+        priceFromQuery,
+        priceToQuery,
         fieldQuery,
         searchQuery,
         offsetValue,
@@ -215,7 +327,42 @@ const flightsModel = {
         modeQuery,
       } = data;
       db.query(
-        `SELECT * FROM flights WHERE is_active=1 AND LOWER(${fieldQuery}) LIKE LOWER ('%${searchQuery}%') ORDER BY ${sortQuery} ${modeQuery} LIMIT ${limitValue} OFFSET ${offsetValue}`,
+        `SELECT
+        flights.id AS flightId,flights.airline_id,airlines.name AS airlinesName,airlines.image AS airlinesImage,
+        departureCity.id AS departureCityId,departureCity.name AS departureCityName,departureCountry.name AS departureCountryName
+        ,flights.arrival_city AS arrivalCity,arrivalCity.name AS arrivalCityName,arrivalCountry.name AS arrivalCountryName,
+        flights.departure_time,flights.arrival_time,flights.code,
+        flights.class,flights.type,to_char(flights.departure_date, 'DD-MM-YYYY') AS departureDate,flights.adult,flights.child,flights.direct,flights.transit,flights.more_transit,flights.luggage,
+        flights.meal,flights.wifi,flights.price,flights.stock,flights.rating,flights.total_reviewed,
+        flights.id_pic,pic.name,
+        flights.is_active,flights.created_at,
+        flights.updated_at,flights.deleted_at
+        FROM flights
+        INNER JOIN airlines ON flights.airline_id = airlines.id
+        INNER JOIN cities AS departureCity on flights.departure_city = departureCity.id
+        INNER JOIN countries AS departureCountry on departureCity.country_id = departureCountry.id
+        INNER JOIN cities AS arrivalCity on flights.arrival_city = arrivalCity.id
+        INNER JOIN countries AS arrivalCountry on arrivalCity.country_id = arrivalCountry.id
+        INNER JOIN pic on flights.id_pic = pic.id
+        WHERE LOWER (departureCity.name) LIKE LOWER ('%${departureCityQuery}%') 
+        AND LOWER(arrivalCity.name) LIKE LOWER ('%${arrivalCityQuery}%')
+        AND CAST (flights.type AS VARCHAR(20)) LIKE '%${typeQuery}'
+        AND CAST (flights.class AS VARCHAR(20)) LIKE '%${flightClassQuery}'
+        AND CAST (flights.departure_date AS VARCHAR) LIKE '%${departureDateQuery}%'
+        AND CHILD >= ${childQuery}
+        AND ADULT >= ${adultQuery}
+        AND LOWER (airlines.name) LIKE LOWER ('%${airlinesNameQuery}%')
+        AND CAST (flights.luggage AS VARCHAR) LIKE '%${luggageQuery}'
+        AND CAST (flights.meal AS VARCHAR) LIKE '%${mealQuery}'
+        AND CAST (flights.wifi AS VARCHAR) LIKE '%${wifiQuery}'
+        AND CAST (flights.direct AS VARCHAR) LIKE '%${directQuery}'
+        AND CAST (flights.transit AS VARCHAR) LIKE '%${transitQuery}'
+        AND CAST (flights.more_transit AS VARCHAR) LIKE '%${moreTransitQuery}'
+        AND CAST (flights.departure_time AS TIME) BETWEEN '${departureTimeFromQuery}' AND '${departureTimeToQuery}'
+        AND CAST (flights.arrival_time AS TIME) BETWEEN '${arrivedTimeFromQuery}' AND '${arrivedTimeToQuery}'
+        AND flights.price BETWEEN ${priceFromQuery} AND ${priceToQuery}
+        AND flights.is_active = 1
+        AND LOWER(${fieldQuery}) LIKE LOWER ('%${searchQuery}%') ORDER BY ${sortQuery} ${modeQuery} LIMIT ${limitValue} OFFSET ${offsetValue}`,
         (err, result) => {
           if (err) {
             reject(err);

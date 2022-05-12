@@ -30,19 +30,27 @@ const bookingValidation = [
   // flightId
   check('flightId', 'Flight Id cannot be empty').not().isEmpty(),
 
-  // total
-  check('total', 'total cannot be empty').not().isEmpty(),
-  check('total', 'total only number 0 or 1').isNumeric(),
-  check('total', 'total require 1 characters').isLength({
-    min: 1,
-  }),
-
-  // total
+  // payment
   check('payment', 'payment cannot be empty').not().isEmpty(),
   check('payment', 'payment only number 0 or 1').isNumeric(),
   check('payment', 'payment require 1 characters').isLength({
     min: 1,
   }),
+
+  // adult
+  check('adult', 'adult cannot be empty').not().isEmpty(),
+  check('adult', 'adult only number').isNumeric(),
+  check('adult', 'adult require 1 characters').isLength({
+    min: 1,
+  }),
+
+  // child
+  check('child', 'child only number')
+    .optional({
+      nullable: true,
+      checkFalsy: true,
+    })
+    .isNumeric(),
 ];
 
 const bookingIsActive = [
