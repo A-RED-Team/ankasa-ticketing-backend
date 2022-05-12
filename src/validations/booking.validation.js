@@ -26,8 +26,23 @@ const bookingValidation = [
     min: 1,
     max: 10,
   }),
+
   // flightId
   check('flightId', 'Flight Id cannot be empty').not().isEmpty(),
+
+  // total
+  check('total', 'total cannot be empty').not().isEmpty(),
+  check('total', 'total only number 0 or 1').isNumeric(),
+  check('total', 'total require 1 characters').isLength({
+    min: 1,
+  }),
+
+  // total
+  check('payment', 'payment cannot be empty').not().isEmpty(),
+  check('payment', 'payment only number 0 or 1').isNumeric(),
+  check('payment', 'payment require 1 characters').isLength({
+    min: 1,
+  }),
 ];
 
 const bookingIsActive = [
