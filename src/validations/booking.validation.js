@@ -51,6 +51,25 @@ const bookingValidation = [
       checkFalsy: true,
     })
     .isNumeric(),
+
+  // email
+  check('email', 'Email required').not().isEmpty(),
+  check('email', 'please enter email correctly').isEmail(),
+  check('email', 'Email maximum length is 50 characters').isLength({ max: 50 }),
+
+  // phone
+  check('phone', 'Phone cannot be empty').not().isEmpty(),
+  check('phone', 'please enter phone correctly').isNumeric(),
+  check('phone', 'Phone require 12 or more characters').isLength({
+    min: 12,
+    max: 20,
+  }),
+
+  // paxName
+  check('paxName', 'Pax Name cannot be empty').not().isEmpty(),
+  check('paxName', 'Pax Name require 2 or more characters').isLength({
+    min: 2,
+  }),
 ];
 
 const bookingIsActive = [
