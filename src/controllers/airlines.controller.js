@@ -57,11 +57,80 @@ module.exports = {
           dataPerPage: limitValue,
           totalPage: Math.ceil(totalData / limitValue),
         };
-        console.log(pagination);
+
         success(res, {
           code: 200,
           status: 'success',
           message: `Success get data airlines`,
+          data: goQuery.rows,
+          pagination: pagination,
+        });
+      }
+    } catch (error) {
+      failed(res, {
+        code: 500,
+        status: 'error',
+        message: error.message,
+        error: [],
+      });
+      return;
+    }
+  },
+  airlinesActive: async (req, res) => {
+    try {
+      const { search, page, limit, sort, mode } = req.query;
+      const searchQuery = search || '';
+      const pageValue = page ? Number(page) : 1;
+      const limitValue = limit ? Number(limit) : 5;
+      const offsetValue = (pageValue - 1) * limitValue;
+      const sortQuery = sort ? sort : 'name';
+      const modeQuery = mode ? mode : 'ASC';
+      const allData = await airlinesModel.allData();
+      const totalData = Number(allData.rows[0].total);
+      const data = {
+        searchQuery,
+        offsetValue,
+        limitValue,
+        sortQuery,
+        modeQuery,
+      };
+      const goQuery = await airlinesModel.airlinesActiveData(data);
+      if (goQuery.rowCount === 0) {
+        const err = {
+          message: `data not found`,
+        };
+        failed(res, {
+          code: 500,
+          status: 'error',
+          message: err.message,
+          error: [],
+        });
+        return;
+      }
+      if (search) {
+        const pagination = {
+          currentPage: pageValue,
+          dataPerPage: limitValue,
+          totalPage: Math.ceil(goQuery.rowCount / limitValue),
+        };
+        success(res, {
+          code: 200,
+          status: 'success',
+          message: `Success get data active airlines`,
+          data: goQuery.rows,
+          pagination: pagination,
+        });
+      } else {
+        const pagination = {
+          currentPage: pageValue,
+          dataPerPage: limitValue,
+          totalPage: Math.ceil(totalData / limitValue),
+        };
+
+        success(res, {
+          code: 200,
+          status: 'success',
+          message: `Success get data active airlines`,
           data: goQuery.rows,
           pagination: pagination,
         });
