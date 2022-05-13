@@ -26,6 +26,21 @@ const airlinesModel = {
       );
     });
   },
+  airlinesActiveData: (data) => {
+    return new Promise((resolve, reject) => {
+      const { searchQuery, offsetValue, limitValue, sortQuery, modeQuery } =
+        data;
+      db.query(
+        `SELECT * FROM airlines WHERE LOWER(name) LIKE LOWER ('%${searchQuery}%') AND is_active=1 ORDER BY ${sortQuery} ${modeQuery} LIMIT ${limitValue} OFFSET ${offsetValue}`,
+        (err, result) => {
+          if (err) {
+            reject(err);
+          }
+          resolve(result);
+        }
+      );
+    });
+  },
   airlinesDetailData: (id) => {
     return new Promise((resolve, reject) => {
       db.query(`SELECT * FROM airlines WHERE id='${id}'`, (err, result) => {

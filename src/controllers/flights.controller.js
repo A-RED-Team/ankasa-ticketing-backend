@@ -126,7 +126,7 @@ module.exports = {
           dataPerPage: limitValue,
           totalPage: Math.ceil(totalData / limitValue),
         };
-        console.log(pagination);
+
         success(res, {
           code: 200,
           status: 'success',
@@ -714,7 +714,6 @@ module.exports = {
         paggination: [],
       });
     } catch (err) {
-      console.log(err);
       failed(res, {
         code: 500,
         status: 'error',
@@ -945,7 +944,7 @@ module.exports = {
           dataPerPage: limitValue,
           totalPage: Math.ceil(totalData / limitValue),
         };
-        console.log(pagination);
+
         success(res, {
           code: 200,
           status: 'success',

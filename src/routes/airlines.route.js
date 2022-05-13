@@ -4,7 +4,7 @@ const express = require('express');
 const jwtAuth = require('../middlewares/jwtAuth');
 
 // import authorization
-const { isAdmin, isCustomer } = require('../middlewares/authorization');
+const { isAdmin, isCustomers } = require('../middlewares/authorization');
 
 // import validation rule
 const {
@@ -26,12 +26,14 @@ const {
   airlinesUpdate,
   airlinesMode,
   airlinesAll,
+  airlinesActive,
 } = require('../controllers/airlines.controller');
 
 const router = express.Router();
 
 router
   .get('/airline', jwtAuth, isAdmin, airlinesAll) // get airline
+  .get('/airline-active', jwtAuth, isCustomers, airlinesActive) // get airline active(customer)
   .get('/airline/:id', jwtAuth, isAdmin, airlinesDetail) // get airline detail
   .post(
     '/airline',
