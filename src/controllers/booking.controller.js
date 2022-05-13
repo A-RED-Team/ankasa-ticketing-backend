@@ -17,11 +17,15 @@ const bookingController = {
         adult,
         child,
         payment,
+        email,
+        phone,
+        paxName,
       } = req.body;
       adult = Number(adult);
       if (!child) child = 0;
       child = Number(child);
       const totalTicket = adult + child;
+      paxName = title + ' ' + paxName;
       const getFlight = await bookingModel.getFlight(flightId);
       if (getFlight.rowCount == 0) {
         failed(res, {
@@ -108,7 +112,10 @@ const bookingController = {
         payment,
         totalTicket,
         adult,
-        child
+        child,
+        email,
+        phone,
+        paxName
       );
       const newData = {
         id,
@@ -123,6 +130,9 @@ const bookingController = {
         adult,
         child,
         getTotal,
+        email,
+        phone,
+        paxName,
       };
       success(res, {
         code: 200,

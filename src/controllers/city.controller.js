@@ -72,9 +72,10 @@ const cityController = {
   },
   getCityPublic: async (req, res) => {
     try {
-      let { sortField, sortType, page, limit } = req.query;
+      let { sortField, sortType, page, limit, search } = req.query;
       page = Number(page);
       limit = Number(limit);
+      const getSearch = !search ? '' : search;
       const sortByField = !sortField ? 'cities.created_at' : sortField;
       const sortByType =
         sortType === 'ASC' || sortType === 'DESC' ? sortType : 'ASC';
@@ -87,20 +88,36 @@ const cityController = {
         sortByField,
         sortByType,
         getLimit,
-        offset
+        offset,
+        getSearch
       );
-      const pagination = {
-        currentPage: getPage,
-        currentLimit: getLimit,
-        totalPage: Math.ceil(totalData / getLimit),
-      };
-      success(res, {
-        code: 201,
-        status: 'Success',
-        message: 'Get trending city success',
-        data: result.rows,
-        pagination,
-      });
+      if (search) {
+        const pagination = {
+          currentPage: getPage,
+          currentLimit: getLimit,
+          totalPage: Math.ceil(result.rowCount / getLimit),
+        };
+        success(res, {
+          code: 200,
+          status: 'Success',
+          message: 'Get trending city success',
+          data: result.rows,
+          pagination,
+        });
+      } else {
+        const pagination = {
+          currentPage: getPage,
+          currentLimit: getLimit,
+          totalPage: Math.ceil(totalData / getLimit),
+        };
+        success(res, {
+          code: 201,
+          status: 'Success',
+          message: 'Get trending city success',
+          data: result.rows,
+          pagination,
+        });
+      }
     } catch (err) {
       failed(res, {
         code: 400,
