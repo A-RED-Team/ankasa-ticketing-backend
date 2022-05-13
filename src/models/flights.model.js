@@ -49,7 +49,7 @@ const flightsModel = {
         flights.departure_time,flights.arrival_time,flights.code,
         flights.class,flights.type,to_char(flights.departure_date, 'DD-MM-YYYY') AS departureDate,flights.adult,flights.child,flights.direct,flights.transit,flights.more_transit,flights.luggage,
         flights.meal,flights.wifi,flights.price,flights.stock,flights.rating,flights.total_reviewed,
-        flights.id_pic,pic.name,
+        flights.id_pic,pic.name AS picName,
         flights.is_active,flights.created_at,
         flights.updated_at,flights.deleted_at
         FROM flights
@@ -186,12 +186,31 @@ const flightsModel = {
   },
   flightsDetailData: (id) => {
     return new Promise((resolve, reject) => {
-      db.query(`SELECT * FROM flights WHERE id='${id}'`, (err, result) => {
-        if (err) {
-          reject(err);
+      db.query(
+        `SELECT
+        flights.id AS flightId,flights.airline_id,airlines.name AS airlinesName,airlines.image AS airlinesImage,
+        departureCity.id AS departureCityId,departureCity.name AS departureCityName,departureCountry.name AS departureCountryName
+        ,flights.arrival_city AS arrivalCity,arrivalCity.name AS arrivalCityName,arrivalCountry.name AS arrivalCountryName,
+        flights.departure_time,flights.arrival_time,flights.code,
+        flights.class,flights.type,to_char(flights.departure_date, 'DD-MM-YYYY') AS departureDate,flights.adult,flights.child,flights.direct,flights.transit,flights.more_transit,flights.luggage,
+        flights.meal,flights.wifi,flights.price,flights.stock,flights.rating,flights.total_reviewed,
+        flights.id_pic,pic.name AS picName,
+        flights.is_active,flights.created_at,
+        flights.updated_at,flights.deleted_at
+        FROM flights
+        INNER JOIN airlines ON flights.airline_id = airlines.id
+        INNER JOIN cities AS departureCity on flights.departure_city = departureCity.id
+        INNER JOIN countries AS departureCountry on departureCity.country_id = departureCountry.id
+        INNER JOIN cities AS arrivalCity on flights.arrival_city = arrivalCity.id
+        INNER JOIN countries AS arrivalCountry on arrivalCity.country_id = arrivalCountry.id
+        INNER JOIN pic on flights.id_pic = pic.id WHERE flights.id='${id}'`,
+        (err, result) => {
+          if (err) {
+            reject(err);
+          }
+          resolve(result);
         }
-        resolve(result);
-      });
+      );
     });
   },
   flightsInsertData: (data) => {
@@ -334,7 +353,7 @@ const flightsModel = {
         flights.departure_time,flights.arrival_time,flights.code,
         flights.class,flights.type,to_char(flights.departure_date, 'DD-MM-YYYY') AS departureDate,flights.adult,flights.child,flights.direct,flights.transit,flights.more_transit,flights.luggage,
         flights.meal,flights.wifi,flights.price,flights.stock,flights.rating,flights.total_reviewed,
-        flights.id_pic,pic.name,
+        flights.id_pic,pic.name AS picName,
         flights.is_active,flights.created_at,
         flights.updated_at,flights.deleted_at
         FROM flights
