@@ -130,7 +130,7 @@ const countryController = {
         code: 200,
         status: 'Success',
         message: 'Insert country success',
-        data: result,
+        data: req.body,
       });
     } catch (err) {
       failed(res, {
@@ -188,7 +188,7 @@ const countryController = {
         code: 200,
         status: 'Success',
         message: 'Update country with  success',
-        data: result,
+        data: req.body,
       });
     } catch (err) {
       failed(res, {

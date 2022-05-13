@@ -8,14 +8,53 @@ const bookingController = {
     try {
       const userId = req.APP_DATA.tokenDecoded.id;
       const id = uuidv4();
-      const { title, fullName, nationallity, travelInsurance, flightId } =
-        req.body;
+      let {
+        title,
+        fullName,
+        nationallity,
+        travelInsurance,
+        flightId,
+        adult,
+        child,
+        payment,
+      } = req.body;
+      adult = Number(adult);
+      if (!child) child = 0;
+      child = Number(child);
+      const totalTicket = adult + child;
       const getFlight = await bookingModel.getFlight(flightId);
-      if (getFlight.rowCount === 0) {
+      if (getFlight.rowCount == 0) {
         failed(res, {
           code: 400,
           status: 'Error',
           message: `Flight with Id ${flightId} not found`,
+          error: null,
+        });
+        return;
+      }
+      if (getFlight.rows[0].is_active == 0) {
+        failed(res, {
+          code: 400,
+          status: 'Error',
+          message: `Flight with Id ${flightId} not operating`,
+          error: null,
+        });
+        return;
+      }
+      const stockTiket = Number(getFlight.rows[0].stock);
+      if (stockTiket <= 0) {
+        failed(res, {
+          code: 400,
+          status: 'Error',
+          message: 'Ticket stock is out',
+          error: null,
+        });
+        return;
+      } else if (stockTiket - totalTicket < 0) {
+        failed(res, {
+          code: 400,
+          status: 'Error',
+          message: 'Ticket stock is out',
           error: null,
         });
         return;
@@ -26,39 +65,21 @@ const bookingController = {
       if (getCode.length == 7) {
         terminal = getCode.substring(0, 3);
         gate = getCode.substring(4, 7);
-      } else {
+      } else if (getCode.length == 6) {
         terminal = getCode.substring(0, 2);
         gate = getCode.substring(3, 6);
-      }
-      if (getFlight.rows[0].stock <= 0) {
-        failed(res, {
-          code: 400,
-          status: 'Error',
-          message: 'Ticket stock is out',
-          error: null,
-        });
-        return;
       } else {
-        let getTotal = '';
-        if (travelInsurance == '0') {
-          getTotal = getFlight.rows[0].price;
-        } else {
-          const asuransi = 2;
-          getTotal = getFlight.rows[0].price + asuransi;
-        }
-        const result = await bookingModel.insertBooking(
-          id,
-          userId,
-          flightId,
-          title,
-          fullName,
-          nationallity,
-          travelInsurance,
-          terminal,
-          gate,
-          getTotal
-        );
-
+        terminal = getCode.substring(0, 1);
+        gate = getCode.substring(2, 5);
+      }
+      let getTotal = '';
+      if (travelInsurance == '0') {
+        getTotal = getFlight.rows[0].price * totalTicket;
+      } else {
+        const insurance = 2;
+        getTotal = (getFlight.rows[0].price + insurance) * totalTicket;
+      }
+      if (payment == 1) {
         QRCode.toFile(
           `public/qrcode/${id}.png`,
           id,
@@ -72,15 +93,44 @@ const bookingController = {
             if (err) throw err;
           }
         );
-
-        success(res, {
-          code: 200,
-          status: 'Success',
-          message: 'Insert booking success',
-          data: result,
-        });
-        const setStock = await bookingModel.setStock(flightId);
       }
+      const result = await bookingModel.insertBooking(
+        id,
+        userId,
+        flightId,
+        title,
+        fullName,
+        nationallity,
+        travelInsurance,
+        terminal,
+        gate,
+        getTotal,
+        payment,
+        totalTicket,
+        adult,
+        child
+      );
+      const newData = {
+        id,
+        userId,
+        flightId,
+        title,
+        fullName,
+        nationallity,
+        travelInsurance,
+        terminal,
+        gate,
+        adult,
+        child,
+        getTotal,
+      };
+      success(res, {
+        code: 200,
+        status: 'Success',
+        message: 'Insert booking success',
+        data: newData,
+      });
+      const setStock = await bookingModel.setStock(flightId);
     } catch (err) {
       failed(res, {
         code: 400,
@@ -111,7 +161,7 @@ const bookingController = {
         offset,
         getSearch
       );
-      if (result.rowCount === 0) {
+      if (result.rowCount == 0) {
         failed(res, {
           code: 400,
           status: 'Error',
@@ -160,7 +210,7 @@ const bookingController = {
     try {
       const bookingId = req.params.bookingId;
       const result = await bookingModel.detailBooking(bookingId);
-      if (result.rowCount === 0) {
+      if (result.rowCount == 0) {
         failed(res, {
           code: 400,
           status: 'Error',
@@ -187,8 +237,9 @@ const bookingController = {
   detailBookingUser: async (req, res) => {
     try {
       const bookingId = req.params.bookingId;
-      const result = await bookingModel.detailBookingUser(bookingId);
-      if (result.rowCount === 0) {
+      const userId = req.APP_DATA.tokenDecoded.id;
+      const result = await bookingModel.detailBookingUser(bookingId, userId);
+      if (result.rowCount == 0) {
         failed(res, {
           code: 400,
           status: 'Error',
@@ -233,7 +284,7 @@ const bookingController = {
         getLimit,
         offset
       );
-      if (result.rowCount === 0) {
+      if (result.rowCount == 0) {
         failed(res, {
           code: 400,
           status: 'Error',
@@ -258,11 +309,11 @@ const bookingController = {
       });
     }
   },
-  updateBooking: async (req, res) => {
+  updateBookingPayment: async (req, res) => {
     try {
       const bookingId = req.params.bookingId;
       const userId = req.APP_DATA.tokenDecoded.id;
-      const checkPayment = await bookingModel.bookingDetaiId(bookingId);
+      const checkPayment = await bookingModel.bookingDetailId(bookingId);
       if (checkPayment.rows[0].payment_status == 1) {
         failed(res, {
           code: 400,
@@ -272,7 +323,7 @@ const bookingController = {
         });
         return;
       }
-      const result = await bookingModel.updateBooking(bookingId, userId);
+      const result = await bookingModel.updateBookingPayment(bookingId, userId);
       if (result.rowCount === 0) {
         failed(res, {
           code: 400,
@@ -282,17 +333,30 @@ const bookingController = {
         });
         return;
       }
+      QRCode.toFile(
+        `public/qrcode/${bookingId}.png`,
+        bookingId,
+        {
+          color: {
+            dark: '#000',
+            light: '#ffff',
+          },
+        },
+        function (err) {
+          if (err) throw err;
+        }
+      );
       success(res, {
         code: 200,
         status: 'Success',
         message: 'Update booking payment success',
-        data: result,
+        data: [],
       });
     } catch (err) {
       failed(res, {
         code: 400,
         status: 'Error',
-        message: 'Update booking failed',
+        message: 'Update booking payment failed',
         error: err.message,
       });
     }
@@ -301,8 +365,8 @@ const bookingController = {
     try {
       const bookingId = req.params.bookingId;
       const { isActive } = req.body;
-      const checkIsActive = await bookingModel.bookingDetaiId(bookingId);
-      if (checkIsActive.rowCount === 0) {
+      const checkIsActive = await bookingModel.bookingDetailId(bookingId);
+      if (checkIsActive.rowCount == 0) {
         failed(res, {
           code: 400,
           status: 'Error',
@@ -351,6 +415,57 @@ const bookingController = {
         code: 400,
         status: 'Error',
         message: 'Delete booking failed',
+        error: err.message,
+      });
+    }
+  },
+  bookingCanceled: async (req, res) => {
+    try {
+      const bookingId = req.params.bookingId;
+      const checkIsActive = await bookingModel.bookingDetailId(bookingId);
+      if (checkIsActive.rowCount == 0) {
+        failed(res, {
+          code: 400,
+          status: 'Error',
+          message: `Booking with Id ${bookingId} not found`,
+          error: null,
+        });
+        return;
+      }
+      const getIsActive = checkIsActive.rows[0].is_active;
+      const getTicket = checkIsActive.rows[0].total_ticket;
+      const getFlightId = checkIsActive.rows[0].flight_id;
+      if (getIsActive == 0) {
+        failed(res, {
+          code: 400,
+          status: 'Error',
+          message: `Booking with Id ${bookingId} have been non active`,
+          error: null,
+        });
+        return;
+      }
+      if (checkIsActive.rows[0].payment_status == 1) {
+        failed(res, {
+          code: 400,
+          status: 'Error',
+          message: `Booking with Id ${bookingId} can't be cancelled because have been paid off`,
+          error: null,
+        });
+        return;
+      }
+      const result = await bookingModel.bookingCanceled(bookingId);
+      success(res, {
+        code: 200,
+        status: 'Success',
+        message: 'Booking cancelled success',
+        data: result,
+      });
+      const setStock = await bookingModel.setStockPlus(getFlightId, getTicket);
+    } catch (err) {
+      failed(res, {
+        code: 400,
+        status: 'Error',
+        message: 'Cancelled booking failed',
         error: err.message,
       });
     }

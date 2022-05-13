@@ -737,6 +737,19 @@ module.exports = {
         isActive,
         deletedAt,
       };
+      const flightsMode = await flightsModel.flightsModeData(data);
+      if (flightsMode.rowCount === 0) {
+        const err = {
+          message: `flights with id ${id} not found`,
+        };
+        failed(res, {
+          code: 500,
+          status: 'error',
+          message: err.message,
+          error: [],
+        });
+        return;
+      }
       const active = await flightsModel.flightsDetailData(id);
       if (isActive == 1 && active.rows[0].is_active == 1) {
         const err = {
@@ -753,19 +766,6 @@ module.exports = {
       if (isActive == 0 && active.rows[0].is_active == 0) {
         const err = {
           message: `flights with id ${id} is already nonactive`,
-        };
-        failed(res, {
-          code: 500,
-          status: 'error',
-          message: err.message,
-          error: [],
-        });
-        return;
-      }
-      const flightsMode = await flightsModel.flightsModeData(data);
-      if (flightsMode.rowCount === 0) {
-        const err = {
-          message: `flights with id ${id} not found`,
         };
         failed(res, {
           code: 500,
