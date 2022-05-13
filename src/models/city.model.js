@@ -65,25 +65,6 @@ const cityModel = {
       );
     });
   },
-  cityPublicTrending: (sortByField, sortByType, getLimit, offset) => {
-    return new Promise((resolve, reject) => {
-      db.query(
-        `SELECT countries.id AS country_id, countries.name AS country_name, countries.alias,
-        cities.id AS city_id, cities.name AS city_name, cities.image
-        FROM cities
-        INNER JOIN countries ON cities.country_id = countries.id
-        WHERE countries.is_active = 1 AND cities.is_active = 1
-        ORDER BY ${sortByField} ${sortByType} LIMIT ${getLimit} OFFSET ${offset}`,
-        (err, result) => {
-          if (err) {
-            reject(new Error(err.message));
-          } else {
-            resolve(result);
-          }
-        }
-      );
-    });
-  },
   cityPublic: (sortByField, sortByType, getLimit, offset, getSearch) => {
     return new Promise((resolve, reject) => {
       db.query(
