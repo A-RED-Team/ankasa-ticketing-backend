@@ -71,6 +71,26 @@ const countryModel = {
       );
     });
   },
+  getAllCountryPublic: (
+    sortByField,
+    sortByType,
+    getLimit,
+    offset,
+    getSearch
+  ) => {
+    return new Promise((resolve, reject) => {
+      db.query(
+        `SELECT * FROM countries WHERE (name ILIKE '%${getSearch}%') AND is_active=1 ORDER BY ${sortByField} ${sortByType} LIMIT ${getLimit} OFFSET ${offset}`,
+        (err, result) => {
+          if (err) {
+            reject(new Error(err.message));
+          } else {
+            resolve(result);
+          }
+        }
+      );
+    });
+  },
   getDetailCountry: (countryId) => {
     return new Promise((resolve, reject) => {
       db.query(

@@ -69,6 +69,72 @@ const countryController = {
       });
     }
   },
+  getAllCountryPublic: async (req, res) => {
+    try {
+      let { sortField, sortType, page, limit, search } = req.query;
+      page = Number(page);
+      limit = Number(limit);
+      const getSearch = !search ? '' : search;
+      const sortByField = !sortField ? 'name' : sortField;
+      const sortByType =
+        sortType === 'ASC' || sortType === 'DESC' ? sortType : 'ASC';
+      const getPage = !page ? 1 : page;
+      const getLimit = !limit ? 10 : limit;
+      const offset = (getPage - 1) * getLimit;
+      const allData = await countryModel.getCountCountry();
+      const totalData = Number(allData.rows[0].totalcountry);
+      const result = await countryModel.getAllCountry(
+        sortByField,
+        sortByType,
+        getLimit,
+        offset,
+        getSearch
+      );
+      if (result.rowCount == 0) {
+        failed(res, {
+          code: 400,
+          status: 'Error',
+          message: 'Data not found',
+          error: null,
+        });
+        return;
+      }
+      if (search) {
+        const pagination = {
+          currentPage: getPage,
+          currentLimit: getLimit,
+          totalPage: Math.ceil(result.rowCount / getLimit),
+        };
+        success(res, {
+          code: 200,
+          status: 'Success',
+          message: 'Get all country success',
+          data: result.rows,
+          pagination,
+        });
+      } else {
+        const pagination = {
+          currentPage: getPage,
+          currentLimit: getLimit,
+          totalPage: Math.ceil(totalData / getLimit),
+        };
+        success(res, {
+          code: 201,
+          status: 'Success',
+          message: 'Get all country success',
+          data: result.rows,
+          pagination,
+        });
+      }
+    } catch (err) {
+      failed(res, {
+        code: 400,
+        status: 'Error',
+        message: 'Failed get all country',
+        error: err.message,
+      });
+    }
+  },
   getDetailCountry: async (req, res) => {
     try {
       const id = req.params.countryId;

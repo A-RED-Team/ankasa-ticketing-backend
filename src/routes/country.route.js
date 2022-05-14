@@ -1,6 +1,7 @@
 const express = require('express');
 const {
   getAllCountry,
+  getAllCountryPublic,
   getDetailCountry,
   insertCountry,
   updateCountry,
@@ -18,6 +19,7 @@ const router = express.Router();
 
 router
   .get('/country', jwtAuth, isAdmin, getAllCountry)
+  .get('/country/public', jwtAuth, isCustomers, getAllCountryPublic)
   .get('/country/:countryId', jwtAuth, getDetailCountry)
   .post(
     '/country',
