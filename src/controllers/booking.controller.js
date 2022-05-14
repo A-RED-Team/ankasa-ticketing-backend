@@ -200,7 +200,7 @@ const bookingController = {
           totalPage: Math.ceil(totalData / getLimit),
         };
         success(res, {
-          code: 201,
+          code: 200,
           status: 'Success',
           message: 'Get all booking success',
           data: result.rows,
