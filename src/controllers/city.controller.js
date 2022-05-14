@@ -54,7 +54,7 @@ const cityController = {
           totalPage: Math.ceil(totalData / getLimit),
         };
         success(res, {
-          code: 201,
+          code: 200,
           status: 'Success',
           message: 'Get all city success',
           data: result.rows,
@@ -111,7 +111,7 @@ const cityController = {
           totalPage: Math.ceil(totalData / getLimit),
         };
         success(res, {
-          code: 201,
+          code: 200,
           status: 'Success',
           message: 'Get trending city success',
           data: result.rows,
