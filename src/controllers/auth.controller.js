@@ -103,7 +103,7 @@ module.exports = {
                 } else {
                   // login gagal
                   const err = {
-                    message: 'wrong email or password',
+                    message: 'wrong username or password',
                   };
                   failed(res, {
                     code: 500,
