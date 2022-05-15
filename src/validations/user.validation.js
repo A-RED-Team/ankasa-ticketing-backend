@@ -34,10 +34,10 @@ const profileValidation = [
     min: 3,
   }),
 
-  //address
+  //postCode
   check('postCode', 'Postcode cannot be empty').not().isEmpty(),
-  check('postCode', 'Postcode require 6 or more characters').isLength({
-    min: 6,
+  check('postCode', 'Postcode require 4 or more characters').isLength({
+    min: 4,
   }),
 ];
 
@@ -45,8 +45,9 @@ const levelValidation = [
   // level
   check('level', 'level cannot be empty').not().isEmpty(),
   check('level', 'level only number 0 or 1').isNumeric(),
-  check('level', 'level require 1 characters').isLength({
-    min: 1,
+  check('level', 'level value must be between 0 to 1').isInt({
+    min: 0,
+    max: 1,
   }),
 ];
 
@@ -54,8 +55,9 @@ const isActiveValidation = [
   // is active
   check('status', 'status cannot be empty').not().isEmpty(),
   check('status', 'status only number 0 or 1').isNumeric(),
-  check('status', 'status require 1 characters').isLength({
-    min: 1,
+  check('status', 'status value must be between 0 to 1').isInt({
+    min: 0,
+    max: 1,
   }),
 ];
 
