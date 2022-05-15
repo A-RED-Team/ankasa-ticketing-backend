@@ -21,8 +21,9 @@ const countryIsActive = [
   // is active
   check('isActive', 'isActive cannot be empty').not().isEmpty(),
   check('isActive', 'isActive only number 0 or 1').isNumeric(),
-  check('isActive', 'isActive require 1 characters').isLength({
-    min: 1,
+  check('isActive', 'isActive value must be between 0 to 1').isInt({
+    min: 0,
+    max: 1,
   }),
 ];
 
