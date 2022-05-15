@@ -321,19 +321,7 @@ module.exports = {
         isActive,
         deletedAt,
       };
-      const mode = await airlinesModel.airlinesModeData(data);
-      if (mode.rowCount === 0) {
-        const err = {
-          message: `id ${id} not found`,
-        };
-        failed(res, {
-          code: 500,
-          status: 'error',
-          message: err.message,
-          error: [],
-        });
-        return;
-      }
+
       const active = await airlinesModel.airlinesDetailData(id);
       if (isActive == 1 && active.rows[0].is_active == 1) {
         const err = {
@@ -359,10 +347,23 @@ module.exports = {
         });
         return;
       }
+      const mode = await airlinesModel.airlinesModeData(data);
+      if (mode.rowCount === 0) {
+        const err = {
+          message: `id ${id} not found`,
+        };
+        failed(res, {
+          code: 500,
+          status: 'error',
+          message: err.message,
+          error: [],
+        });
+        return;
+      }
       success(res, {
         code: 200,
         status: 'success',
-        message: `update mode airlines id ${id} success`,
+        message: `update status airlines id ${id} success`,
         data: data,
         paggination: [],
       });
