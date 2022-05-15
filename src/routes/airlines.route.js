@@ -27,6 +27,7 @@ const {
   airlinesMode,
   airlinesAll,
   airlinesActive,
+  airlinesDelete,
 } = require('../controllers/airlines.controller');
 
 const router = express.Router();
@@ -60,6 +61,6 @@ router
     modeValidation,
     validation,
     airlinesMode
-  ); // active or nonactive airline
-
+  ) // active or nonactive airline
+  .delete('/airline/:id', jwtAuth, isAdmin, airlinesDelete); // for delete airlines (ADMIN ONLY)
 module.exports = router;

@@ -377,4 +377,50 @@ module.exports = {
       return;
     }
   },
+  airlinesDelete: async (req, res) => {
+    try {
+      const id = req.params.id;
+      const data = await airlinesModel.airlinesDetailData(id);
+      if (data.rows[0].is_active) {
+        const err = {
+          message: `set airline status inactive first`,
+        };
+        failed(res, {
+          code: 500,
+          status: 'error',
+          message: err.message,
+          error: [],
+        });
+        return;
+      }
+      const airlinesDelete = await airlinesModel.airlinesDeleteData(id);
+      if (airlinesDelete.rowCount === 0) {
+        const err = {
+          message: `airlines with ${id} not found`,
+        };
+        failed(res, {
+          code: 500,
+          status: 'error',
+          message: err.message,
+          error: [],
+        });
+        return;
+      }
+      success(res, {
+        code: 200,
+        status: 'success',
+        message: `delete airlines with id ${id} success`,
+        data: data.rows[0],
+        paggination: [],
+      });
+    } catch (err) {
+      failed(res, {
+        code: 500,
+        status: 'error',
+        message: err.message,
+        error: [],
+      });
+      return;
+    }
+  },
 };

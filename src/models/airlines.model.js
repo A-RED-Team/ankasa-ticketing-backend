@@ -103,6 +103,16 @@ const airlinesModel = {
       );
     });
   },
+  airlinesDeleteData: (id) => {
+    return new Promise((resolve, reject) => {
+      db.query(`DELETE FROM airlines WHERE id ='${id}'`, (err, result) => {
+        if (err) {
+          reject(err);
+        }
+        resolve(result);
+      });
+    });
+  },
 };
 
 module.exports = airlinesModel;
