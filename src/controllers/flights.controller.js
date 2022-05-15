@@ -795,6 +795,19 @@ module.exports = {
   flightsDelete: async (req, res) => {
     try {
       const id = req.params.id;
+      const data = await flightsModel.flightsDetailData(id);
+      if (data.rows[0].is_active) {
+        const err = {
+          message: `set flight status inactive first`,
+        };
+        failed(res, {
+          code: 500,
+          status: 'error',
+          message: err.message,
+          error: [],
+        });
+        return;
+      }
       const flightsDelete = await flightsModel.flightsDeleteData(id);
       if (flightsDelete.rowCount === 0) {
         const err = {
@@ -812,7 +825,7 @@ module.exports = {
         code: 200,
         status: 'success',
         message: `delete flights with id ${id} success`,
-        data: data,
+        data: data.rows[0],
         paggination: [],
       });
     } catch (err) {
