@@ -162,12 +162,10 @@ module.exports = {
       authModel
         .verifyingUser(token)
         .then((result) => {
-          success(res, {
-            code: 200,
-            status: 'success',
-            message: 'email is activated',
-            data: [],
-            paggination: [],
+          res.render
+          res.render('./welcome.ejs', {
+            user_firstname: 'ta',
+            confirm_link: 'ta',
           });
         })
         .catch((err) => {
