@@ -33,6 +33,8 @@
 | 1   | GET         | /api/auth/verify-email          | Verify email user                   |
 | 2   | POST        | /api/auth/register              | Register new user                   |
 | 3   | POST        | /api/auth/login                 | Login user                          |
+| 4   | PUT         | /api/auth/forgot-password       | Forgot password                     |
+| 4   | PUT         | /api/auth/reset-password        | Reset password                      |
 
 ### User Endpoint
 
