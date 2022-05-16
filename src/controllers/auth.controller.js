@@ -211,7 +211,6 @@ module.exports = {
             verifyToken,
             emailCheck.rows[0].photo
           );
-
           success(res, {
             code: 200,
             status: 'success',
@@ -219,7 +218,6 @@ module.exports = {
             data: req.body,
           });
         }
-        
       }
     } catch (error) {
       failed(res, {
