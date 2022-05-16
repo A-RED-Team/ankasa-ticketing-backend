@@ -21,11 +21,11 @@ module.exports = {
         next();
       } else if (emailCheck.rows[0].is_verified) {
         next();
-      } else {
+      } else if (emailCheck.rows[0].verify_token) {
         failed(res, {
           code: 400,
           status: 'failed',
-          message: 'email not verified yet',
+          message: 'please using your token for access application',
           error: err,
         });
       }
