@@ -140,7 +140,12 @@ const bookingController = {
         message: 'Insert booking success',
         data: newData,
       });
-      const setStock = await bookingModel.setStock(flightId);
+      const setStock = await bookingModel.setStock(
+        flightId,
+        totalTicket,
+        adult,
+        child
+      );
     } catch (err) {
       failed(res, {
         code: 400,
@@ -444,6 +449,8 @@ const bookingController = {
       }
       const getIsActive = checkIsActive.rows[0].is_active;
       const getTicket = checkIsActive.rows[0].total_ticket;
+      const getAdult = checkIsActive.rows[0].adult;
+      const getChild = checkIsActive.rows[0].child;
       const getFlightId = checkIsActive.rows[0].flight_id;
       if (getIsActive == 0) {
         failed(res, {
@@ -470,7 +477,12 @@ const bookingController = {
         message: 'Booking cancelled success',
         data: result,
       });
-      const setStock = await bookingModel.setStockPlus(getFlightId, getTicket);
+      const setStock = await bookingModel.setStockPlus(
+        getFlightId,
+        getTicket,
+        getAdult,
+        getChild
+      );
     } catch (err) {
       failed(res, {
         code: 400,
