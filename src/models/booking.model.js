@@ -16,10 +16,10 @@ const bookingModel = {
       );
     });
   },
-  setStock: (flightId) => {
+  setStock: (flightId, total, adult, child) => {
     return new Promise((resolve, reject) => {
       db.query(
-        `UPDATE flights SET stock=stock-1 WHERE id='${flightId}'`,
+        `UPDATE flights SET stock=stock-${total}, adult=adult-${adult}, child=child-${child} WHERE id='${flightId}'`,
         (err, result) => {
           if (err) {
             reject(new Error(err.message));
@@ -30,10 +30,10 @@ const bookingModel = {
       );
     });
   },
-  setStockPlus: (flightId, stock) => {
+  setStockPlus: (flightId, stock, getAdult, getChild) => {
     return new Promise((resolve, reject) => {
       db.query(
-        `UPDATE flights SET stock=stock+${stock} WHERE id='${flightId}'`,
+        `UPDATE flights SET stock=stock+${stock}, adult=adult+${getAdult}, child=child+${getChild} WHERE id='${flightId}'`,
         (err, result) => {
           if (err) {
             reject(new Error(err.message));
