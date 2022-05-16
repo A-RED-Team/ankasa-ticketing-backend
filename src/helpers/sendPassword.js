@@ -35,7 +35,7 @@ module.exports = {
       template: 'reset-password',
       context: {
         url: `${APP_CLIENT}/reset-password?token=${confirmationCode}`,
-        photo: `${APP_URL}/uploads/user/${photo}`,
+        photo: `${APP_CLIENT}/uploads/user/${photo}`,
       },
     };
 
