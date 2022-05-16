@@ -5,17 +5,29 @@ module.exports = {
   isVerified: async (req, res, next) => {
     try {
       const emailCheck = await authModel.emailCheck(req.body.email);
+      if (emailCheck.rowCount < 1) {
+        const err = {
+          message: 'Email not registered',
+        };
+        failed(res, {
+          code: 500,
+          status: 'error',
+          message: err.message,
+          error: [],
+        });
+        return;
+      }
       if (emailCheck.rowCount > 0) {
         next();
       } else if (emailCheck.rows[0].is_verified) {
         next();
       } else {
         failed(res, {
-        code: 400,
-        status: 'failed',
-        message: 'email not verified yet',
-        error: err,
-      });
+          code: 400,
+          status: 'failed',
+          message: 'email not verified yet',
+          error: err,
+        });
       }
     } catch (error) {
       failed(res, {
