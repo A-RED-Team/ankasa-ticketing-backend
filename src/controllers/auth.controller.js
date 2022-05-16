@@ -196,28 +196,19 @@ module.exports = {
       const { email } = req.body;
       const emailCheck = await authModel.emailCheck(email);
       if (emailCheck.rowCount > 0) {
-        if (emailCheck.rows[0].verify_token) {
-          failed(res, {
-            code: 400,
-            status: 'failed',
-            message: 'Your token already changed',
-            error: [],
-          });
-        } else {
-          const verifyToken = crypto.randomBytes(64).toString('hex');
-          await authModel.updateToken(verifyToken, emailCheck.rows[0].id);
-          sendPassword.sendConfirmationEmail(
-            email,
-            verifyToken,
-            emailCheck.rows[0].photo
-          );
-          success(res, {
-            code: 200,
-            status: 'success',
-            message: 'Password reset has been sent via email',
-            data: req.body,
-          });
-        }
+      const verifyToken = crypto.randomBytes(64).toString('hex');
+        await authModel.updateToken(verifyToken, emailCheck.rows[0].id);
+        sendPassword.sendConfirmationEmail(
+          email,
+          verifyToken,
+          emailCheck.rows[0].photo
+        );
+        success(res, {
+          code: 200,
+          status: 'success',
+          message: 'Password reset has been sent via email',
+          data: req.body,
+        });  
       }
     } catch (error) {
       failed(res, {
