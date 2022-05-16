@@ -3,8 +3,9 @@ const bcrypt = require('bcrypt');
 const { v4: uuidv4 } = require('uuid');
 const crypto = require('crypto');
 const authModel = require('../models/auth.model');
-
+const { APP_CLIENT } = require('../helpers/env');
 const sendEmail = require('../helpers/sendEmail');
+const sendPassword = require('../helpers/sendPassword');
 const jwtToken = require('../helpers/generateJWTtoken');
 
 module.exports = {
@@ -162,12 +163,11 @@ module.exports = {
       authModel
         .verifyingUser(token)
         .then((result) => {
-          success(res, {
-            code: 200,
-            status: 'success',
-            message: 'email is activated',
-            data: [],
-            paggination: [],
+          res.render
+          res.render('./welcome.ejs', {
+            username: verifyTokenCheck.rows[0].username,
+            url_home: `${APP_CLIENT}`,
+            url_login: `${APP_CLIENT}/login`,
           });
         })
         .catch((err) => {
@@ -191,4 +191,97 @@ module.exports = {
       });
     }
   },
+  forgotPassword: async (req, res) => {
+    try {
+      const { email } = req.body;
+      const emailCheck = await authModel.emailCheck(email);
+      if (emailCheck.rowCount > 0) {
+        if (emailCheck.rows[0].verify_token) {
+          failed(res, {
+            code: 400,
+            status: 'failed',
+            message: 'Your token already changed',
+            error: [],
+          });
+        } else {
+          const verifyToken = crypto.randomBytes(64).toString('hex');
+          await authModel.updateToken(verifyToken, emailCheck.rows[0].id);
+          sendPassword.sendConfirmationEmail(
+            email,
+            verifyToken,
+            emailCheck.rows[0].photo
+          );
+
+          success(res, {
+            code: 200,
+            status: 'success',
+            message: 'Password reset has been sent via email',
+            data: req.body,
+          });
+        }
+        
+      }
+    } catch (error) {
+      failed(res, {
+        code: 500,
+        status: 'error',
+        message: error.message,
+        error: [],
+      });
+    }
+  },
+  resetPassword: async (req, res) => {
+    try {
+      const { token } = req.query;
+      const verifyTokenCheck = await authModel.verifyTokenCheck(token);
+      if (verifyTokenCheck.rowCount > 0) {
+        const passwordHashed = await bcrypt.hash(req.body.password, 10);
+        await authModel.resetPassword(
+          passwordHashed, verifyTokenCheck.rows[0].id
+        );
+        await authModel.updateToken(null, verifyTokenCheck.rows[0].id);
+
+        success(res, {
+          code: 200,
+          status: 'failed',
+          message: 'Reset Password Sucess',
+          data: [],
+        });
+        // authModelverifyTokenCheck.rows[0].id
+        //   .verifyingUser(token)
+        //   .then((result) => {
+        //     res.render;
+        //     res.render('./welcome.ejs', {
+        //       user_firstname: 'ta',
+        //       confirm_link: 'ta',
+        //     });
+        //   })
+        //   .catch((err) => {
+        //     failed(res, {
+        //       code: 500,
+        //       status: 'error',
+        //       message: err.message,
+        //       error: [],
+        //     });
+        //   });
+      } else {
+        const err = {
+          message: 'verify token is invalid',
+        };
+        failed(res, {
+          code: 500,
+          status: 'error',
+          message: err.message,
+          error: [],
+        });
+      }
+    } catch (error) {
+      failed(res, {
+        code: 500,
+        status: 'error',
+        message: error.message,
+        error: [],
+      });
+    }
+  }
 };

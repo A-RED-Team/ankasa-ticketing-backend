@@ -89,5 +89,25 @@ const authModel = {
       );
     });
   },
+  updateToken: (verifyToken, id) => {
+    return new Promise((resolve, reject) => {
+      db.query(`UPDATE users SET verify_token=$1 WHERE id=$2`, [verifyToken, id], (err, result) => {
+        if (err) {
+          reject(err);
+        }
+        resolve(result);
+      });
+    })
+  },
+  resetPassword: (password, id) => {
+    return new Promise((resolve, reject) => {
+      db.query(`UPDATE users SET password=$1 WHERE id=$2`, [password, id], (err, result) => {
+        if (err) {
+          reject(err);
+        }
+        resolve(result);
+      })
+    })
+  }
 };
 module.exports = authModel;

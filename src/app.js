@@ -27,6 +27,10 @@ app.use(bodyParser.urlencoded({ extended: true }));
 // parse application/json
 app.use(bodyParser.json());
 
+// ejs
+app.set('views', `${__dirname}/views`);
+app.set('view engine', 'ejs');
+
 app.use(express.static('public'));
 
 module.exports = app;
