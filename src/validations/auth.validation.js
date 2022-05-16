@@ -32,7 +32,36 @@ const loginValidation = [
   check('password', 'Password required').not().isEmpty(),
 ];
 
+const forgotValidation = [
+  // email
+  check('email', 'Email required').not().isEmpty(),
+  check('email', 'please enter email correctly').isEmail(),
+];
+
+const resetValidation = [
+  // password
+  check('password', 'Password required').not().isEmpty(),
+  check('password', 'Password require 8 or more characters').isLength({
+    min: 8,
+  }),
+  check(
+    'password',
+    'Password must include one lowercase character, one uppercase character, a number, and a special character.'
+  ).matches(/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-zA-Z0-9]).{8,}$/, 'i'),
+
+  // confirm password
+  check('passwordConfirmation', 'Password confirmation required').not().isEmpty(),
+  check('passwordConfirmation').custom((value, {req}) => {
+    if (value !== req.body.password) {
+      throw new Error('Password confirmation does not match password')
+    }
+    return true
+  })
+];
+
 module.exports = {
   registerValidation,
   loginValidation,
+  forgotValidation,
+  resetValidation
 };
