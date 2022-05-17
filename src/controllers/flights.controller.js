@@ -661,6 +661,7 @@ module.exports = {
       }
 
       // for check pic is active
+      const idPicCheck = await flightsModel.checkPicId(idPic);
       if (idPicCheck.rows[0].is_active == 0) {
         const err = {
           message: `pic with id ${idPic} is non active`,
