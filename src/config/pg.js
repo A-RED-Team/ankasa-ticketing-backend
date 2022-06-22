@@ -18,7 +18,7 @@ const config = {
 
 if (NODE_ENV === 'production') {
   config.ssl = {
-    rejectUnauthorized: true,
+    rejectUnauthorized: false,
   };
 }
 
