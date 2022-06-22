@@ -4,7 +4,7 @@ module.exports = {
   // application
   APP_NAME: process.env.APP_NAME || 'Ankasa Ticketing',
   APP_VERSION: process.env.APP_VERSION || '1.0.0',
-  APP_STATUS: process.env.APP_STATUS || 'development',
+  NODE_ENV: process.env.NODE_ENV || 'development',
   PORT: process.env.PORT || 4000,
   // database
   PG_HOST: process.env.PG_HOST,
@@ -19,6 +19,6 @@ module.exports = {
   GMAIL_PASS: process.env.GMAIL_PASS,
   EMAIL_SENDER: process.env.EMAIL_SENDER,
   //api
-  APP_URL: process.env.APP_URL,
-  APP_CLIENT: process.env.APP_CLIENT
+  API_URL: process.env.API_URL,
+  APP_CLIENT: process.env.APP_CLIENT,
 };
