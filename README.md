@@ -12,7 +12,7 @@
   <p align="center">
     Create a Node.js app for building flight booking RESTful APIs using Express.
     <br />
-    <a href="https://github.com/A-RED-Team/ankasa-ticketing-backend"><strong>Explore the docs »</strong></a>
+    <a href="#table-of-contents"><strong>Explore the docs »</strong></a>
     <br />
     <br />
     <a href="https://ankasa-ticketing-app.herokuapp.com/">View Web Service</a>
@@ -24,6 +24,7 @@
 </div>
 
 <!-- TABLE OF CONTENTS -->
+## Table of Contents
 <details>
   <summary>Table of Contents</summary>
   <ol>
