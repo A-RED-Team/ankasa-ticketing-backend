@@ -24,7 +24,9 @@
 </div>
 
 <!-- TABLE OF CONTENTS -->
+
 ## Table of Contents
+
 <details>
   <summary>Table of Contents</summary>
   <ol>
@@ -53,11 +55,15 @@
 </details>
 
 <!-- ABOUT THE PROJECT -->
+
 ## About The Project
+
 Create a Node.js app for building flight booking RESTful APIs using Express.
 
 ### Built With
+
 This app was built with some technologies below:
+
 - [Node.js](https://nodejs.org/en/)
 - [Express.js](https://expressjs.com/)
 - [JSON Web Tokens](https://jwt.io/)
@@ -68,33 +74,41 @@ This app was built with some technologies below:
 <p align="right">(<a href="#top">back to top</a>)</p>
 
 <!-- GETTING STARTED -->
+
 ## Getting Started
 
 ### Prerequisites
 
 This is an example of how to list things you need to use the software and how to install them.
 
-* [Node.js](https://nodejs.org/en/download/)
+- [Node.js](https://nodejs.org/en/download/)
 
 ### Requirements
-* [Node.js](https://nodejs.org/en/)
-* [Postman](https://www.getpostman.com/) for testing
-* [Database](./blanja.sql)
+
+- [Node.js](https://nodejs.org/en/)
+- [Postman](https://www.getpostman.com/) for testing
+- [Database](./blanja.sql)
 
 ### Installation
 
 - Clone the Repo
+
 ```
 git clone https://github.com/A-RED-Team/ankasa-ticketing-backend.git
 ```
+
 - Go To Folder Repo
+
 ```
 cd ankasa-ticketing-backend
 ```
+
 - Install Module
+
 ```
 npm install
 ```
+
 - Make a new database and import [ankasa_ticketing.sql](./blanja.sql)
 - <a href="#setup-env-example">Setup .env</a>
 - Type ` npm run dev` To Start Development
@@ -111,7 +125,7 @@ Create .env file in your root project folder.
 # app
 APP_NAME = [APP_NAME]
 APP_VERSION = [APP_VERSION]
-APP_STATUS = [developement / production]
+NODE_ENV = [developement / production]
 APP_URL=
 APP_CLIENT=
 
@@ -141,6 +155,7 @@ You can view my Postman collection [here](https://www.postman.com/warped-shadow-
 <p align="right">(<a href="#top">back to top</a>)</p>
 
 <!-- CONTRIBUTING -->
+
 ## Contributing
 
 Contributions are what make the open source community such an amazing place to be learn, inspire, and create. Any contributions you make are **greatly appreciated**.
@@ -154,6 +169,7 @@ Contributions are what make the open source community such an amazing place to b
 <p align="right">(<a href="#top">back to top</a>)</p>
 
 ## Related Project
+
 :rocket: [`Backend Ankasa Ticketing`](https://github.com/A-RED-Team/ankasa-ticketing-backend)
 
 :rocket: [`Frontend Ankasa Ticketing`](https://github.com/A-RED-Team/ankasa-ticketing-frontend)
@@ -163,7 +179,7 @@ Contributions are what make the open source community such an amazing place to b
 :rocket: [`Web Service`](https://ankasa-ticketing-app.herokuapp.com/)
 
 :rocket: [`Demo Ankasa Ticketing`](https://bit.ly/ankasa-ticketing-app)
-      
+
 :rocket: [`Demo Ankasa Ticketing Admin`](https://ankasa-ticketing-admin.netlify.app/)
 
 <p align="right">(<a href="#top">back to top</a>)</p>
@@ -201,6 +217,7 @@ Contributions are what make the open source community such an amazing place to b
 <p align="right">(<a href="#top">back to top</a>)</p>
 
 ## License
+
 Distributed under the [MIT](/LICENSE) License.
 
 <p align="right">(<a href="#top">back to top</a>)</p>
