@@ -126,7 +126,7 @@ Create .env file in your root project folder.
 APP_NAME = [APP_NAME]
 APP_VERSION = [APP_VERSION]
 NODE_ENV = [developement / production]
-APP_URL=
+API_URL=
 APP_CLIENT=
 
 # database

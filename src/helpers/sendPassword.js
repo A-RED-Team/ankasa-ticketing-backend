@@ -1,7 +1,7 @@
 const nodemailer = require('nodemailer');
 const hbs = require('nodemailer-express-handlebars');
 const path = require('path');
-const { GMAIL_PASS, GMAIL_USER, APP_URL, APP_CLIENT } = require('./env');
+const { GMAIL_PASS, GMAIL_USER, API_URL, APP_CLIENT } = require('./env');
 
 const transport = nodemailer.createTransport({
   host: 'smtp.gmail.com',
