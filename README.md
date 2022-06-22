@@ -1,113 +1,203 @@
 <div id="top"></div>
-<p align="center">
-  <a href="https://github.com/altrawan/ankasa-ticketing-backend">
-    <img src="https://github.com/altrawan/ankasa-ticketing-frontend/raw/master/screenshoots/logo.png"  width="200px" alt="Logo">
+
+<!-- PROJECT LOGO -->
+<br />
+<div align="center">
+  <a href="https://github.com/A-RED-Team/ankasa-ticketing-backend">
+    <img src="https://lh3.googleusercontent.com/d/1j1a09gdu6PaysgD-U4teBGLPuDqN81zA" alt="Logo" width="200px">
   </a>
-</p>
-<h3 align="center">Ankasa Flight Booking API</h3>
-<p align="center">
-  A Web Service and Backend APIs for Ankasa Web Application.
-  <br/>
-  <a href="#table-of-contents">
-    <strong>Explore the docs »</strong>
-  </a>
-  <br /><br/>
-  <a href="https://ankasa-ticketing.herokuapp.com">View Web App</a>
-  ·
-  <a href="https://github.com/altrawan/ankasa-ticketing-backend/issues">Report Bug</a>
-  ·
-  <a href="https://github.com/altrawan/ankasa-ticketing-backend">Request Feature</a>
-</p>
-<p align="center">
-  <a href="https://reactjs.org/">
-    <img src="https://img.shields.io/badge/Express-v4.18-green?style=flat">
-  </a>                                  
-</p>
 
-## API Documentation
+  <h3 align="center">Ankasa Ticketing : Backend Flight Booking</h3>
 
-### Auth Endpoint
+  <p align="center">
+    Create a Node.js app for building flight booking RESTful APIs using Express.
+    <br />
+    <a href="https://github.com/A-RED-Team/ankasa-ticketing-backend"><strong>Explore the docs »</strong></a>
+    <br />
+    <br />
+    <a href="https://ankasa-ticketing-app.herokuapp.com/">View Web Service</a>
+    ·
+    <a href="https://github.com/A-RED-Team/ankasa-ticketing-backend/issues">Report Bug</a>
+    ·
+    <a href="https://github.com/A-RED-Team/ankasa-ticketing-backend/issues">Request Feature</a>
+  </p>
+</div>
 
-| No  | HTTP Method | URL                             | Operation                           |
-| --- | ----------- | ------------------------------- | ----------------------------------- |
-| 1   | GET         | /api/auth/verify-email          | Verify email user                   |
-| 2   | POST        | /api/auth/register              | Register new user                   |
-| 3   | POST        | /api/auth/login                 | Login user                          |
-| 4   | PUT         | /api/auth/forgot-password       | Forgot password                     |
-| 4   | PUT         | /api/auth/reset-password        | Reset password                      |
+<!-- TABLE OF CONTENTS -->
+<details>
+  <summary>Table of Contents</summary>
+  <ol>
+    <li>
+      <a href="#about-the-project">About The Project</a>
+      <ul>
+        <li><a href="#built-with">Built With</a></li>
+      </ul>
+    </li>
+    <li>
+      <a href="#getting-started">Getting Started</a>
+      <ul>
+        <li><a href="#prerequisites">Prerequisites</a></li>
+        <li><a href="#requirements">Requirements</a></li>
+        <li><a href="#installation">Installation</a></li>
+        <li><a href="#setup-env-example">Setup .env example</a></li>
+      </ul>
+    </li>
+    <li><a href="#rest-api">REST API</a></li>
+    <li><a href="#contributing">Contributing</a></li>
+    <li><a href="#related-project">Related Project</a></li>
+    <li><a href="#contributing">Contributing</a></li>
+    <li><a href="#contributors">Contributors</a></li>
+    <li><a href="#license">License</a></li>
+  </ol>
+</details>
 
-### User Endpoint
+<!-- ABOUT THE PROJECT -->
+## About The Project
+Create a Node.js app for building flight booking RESTful APIs using Express.
 
-| No  | HTTP Method | URL                             | Operation                                      |
-| --- | ----------- | ------------------------------- | -----------------------------------------------|
-| 1   | GET         | /api/users                      | Get all users (admin)                          |
-| 2   | GET         | /api/users/:id                  | Get detail user                                |
-| 3   | PUT         | /api/users/update/profile       | Update profile (user)                          |
-| 4   | PUT         | /api/users/update/photo         | Update photo (user)                            |
-| 5   | PUT         | /api/users/status/:id           | Change status user active or non active (admin)|
-| 6   | PUT         | /api/users/level/:id            | Change user to admin or customer (admin)       |
+### Built With
+This app was built with some technologies below:
+- [Node.js](https://nodejs.org/en/)
+- [Express.js](https://expressjs.com/)
+- [JSON Web Tokens](https://jwt.io/)
+- [Nodemailer](https://nodemailer.com/about/)
+- [PostgreSQL](https://www.postgresql.org/)
+- and other
 
-### PIC  Endpoint
+<p align="right">(<a href="#top">back to top</a>)</p>
 
-| No  | HTTP Method | URL                             | Operation                                      |
-| --- | ----------- | ------------------------------- | -----------------------------------------------|
-| 1   | GET         | /api/pic                        | Get all pic (admin)                            |
-| 2   | GET         | /api/pic/:id                    | Get detail pic                                 |
-| 3   | POST        | /api/pic                        | Add pic (admin)                                |
-| 4   | PUT         | /api/pic/:id                    | Update pic (admin)                             |
-| 5   | PUT         | /api/pic-status/:id             | Change pic active or non active (admin)        |
+<!-- GETTING STARTED -->
+## Getting Started
 
-### Flight Endpoint
+### Prerequisites
 
-| No  | HTTP Method | URL                             | Operation                                      |
-| --- | ----------- | ------------------------------- | -----------------------------------------------|
-| 1   | GET         | /api/flight                     | Get all flight (admin)                         |
-| 2   | GET         | /api/flight/:id                 | Get detail flight                              |
-| 3   | GET         | /api/flight-customers           | Get flight latest                              |
-| 4   | POST        | /api/flight                     | Create flight (admin)                          |
-| 5   | PUT         | /api/flight/:id                 | Update flight (admin)                          |
-| 6   | PUT         | /api/flight/mode/:id            | Change flight active or non active (admin)     |
-| 7   | DELETE      | /api/flight/:id                 | Delete flight (admin)                          |
+This is an example of how to list things you need to use the software and how to install them.
 
-### Airlane Endpoint
+* [Node.js](https://nodejs.org/en/download/)
 
-| No  | HTTP Method | URL                             | Operation                                         |
-| --- | ----------- | ------------------------------- | --------------------------------------------------|
-| 1   | GET         | /api/airline                    | Get all airline (admin)                           |
-| 2   | GET         | /api/airline/:id                | Get detail airline (admin)                        |
-| 3   | POST        | /api/airline                    | Create airline (admin)                            |
-| 4   | PUT         | /api/airline/:id                | Update airline (admin)                            |
-| 5   | PUT         | /api/airline/mode/:id           | Change status airline active or non active (admin)|
+### Requirements
+* [Node.js](https://nodejs.org/en/)
+* [Postman](https://www.getpostman.com/) for testing
+* [Database](./blanja.sql)
 
-### City Endpoint
+### Installation
 
-| No  | HTTP Method | URL                             | Operation                                      |
-| --- | ----------- | ------------------------------- | -----------------------------------------------|
-| 1   | GET         | /api/city                       | Get all city (admin)                           |
-| 2   | GET         | /api/city/public                | Get all city (user)                            |
-| 3   | GET         | /api/city/detail/:cityId        | Get detail city                                |
-| 4   | POST        | /api/city                       | Create city (admin)                            |
-| 5   | PUT         | /api/city/:cityId               | Update city (admin)                            |
-| 6   | PUT         | /api/city/status/:cityId        | Change status city active or non active (admin)|
+- Clone the Repo
+```
+git clone https://github.com/A-RED-Team/ankasa-ticketing-backend.git
+```
+- Go To Folder Repo
+```
+cd ankasa-ticketing-backend
+```
+- Install Module
+```
+npm install
+```
+- Make a new database and import [ankasa_ticketing.sql](./blanja.sql)
+- <a href="#setup-env-example">Setup .env</a>
+- Type ` npm run dev` To Start Development
+- Type ` npm run start` To Start Production
 
-### Country Endpoint
+<p align="right">(<a href="#top">back to top</a>)</p>
 
-| No  | HTTP Method | URL                             | Operation                                         |
-| --- | ----------- | ------------------------------- | --------------------------------------------------|
-| 1   | GET         | /api/country                    | Get all country (admin)                           |
-| 2   | GET         | /api/country/:countryId         | Get detail country                                |
-| 3   | POST        | /api/country                    | Create country (admin)                            |
-| 4   | PUT         | /api/country/:countryId         | Update country (admin)                            |
-| 5   | PUT         | /api/country/status/:countryId  | Change status country active or non active (admin)|
+### Setup .env example
 
-### Booking Endpoint
+Create .env file in your root project folder.
 
-| No  | HTTP Method | URL                             | Operation                                      |
-| --- | ----------- | ------------------------------- | -----------------------------------------------|
-| 1   | GET         | /api/booking                    | Get all booking (admin)                        |
-| 2   | GET         | /api/mybooking                  | Get all my booking (user)                      |
-| 3   | GET         | /api/booking/:bookingId         | Get detail booking (admin)                     |
-| 4   | GET         | /api/booking/byuser/:bookingId  | Get detail booking (user)                      |
-| 5   | POST        | /api/booking                    | Create booking (user)                          |
-| 6   | PUT         | /api/booking/payment/:bookingId | Update booking payment (user)                  |
-| 7   | PUT         | /api/booking/status/:bookingId  | Change booking active or non active (admin)    |
+```env
+# app
+# app
+APP_NAME = [APP_NAME]
+APP_VERSION = [APP_VERSION]
+APP_STATUS = [developement / production]
+APP_URL=
+APP_CLIENT=
+
+# database
+PG_HOST=
+PG_USER=
+PG_PASSWORD=
+PG_DATABASE=
+PG_PORT=
+
+# jwt
+JWT_SECRET=rahasia
+
+# gmail
+GMAIL_USER=
+GMAIL_PASS=
+```
+
+<p align="right">(<a href="#top">back to top</a>)</p>
+
+## REST API
+
+You can view my Postman collection [here](https://www.postman.com/warped-shadow-374852/workspace/blanja/overview)
+</br>
+[![Run in Postman](https://run.pstmn.io/button.svg)](https://app.getpostman.com/run-collection/19659051-cdd14dbd-b11b-492b-b4b5-83065267d690?action=collection%2Ffork&collection-url=entityId%3D19659051-cdd14dbd-b11b-492b-b4b5-83065267d690%26entityType%3Dcollection%26workspaceId%3D2d0c24df-fbb7-405f-93af-c4ef984f8428)
+
+<p align="right">(<a href="#top">back to top</a>)</p>
+
+<!-- CONTRIBUTING -->
+## Contributing
+
+Contributions are what make the open source community such an amazing place to be learn, inspire, and create. Any contributions you make are **greatly appreciated**.
+
+1. Fork the Project
+2. Create your Feature Branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your Changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the Branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
+
+<p align="right">(<a href="#top">back to top</a>)</p>
+
+## Related Project
+:rocket: [`Backend Ankasa Ticketing`](https://github.com/A-RED-Team/ankasa-ticketing-backend)
+
+:rocket: [`Frontend Ankasa Ticketing`](https://github.com/A-RED-Team/ankasa-ticketing-frontend)
+
+:rocket: [`Frontend Ankasa Ticketing Admin`](https://github.com/A-RED-Team/ankasa-ticketing-admin)
+
+:rocket: [`Demo Ankasa Ticketing`](https://bit.ly/ankasa-ticketing-app)
+      
+:rocket: [`Demo Ankasa Ticketing Admin`](https://ankasa-ticketing-admin.netlify.app/)
+
+<p align="right">(<a href="#top">back to top</a>)</p>
+
+## Contributors
+
+<center>
+  <table>
+    <tr>
+      <td align="center">
+        <a href="https://github.com/altrawan">
+          <img width="100" src="https://avatars.githubusercontent.com/u/39686865?v=4" alt="Nur Muhammad Alif Putra Setiawan"><br/>
+          <sub><b>Nur Muhammad Alif Putra Setiawan</b></sub> <br/>
+          <sub>Project Manager | Full Stack Web Developer</sub>
+        </a>
+      </td>
+      <td align="center">
+        <a href="https://github.com/janexmgd">
+          <img width="100" src="https://avatars.githubusercontent.com/u/43938494?v=4" alt="Denny Wahyu Prasetio"><br/>
+          <sub><b>Denny Wahyu Prasetio</b></sub> <br/>
+          <sub>Full Stack Web Developer</sub>
+        </a>
+      </td>
+      <td align="center">
+        <a href="https://github.com/rifanhidayatulloh">
+          <img width="100" src="https://avatars.githubusercontent.com/u/87940197?v=4" alt="Rif'an Hidayatulloh"><br/>
+          <sub><b>Rif'an Hidayatulloh</b></sub> <br/>
+          <sub>Back End Web Developer</sub>
+        </a>
+      </td>
+    </tr>
+  </table>
+</center>
+
+<p align="right">(<a href="#top">back to top</a>)</p>
+
+## License
+Distributed under the [MIT](/LICENSE) License.
+
+<p align="right">(<a href="#top">back to top</a>)</p>
