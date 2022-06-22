@@ -1,7 +1,7 @@
 const nodemailer = require('nodemailer');
 const hbs = require('nodemailer-express-handlebars');
 const path = require('path');
-const { GMAIL_PASS, GMAIL_USER, APP_URL } = require('./env');
+const { GMAIL_PASS, GMAIL_USER, API_URL } = require('./env');
 
 const transport = nodemailer.createTransport({
   host: 'smtp.gmail.com',
@@ -34,7 +34,7 @@ module.exports = {
       text: 'Confirm Your email Ankasa Ticketing Account',
       template: 'confirm-email',
       context: {
-        url: `${APP_URL}/auth/verify-email?token=${confirmationCode}`,
+        url: `${API_URL}/auth/verify-email?token=${confirmationCode}`,
         username: `${username}`,
       },
     };

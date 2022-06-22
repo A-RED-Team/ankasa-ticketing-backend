@@ -37,11 +37,7 @@ app.set('view engine', 'ejs');
 app.use(express.static('public'));
 
 app.get('/', (req, res) =>
-  res.send(
-    `${APP_NAME} API ${APP_VERSION} - ${
-      NODE_ENV[0].toUpperCase() + NODE_ENV.slice(1)
-    }`
-  )
+  res.send(`${APP_NAME} API - ${NODE_ENV[0].toUpperCase() + NODE_ENV.slice(1)}`)
 );
 
 app.use(require('./src/routes/auth.route'));

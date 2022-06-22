@@ -19,6 +19,6 @@ module.exports = {
   GMAIL_PASS: process.env.GMAIL_PASS,
   EMAIL_SENDER: process.env.EMAIL_SENDER,
   //api
-  APP_URL: process.env.APP_URL,
+  API_URL: process.env.API_URL,
   APP_CLIENT: process.env.APP_CLIENT,
 };

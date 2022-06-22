@@ -1,24 +1,24 @@
 const { Pool } = require('pg');
 const {
   NODE_ENV,
-  DB_HOST,
-  DB_USER,
-  DB_PASSWORD,
-  DB_NAME,
-  DB_PORT,
+  PG_HOST,
+  PG_USER,
+  PG_PASSWORD,
+  PG_DATABASE,
+  PG_PORT,
 } = require('../helpers/env');
 
 const config = {
-  host: DB_HOST,
-  user: DB_USER,
-  password: DB_PASSWORD,
-  database: DB_NAME,
-  port: DB_PORT,
+  host: PG_HOST,
+  user: PG_USER,
+  password: PG_PASSWORD,
+  database: PG_DATABASE,
+  port: PG_PORT,
 };
 
 if (NODE_ENV === 'production') {
   config.ssl = {
-    rejectUnauthorized: false,
+    rejectUnauthorized: true,
   };
 }
 
