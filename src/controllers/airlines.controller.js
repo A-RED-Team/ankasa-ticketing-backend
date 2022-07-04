@@ -1,10 +1,9 @@
 const { success, failed } = require('../helpers/response');
-
 const { v4: uuidv4 } = require('uuid');
-
 const deleteFile = require('../utils/deleteFile');
-
 const airlinesModel = require('../models/airlines.model');
+const uploadGoogleDrive = require('../utils/uploadGoogleDrive');
+const deleteGoogleDrive = require('../utils/deleteGoogleDrive');
 
 module.exports = {
   airlinesAll: async (req, res) => {
@@ -182,6 +181,9 @@ module.exports = {
     try {
       const { name } = req.body;
       if (!req.file) {
+        if (req.file) {
+          deleteFile(req.file.path);
+        }
         const err = {
           message: 'Image is required',
         };
@@ -195,6 +197,9 @@ module.exports = {
       }
       const airlinesNameCheck = await airlinesModel.airlinesNameCheck(name);
       if (airlinesNameCheck.rowCount > 0) {
+        if (req.file) {
+          deleteFile(req.file.path);
+        }
         const err = {
           message: 'Name is already exist',
         };
@@ -207,8 +212,17 @@ module.exports = {
         return;
       }
       const id = uuidv4();
-      const image = req.file.filename;
+      // const image = req.file.filename;
       const isActive = 1;
+      // upload image to google drive
+      let image = null;
+      if (req.file) {
+        // upload image to google drive
+        const photoGd = await uploadGoogleDrive(req.file);
+        image = photoGd.id;
+        // remove image after upload
+        deleteFile(req.file.path);
+      }
       // insert data
       const data = {
         id,
@@ -226,6 +240,9 @@ module.exports = {
         paggination: [],
       });
     } catch (error) {
+      if (req.file) {
+        deleteFile(req.file.path);
+      }
       failed(res, {
         code: 500,
         status: 'error',
@@ -239,12 +256,14 @@ module.exports = {
     try {
       const id = req.params.id;
       const { name } = req.body;
-      let image;
       const airlinesData = await airlinesModel.airlinesDetailData(id);
       const airlinesNameCheck = await airlinesModel.airlinesNameCheck(name);
       // check id
       const checkId = await airlinesModel.airlinesDetailData(id);
       if (checkId.rowCount === 0) {
+        if (req.file) {
+          deleteFile(req.file.path);
+        }
         const err = {
           message: `Airlines with id ${id} not found`,
         };
@@ -259,6 +278,9 @@ module.exports = {
       // airlines name check
       if (name != airlinesData.rows[0].name) {
         if (airlinesNameCheck.rowCount > 0) {
+          if (req.file) {
+            deleteFile(req.file.path);
+          }
           const err = {
             message: 'Name is already exist',
           };
@@ -271,11 +293,18 @@ module.exports = {
           return;
         }
       }
+      // upload image to google drive
+      let { image } = airlinesData.rows[0];
       if (req.file) {
-        image = req.file.filename;
-        deleteFile(`public/uploads/airlines/${airlinesData.rows[0].image}`);
-      } else {
-        image = airlinesData.rows[0].image;
+        if (image) {
+          // remove old image except default image
+          deleteGoogleDrive(image);
+        }
+        // upload new image to google drive
+        const photoGd = await uploadGoogleDrive(req.file);
+        image = photoGd.id;
+        // remove image after upload
+        deleteFile(req.file.path);
       }
       const date = new Date();
       const dateOffset = new Date(
@@ -298,6 +327,9 @@ module.exports = {
         paggination: [],
       });
     } catch (error) {
+      if (req.file) {
+        deleteFile(req.file.path);
+      }
       failed(res, {
         code: 500,
         status: 'error',
