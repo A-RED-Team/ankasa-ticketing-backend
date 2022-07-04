@@ -17,7 +17,7 @@ const {
 const validation = require('../middlewares/validation');
 
 // import middleware upload
-const airlineUpload = require('../middlewares/airlineUpload');
+const upload = require('../middlewares/upload');
 
 // import controller
 const {
@@ -40,7 +40,7 @@ router
     '/airline',
     jwtAuth,
     isAdmin,
-    airlineUpload,
+    upload,
     createValidation,
     validation,
     airlinesInsert
@@ -49,7 +49,7 @@ router
     '/airline/:id',
     jwtAuth,
     isAdmin,
-    airlineUpload,
+    upload,
     updateValidation,
     validation,
     airlinesUpdate
