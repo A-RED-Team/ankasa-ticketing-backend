@@ -5,7 +5,7 @@ const {
   registerValidation,
   loginValidation,
   forgotValidation,
-  resetValidation
+  resetValidation,
 } = require('../validations/auth.validation');
 const validation = require('../middlewares/validation');
 const {
@@ -13,28 +13,16 @@ const {
   login,
   verifyEmail,
   forgotPassword,
-  resetPassword
+  resetPassword,
 } = require('../controllers/auth.controller');
-
 
 const router = express.Router();
 
 router
-  .get('/auth/verify-email', verifyEmail) //email verify endpoint
+  .get('/auth/activation/:token', verifyEmail) //email verify endpoint
   .post('/auth/register', registerValidation, validation, register) // register endpoint
-  .post('/auth/login', loginValidation, validation, login) // login endpoint
-  .put(
-    '/auth/forgot-password',
-    isVerified,
-    forgotValidation,
-    validation,
-    forgotPassword
-  ) // forgot password end point
-  .put(
-    '/auth/reset-password',
-    resetValidation,
-    validation,
-    resetPassword
-  ); // reset password end point 
+  .post('/auth/login', isVerified, loginValidation, validation, login) // login endpoint
+  .put('/auth/forgot', isVerified, forgotValidation, validation, forgotPassword) // forgot password end point
+  .put('/auth/reset/:token', resetValidation, validation, resetPassword); // reset password end point
 
 module.exports = router;

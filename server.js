@@ -41,7 +41,7 @@ app.get('/', (req, res) =>
 );
 
 app.use(require('./src/routes/auth.route'));
-app.use(require('./src/routes/user.router'));
+app.use(require('./src/routes/user.route'));
 app.use(require('./src/routes/booking.route'));
 app.use(require('./src/routes/flights.route'));
 app.use(require('./src/routes/country.route'));

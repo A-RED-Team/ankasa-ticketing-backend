@@ -11,17 +11,15 @@ module.exports = (req, res, next) => {
     errors.array().map((err) => extractedErrors.push(err.msg));
 
     return failed(res, {
-      code: 400,
-      status: 'failed',
+      code: 422,
       message: 'validation failed',
       error: extractedErrors,
     });
   } catch (error) {
     failed(res, {
       code: 500,
-      status: 'error',
-      message: 'internal server error',
-      error: error.message,
+      message: err.message,
+      error: 'Internal Server Error',
     });
   }
 };
