@@ -1,276 +1,220 @@
-const { success, failed } = require('../helpers/response');
 const bcrypt = require('bcrypt');
 const { v4: uuidv4 } = require('uuid');
 const crypto = require('crypto');
+const { success, failed } = require('../helpers/response');
+const jwtToken = require('../utils/generateJwtToken');
 const authModel = require('../models/auth.model');
-const { APP_CLIENT } = require('../helpers/env');
-const sendEmail = require('../helpers/sendEmail');
-const sendPassword = require('../helpers/sendPassword');
-const jwtToken = require('../helpers/generateJWTtoken');
+const sendEmail = require('../utils/sendEmail');
+const { APP_NAME, EMAIL_FROM, API_URL, APP_CLIENT } = require('../helpers/env');
+const activateAccount = require('../templates/confirm-email');
+const resetAccount = require('../templates/reset-password');
 
 module.exports = {
   register: async (req, res) => {
     try {
       const { username, email, password } = req.body;
-      const usernameCheck = await authModel.usernameCheck(username);
-      if (usernameCheck.rowCount > 0) {
-        const err = {
-          message: 'Username is already exist',
-        };
-        failed(res, {
-          code: 500,
-          status: 'error',
-          message: err.message,
-          error: [],
+      const checkUsername = await authModel.findBy('username', username);
+      if (checkUsername.rowCount) {
+        return failed(res, {
+          code: 409,
+          message: 'Username already exist',
+          error: 'Conflict',
         });
-        return;
       }
 
-      const emailCheck = await authModel.emailCheck(email);
+      const checkEmail = await authModel.findBy('email', email);
       // for check email
-      if (emailCheck.rowCount > 0) {
-        const err = {
-          message: 'Email is already exist',
-        };
-        failed(res, {
-          code: 500,
-          status: 'error',
-          message: err.message,
-          error: [],
+      if (checkEmail.rowCount) {
+        return failed(res, {
+          code: 409,
+          message: 'Email already exist',
+          error: 'Conflict',
         });
-        return;
       }
-      const id = uuidv4();
-      const passwordHashed = await bcrypt.hash(password, 10);
-      const verifyToken = crypto.randomBytes(64).toString('hex');
-      const isVerified = 0;
-      const isActive = 0;
-      const level = 0;
-      const photo = 'profile-default.png';
 
       const data = {
-        id,
+        id: uuidv4(),
         username,
         email,
-        passwordHashed,
-        verifyToken,
-        isVerified,
-        isActive,
-        level,
-        photo,
+        password: await bcrypt.hash(password, 10),
+        verifyToken: crypto.randomBytes(64).toString('hex'),
       };
+
+      // send email
+      const templateEmail = {
+        from: `"${APP_NAME}" <${EMAIL_FROM}>`,
+        to: email.toLowerCase(),
+        subject: 'Activate Your Account!',
+        html: activateAccount(
+          `${API_URL}auth/activation/${verifyToken}`,
+          username
+        ),
+      };
+      sendEmail(templateEmail);
+
       // insert data
-      const out = await authModel.registerData(data);
-      sendEmail.sendConfirmationEmail(email, verifyToken, username);
+      const result = await authModel.register(data);
+
       success(res, {
         code: 200,
-        status: 'success',
         message: 'create user sucesss, please activate your email',
-        data: data,
-        paggination: [],
+        data: result,
       });
     } catch (error) {
       failed(res, {
         code: 500,
-        status: 'failed',
         message: error.message,
-        error: [],
+        error: 'Internal Server Error',
+      });
+    }
+  },
+  verifyEmail: async (req, res) => {
+    try {
+      const { token } = req.params;
+      const checkToken = await authModel.findBy('verify_token', token);
+      if (checkToken.rowCount) {
+        if (!checkToken.rowCount) {
+          res.send(`
+          <div>
+            <h1>Activation Failed</h1>
+            <h3>Token invalid</h3>
+          </div>`);
+          return;
+        }
+
+        await authModel.activateEmail(token);
+
+        res.render('./welcome.ejs', {
+          email: checkToken.rows[0].username,
+          url_home: `${APP_CLIENT}`,
+          url_login: `${APP_CLIENT}/login`,
+        });
+      } else {
+        failed(res, {
+          code: 404,
+          message: 'Token not found',
+          error: 'Not Found',
+        });
+      }
+    } catch (error) {
+      failed(res, {
+        code: 500,
+        message: error.message,
+        error: 'Internal Server Error',
       });
     }
   },
   login: async (req, res) => {
     try {
       const { username, password } = req.body;
-      const usernameCheck = await authModel.usernameCheck(username);
+
+      const user = await authModel.findBy('username', username);
       // cek apakah sudah register?
-      if (usernameCheck.rowCount >= 1) {
-        // cek apakah sudah veifikasi email
-        if (usernameCheck.rows[0].verify_token === null) {
-          // cek apakah akun active?
-          if (usernameCheck.rows[0].is_active == 1) {
-            bcrypt
-              .compare(password, usernameCheck.rows[0].password)
-              .then(async (match) => {
-                // compare berhasil?
-                if (match) {
-                  // login sukses dan memberi token
-                  const token = await jwtToken(usernameCheck.rows[0]);
-                  success(res, {
-                    code: 200,
-                    status: 'success',
-                    message: 'login success',
-                    token: token,
-                  });
-                } else {
-                  // login gagal
-                  const err = {
-                    message: 'wrong username or password',
-                  };
-                  failed(res, {
-                    code: 500,
-                    status: 'error',
-                    message: err.message,
-                    error: [],
-                  });
-                }
-              });
+      if (user.rowCount > 0) {
+        // cek apakah akun active?
+        if (user.rows[0].is_active) {
+          const match = await bcrypt.compare(password, user.rows[0].password);
+
+          if (match) {
+            const jwt = jwtToken(user.rows[0]);
+
+            return success(res, {
+              code: 200,
+              message: 'Login sucess',
+              token: jwt,
+            });
           } else {
-            const err = {
-              message: 'your account is disabled',
-            };
-            failed(res, {
-              code: 500,
-              status: 'error',
-              message: err.message,
-              error: [],
+            return failed(res, {
+              code: 401,
+              message: 'Wrong username or password',
+              error: 'Unauthorized',
             });
           }
         } else {
-          const err = {
-            message: 'e-mail is not verified',
-          };
-          failed(res, {
-            code: 500,
-            status: 'error',
-            message: err.message,
-            error: [],
+          return failed(res, {
+            code: 403,
+            message: 'Your account has been banned',
+            error: 'Forbidden',
           });
         }
       } else {
-        const err = {
-          message: 'username not registered',
-        };
-        failed(res, {
-          code: 500,
-          status: 'error',
-          message: err.message,
-          error: [],
+        return failed(res, {
+          code: 401,
+          message: 'Wrong username or password',
+          error: 'Unauthorized',
         });
       }
     } catch (error) {
       failed(res, {
         code: 500,
-        status: 'error',
         message: error.message,
-        error: [],
-      });
-    }
-  },
-  verifyEmail: async (req, res) => {
-    const { token } = req.query;
-    const verifyTokenCheck = await authModel.verifyTokenCheck(token);
-    if (verifyTokenCheck.rowCount > 0) {
-      authModel
-        .verifyingUser(token)
-        .then((result) => {
-          res.render
-          res.render('./welcome.ejs', {
-            username: verifyTokenCheck.rows[0].username,
-            url_home: `${APP_CLIENT}`,
-            url_login: `${APP_CLIENT}/login`,
-          });
-        })
-        .catch((err) => {
-          console.log(err);
-          failed(res, {
-            code: 500,
-            status: 'error',
-            message: err.message,
-            error: [],
-          });
-        });
-    } else {
-      const err = {
-        message: 'verify token is invalid',
-      };
-      failed(res, {
-        code: 500,
-        status: 'error',
-        message: err.message,
-        error: [],
+        error: 'Internal Server Error',
       });
     }
   },
   forgotPassword: async (req, res) => {
     try {
       const { email } = req.body;
-      const emailCheck = await authModel.emailCheck(email);
-      if (emailCheck.rowCount > 0) {
-      const verifyToken = crypto.randomBytes(64).toString('hex');
-        await authModel.updateToken(verifyToken, emailCheck.rows[0].id);
-        sendPassword.sendConfirmationEmail(
-          email,
+      const user = await authModel.findBy('email', email);
+
+      if (user.rowCount) {
+        const verifyToken = crypto.randomBytes(30).toString('hex');
+
+        // send email for reset password
+        const templateEmail = {
+          from: `"${APP_NAME}" <${EMAIL_FROM}>`,
+          to: email.toLowerCase(),
+          subject: 'Reset Your Password!',
+          html: resetAccount(`${APP_CLIENT}auth/reset/${verifyToken}`),
+        };
+        sendEmail(templateEmail);
+
+        const result = await authModel.updateToken(
           verifyToken,
-          emailCheck.rows[0].photo
+          user.rows[0].id
         );
+
         success(res, {
           code: 200,
-          status: 'success',
           message: 'Password reset has been sent via email',
-          data: req.body,
-        });  
+          data: result,
+        });
       }
     } catch (error) {
       failed(res, {
         code: 500,
-        status: 'error',
         message: error.message,
-        error: [],
+        error: 'Internal Server Error',
       });
     }
   },
   resetPassword: async (req, res) => {
     try {
-      const { token } = req.query;
-      const verifyTokenCheck = await authModel.verifyTokenCheck(token);
-      if (verifyTokenCheck.rowCount > 0) {
-        const passwordHashed = await bcrypt.hash(req.body.password, 10);
-        await authModel.resetPassword(
-          passwordHashed, verifyTokenCheck.rows[0].id
-        );
-        await authModel.updateToken(null, verifyTokenCheck.rows[0].id);
+      const { token } = req.params;
+      const user = await authModel.findBy('verify_email', token);
 
-        success(res, {
-          code: 200,
-          status: 'failed',
-          message: 'Reset Password Sucess',
-          data: [],
-        });
-        // authModelverifyTokenCheck.rows[0].id
-        //   .verifyingUser(token)
-        //   .then((result) => {
-        //     res.render;
-        //     res.render('./welcome.ejs', {
-        //       user_firstname: 'ta',
-        //       confirm_link: 'ta',
-        //     });
-        //   })
-        //   .catch((err) => {
-        //     failed(res, {
-        //       code: 500,
-        //       status: 'error',
-        //       message: err.message,
-        //       error: [],
-        //     });
-        //   });
-      } else {
-        const err = {
-          message: 'verify token is invalid',
-        };
-        failed(res, {
-          code: 500,
-          status: 'error',
-          message: err.message,
-          error: [],
+      if (!user.rowCount) {
+        return failed(res, {
+          code: '401',
+          message: 'Invalid token',
+          error: 'Unauthorized',
         });
       }
+
+      const password = await bcrypt.hash(req.body.password, 10);
+      await authModel.updatePassword(password, user.rows[0].id);
+
+      return success(res, {
+        code: 200,
+        message: 'Reset Password Success',
+        data: result,
+      });
     } catch (error) {
       failed(res, {
         code: 500,
-        status: 'error',
         message: error.message,
-        error: [],
+        error: 'Internal Server Error',
       });
     }
-  }
+  },
 };

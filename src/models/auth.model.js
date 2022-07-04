@@ -1,85 +1,41 @@
 const db = require('../config/pg');
 
 const authModel = {
-  loginData: (email) => {
+  register: (data) => {
+    return new Promise((resolve, reject) => {
+      const { id, username, email, password, verifyToken } = data;
+      db.query(
+        `INSERT INTO users (id, username, email, password, verify_token, is_verified, is_active, level, photo)
+        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)`,
+        [id, username, email, password, verifyToken, 0, 0, 0, null],
+        (err) => {
+          if (err) {
+            reject(new Error(`SQL : ${err.message}`));
+          }
+          resolve(data);
+        }
+      );
+    });
+  },
+  findBy: (field, data) => {
     return new Promise((resolve, reject) => {
       db.query(
-        `SELECT password,is_active FROM users WHERE email='${email}'`,
+        `SELECT * FROM users WHERE ${field}=$1`,
+        [data],
         (err, result) => {
           if (err) {
-            reject(err);
+            reject(new Error(`SQL : ${err.message}`));
           }
           resolve(result);
         }
       );
     });
   },
-  registerData: (data) => {
-    return new Promise((resolve, reject) => {
-      const {
-        id,
-        username,
-        email,
-        passwordHashed,
-        verifyToken,
-        isVerified,
-        isActive,
-        level,
-        photo,
-      } = data;
-      db.query(
-        `INSERT INTO users(id,username,email,password,verify_token,is_verified,is_active,level,photo)
-        VALUES('${id}','${username}','${email}','${passwordHashed}','${verifyToken}','${isVerified}',${isActive},${level},'${photo}')`,
-        (err, result) => {
-          if (err) {
-            // console.log(err);
-            reject(err);
-          }
-          resolve(result);
-        }
-      );
-    });
-  },
-  emailCheck: (email) => {
-    return new Promise((resolve, reject) => {
-      db.query(`SELECT * FROM users WHERE email='${email}'`, (err, result) => {
-        if (err) {
-          reject(err);
-        }
-        resolve(result);
-      });
-    });
-  },
-  usernameCheck: (username) => {
+  activateEmail: (verifyToken) => {
     return new Promise((resolve, reject) => {
       db.query(
-        `SELECT * FROM users WHERE username='${username}'`,
-        (err, result) => {
-          if (err) {
-            reject(err);
-          }
-          resolve(result);
-        }
-      );
-    });
-  },
-  verifyTokenCheck: (verifyToken) => {
-    return new Promise((resolve, reject) => {
-      db.query(
-        `SELECT * FROM users WHERE verify_token='${verifyToken}'`,
-        (err, result) => {
-          if (err) {
-            reject(err);
-          }
-          resolve(result);
-        }
-      );
-    });
-  },
-  verifyingUser: (verifyToken) => {
-    return new Promise((resolve, reject) => {
-      db.query(
-        `UPDATE users SET is_verified=1, is_active=1, verify_token=null WHERE verify_token='${verifyToken}'`,
+        `UPDATE users SET verify_token = null, is_verified = 1, is_active = 1 WHERE verify_token = $1`,
+        [verifyToken],
         (err, result) => {
           if (err) {
             reject(err);
@@ -91,23 +47,31 @@ const authModel = {
   },
   updateToken: (verifyToken, id) => {
     return new Promise((resolve, reject) => {
-      db.query(`UPDATE users SET verify_token=$1 WHERE id=$2`, [verifyToken, id], (err, result) => {
-        if (err) {
-          reject(err);
+      db.query(
+        `UPDATE users SET verify_token=$1 WHERE id=$2`,
+        [verifyToken, id],
+        (err, result) => {
+          if (err) {
+            reject(err);
+          }
+          resolve(result);
         }
-        resolve(result);
-      });
-    })
+      );
+    });
   },
-  resetPassword: (password, id) => {
+  updatePassword: (password, id) => {
     return new Promise((resolve, reject) => {
-      db.query(`UPDATE users SET password=$1 WHERE id=$2`, [password, id], (err, result) => {
-        if (err) {
-          reject(err);
+      db.query(
+        `UPDATE users SET password=$1, verify_token = null WHERE id=$2`,
+        [password, id],
+        (err, result) => {
+          if (err) {
+            reject(err);
+          }
+          resolve(result);
         }
-        resolve(result);
-      })
-    })
-  }
+      );
+    });
+  },
 };
 module.exports = authModel;

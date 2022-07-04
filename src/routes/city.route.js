@@ -9,7 +9,7 @@ const {
 } = require('../controllers/city.controller');
 const jwtAuth = require('../middlewares/jwtAuth');
 const { isAdmin, isCustomers } = require('../middlewares/authorization');
-const cityUpload = require('../middlewares/cityUpload');
+const upload = require('../middlewares/upload');
 const validation = require('../middlewares/validation');
 const {
   cityValidation,
@@ -27,7 +27,7 @@ router
     '/city',
     jwtAuth,
     isAdmin,
-    cityUpload,
+    upload,
     cityValidation,
     validation,
     insertCity
@@ -36,7 +36,7 @@ router
     '/city/:cityId',
     jwtAuth,
     isAdmin,
-    cityUpload,
+    upload,
     nameCityValidation,
     validation,
     updateCity
