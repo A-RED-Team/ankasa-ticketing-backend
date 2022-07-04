@@ -12,7 +12,7 @@ const resetAccount = require('../templates/reset-password');
 module.exports = {
   register: async (req, res) => {
     try {
-      const { username, email, password } = req.body;
+      const { name, username, email, password } = req.body;
       const checkUsername = await authModel.findBy('username', username);
       if (checkUsername.rowCount) {
         return failed(res, {
@@ -35,6 +35,7 @@ module.exports = {
       const verifyToken = crypto.randomBytes(64).toString('hex');
       const data = {
         id: uuidv4(),
+        name,
         username,
         email,
         password: await bcrypt.hash(password, 10),
@@ -46,10 +47,7 @@ module.exports = {
         from: `"${APP_NAME}" <${EMAIL_FROM}>`,
         to: email.toLowerCase(),
         subject: 'Activate Your Account!',
-        html: activateAccount(
-          `${API_URL}auth/activation/${verifyToken}`,
-          username
-        ),
+        html: activateAccount(`${API_URL}auth/activation/${verifyToken}`, name),
       };
       sendEmail(templateEmail);
 
