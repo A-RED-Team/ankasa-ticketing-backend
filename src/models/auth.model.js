@@ -38,7 +38,7 @@ const authModel = {
         [verifyToken],
         (err, result) => {
           if (err) {
-            reject(err);
+            reject(new Error(`SQL : ${err.message}`));
           }
           resolve(result);
         }
@@ -50,11 +50,14 @@ const authModel = {
       db.query(
         `UPDATE users SET verify_token=$1 WHERE id=$2`,
         [verifyToken, id],
-        (err, result) => {
+        (err) => {
           if (err) {
-            reject(err);
+            reject(new Error(`SQL : ${err.message}`));
           }
-          resolve(result);
+          resolve({
+            verifyToken,
+            id,
+          });
         }
       );
     });
@@ -64,11 +67,14 @@ const authModel = {
       db.query(
         `UPDATE users SET password=$1, verify_token = null WHERE id=$2`,
         [password, id],
-        (err, result) => {
+        (err) => {
           if (err) {
-            reject(err);
+            reject(new Error(`SQL : ${err.message}`));
           }
-          resolve(result);
+          resolve({
+            password,
+            id,
+          });
         }
       );
     });

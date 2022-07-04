@@ -176,9 +176,9 @@ const index = (link, name) => {
                                               <table align="center" border="0" cellpadding="0" cellspacing="0" role="presentation" style="border-collapse:collapse;border-spacing:0px;">
                                                   <tbody>
                                                       <tr>
-                                                          <td style="width:250px;">
+                                                          <td style="width:200px;">
 
-                                                              <img height="auto" src="https://i.postimg.cc/wBXQNQhC/Logo.png" style="border:0;display:block;outline:none;text-decoration:none;width:100%;" width="250" />
+                                                              <img height="auto" src="https://i.postimg.cc/DZb9Txj9/Ankasa.png" style="border:0;display:block;outline:none;text-decoration:none;width:100%;" width="200" />
 
                                                           </td>
                                                       </tr>
@@ -215,9 +215,9 @@ const index = (link, name) => {
 
                                               <table align="center" border="0" cellpadding="0" cellspacing="0" role="presentation" style="border-collapse:separate;line-height:100%;">
                                                   <tr>
-                                                      <td align="center" bgcolor="#5e50a1" role="presentation" style="border:none;border-radius:3px;color:#ffffff;cursor:auto;padding:15px 25px;" valign="middle">
+                                                      <td align="center" bgcolor="#2395FF" role="presentation" style="border:none;border-radius:3px;color:#ffffff;cursor:auto;padding:15px 25px;" valign="middle">
                                                           <a href="${link}" style="text-decoration: none;">
-                                                              <p style="background:#5e50a1;color:#ffffff;font-family:'Helvetica Neue',Arial,sans-serif;font-size:15px;font-weight:normal;line-height:120%;Margin:0;text-decoration:none;text-transform:none;">
+                                                              <p style="background:#2395FF;color:#ffffff;font-family:'Helvetica Neue',Arial,sans-serif;font-size:15px;font-weight:normal;line-height:120%;Margin:0;text-decoration:none;text-transform:none;">
                                                                   Confirm Your Email
                                                               </p>
                                                           </a>

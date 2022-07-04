@@ -32,12 +32,13 @@ module.exports = {
         });
       }
 
+      const verifyToken = crypto.randomBytes(64).toString('hex');
       const data = {
         id: uuidv4(),
         username,
         email,
         password: await bcrypt.hash(password, 10),
-        verifyToken: crypto.randomBytes(64).toString('hex'),
+        verifyToken,
       };
 
       // send email
@@ -87,7 +88,7 @@ module.exports = {
         res.render('./welcome.ejs', {
           email: checkToken.rows[0].username,
           url_home: `${APP_CLIENT}`,
-          url_login: `${APP_CLIENT}/login`,
+          url_login: `${APP_CLIENT}login`,
         });
       } else {
         failed(res, {
@@ -191,7 +192,7 @@ module.exports = {
   resetPassword: async (req, res) => {
     try {
       const { token } = req.params;
-      const user = await authModel.findBy('verify_email', token);
+      const user = await authModel.findBy('verify_token', token);
 
       if (!user.rowCount) {
         return failed(res, {
@@ -202,7 +203,7 @@ module.exports = {
       }
 
       const password = await bcrypt.hash(req.body.password, 10);
-      await authModel.updatePassword(password, user.rows[0].id);
+      const result = await authModel.updatePassword(password, user.rows[0].id);
 
       return success(res, {
         code: 200,
