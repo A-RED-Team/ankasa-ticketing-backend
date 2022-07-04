@@ -3,11 +3,12 @@ const db = require('../config/pg');
 const authModel = {
   register: (data) => {
     return new Promise((resolve, reject) => {
-      const { id, username, email, password, verifyToken } = data;
+      const { id, name, username, email, password, verifyToken } = data;
       db.query(
-        `INSERT INTO users (id, username, email, password, verify_token, is_verified, is_active, level, photo)
-        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)`,
-        [id, username, email, password, verifyToken, 0, 0, 0, null],
+        `INSERT INTO users 
+        (id, name, username, email, password, verify_token, is_verified, is_active, level, photo)
+        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)`,
+        [id, name, username, email, password, verifyToken, 0, 0, 0, null],
         (err) => {
           if (err) {
             reject(new Error(`SQL : ${err.message}`));

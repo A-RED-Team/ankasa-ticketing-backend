@@ -152,7 +152,7 @@ const countryController = {
         code: 200,
         status: 'Success',
         message: 'Get detail country success',
-        data: result.rows,
+        data: result.rows[0],
       });
     } catch (err) {
       failed(res, {
