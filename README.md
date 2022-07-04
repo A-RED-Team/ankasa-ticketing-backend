@@ -122,26 +122,31 @@ Create .env file in your root project folder.
 
 ```env
 # app
-# app
-APP_NAME = [APP_NAME]
-APP_VERSION = [APP_VERSION]
-NODE_ENV = [developement / production]
+APP_NAME=
+NODE_ENV=
+PORT=
 API_URL=
 APP_CLIENT=
 
 # database
-PG_HOST=
-PG_USER=
-PG_PASSWORD=
-PG_DATABASE=
-PG_PORT=
+DB_HOST=
+DB_USER=
+DB_PASSWORD=
+DB_NAME=
+DB_PORT=
 
 # jwt
-JWT_SECRET=rahasia
+JWT_SECRET=
+JWT_EXPIRED=
 
-# gmail
-GMAIL_USER=
-GMAIL_PASS=
+# google
+EMAIL_FROM=
+EMAIL_USER=
+GOOGLE_CLIENT_ID=
+GOOGLE_CLIENT_SECRET=
+REDIRECT_URI=
+GMAIL_REFRESH_TOKEN=
+DRIVE_REFRESH_TOKEN=
 ```
 
 <p align="right">(<a href="#top">back to top</a>)</p>
