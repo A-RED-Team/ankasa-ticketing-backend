@@ -2,6 +2,8 @@ const cityModel = require('../models/city.model');
 const { success, failed } = require('../helpers/response');
 const { v4: uuidv4 } = require('uuid');
 const deleteFile = require('../utils/deleteFile');
+const uploadGoogleDrive = require('../utils/uploadGoogleDrive');
+const deleteGoogleDrive = require('../utils/deleteGoogleDrive');
 
 const cityController = {
   getAllCity: async (req, res) => {
@@ -159,7 +161,7 @@ const cityController = {
     try {
       const id = uuidv4();
       const { countryId, cityName } = req.body;
-      const image = req.file.filename;
+      // const image = req.file.filename;
       if (!req.file) {
         failed(res, {
           code: 500,
@@ -171,14 +173,25 @@ const cityController = {
       }
       const checkNameCity = await cityModel.checkNameCity(cityName);
       if (checkNameCity.rowCount > 0) {
+        if (req.file) {
+          deleteFile(req.file.path);
+        }
         failed(res, {
           code: 400,
           status: 'Error',
           message: 'Name city is already exist',
           error: null,
         });
-        deleteFile(`public/uploads/cities/${image}`);
         return;
+      }
+      // upload image to google drive
+      let image = null;
+      if (req.file) {
+        // upload image to google drive
+        const photoGd = await uploadGoogleDrive(req.file);
+        image = photoGd.id;
+        // remove image after upload
+        deleteFile(req.file.path);
       }
       const result = await cityModel.insertCity(id, countryId, cityName, image);
       success(res, {
@@ -188,6 +201,9 @@ const cityController = {
         data: result,
       });
     } catch (err) {
+      if (req.file) {
+        deleteFile(req.file.path);
+      }
       failed(res, {
         code: 400,
         status: 'Error',
@@ -202,6 +218,9 @@ const cityController = {
       const { cityName } = req.body;
       const checkCityId = await cityModel.checkCityId(cityId);
       if (checkCityId.rowCount == 0) {
+        if (req.file) {
+          deleteFile(req.file.path);
+        }
         failed(res, {
           code: 400,
           status: 'Error',
@@ -213,6 +232,10 @@ const cityController = {
       const checkNameCity = await cityModel.checkNameCity(cityName);
       if (cityName != checkCityId.rows[0].name) {
         if (checkNameCity.rowCount > 0) {
+          if (req.file) {
+            deleteFile(req.file.path);
+          }
+
           failed(res, {
             code: 400,
             status: 'Error',
@@ -222,13 +245,21 @@ const cityController = {
           return;
         }
       }
-      let image;
+
+      // upload image to google drive
+      let { image } = checkCityId.rows[0];
       if (req.file) {
-        image = req.file.filename;
-        deleteFile(`public/uploads/cities/${checkCityId.rows[0].image}`);
-      } else {
-        image = checkCityId.rows[0].image;
+        if (image) {
+          // remove old image except default image
+          deleteGoogleDrive(image);
+        }
+        // upload new image to google drive
+        const photoGd = await uploadGoogleDrive(req.file);
+        image = photoGd.id;
+        // remove image after upload
+        deleteFile(req.file.path);
       }
+
       const result = await cityModel.updateCity(cityId, cityName, image);
       success(res, {
         code: 200,
@@ -237,6 +268,10 @@ const cityController = {
         data: result,
       });
     } catch (err) {
+      if (req.file) {
+        deleteFile(req.file.path);
+      }
+
       failed(res, {
         code: 400,
         status: 'Error',
