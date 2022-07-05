@@ -1,6 +1,8 @@
 const userModel = require('../models/user.model');
 const { success, failed } = require('../helpers/response');
 const deleteFile = require('../utils/deleteFile');
+const uploadGoogleDrive = require('../utils/uploadGoogleDrive');
+const deleteGoogleDrive = require('../utils/deleteGoogleDrive');
 
 const userController = {
   listAllUser: async (req, res) => {
@@ -154,33 +156,48 @@ const userController = {
   updatePhoto: async (req, res) => {
     try {
       const id = req.APP_DATA.tokenDecoded.id;
-      const checkPhoto = await userModel.getPhoto(id);
-      const getPhoto = checkPhoto.rows[0].photo;
-      const filePhoto = req.file.filename;
-      if (getPhoto === 'profile-default.png') {
-        const result = await userModel.updatePhoto(filePhoto, id);
-        success(res, {
-          code: 200,
-          status: 'Success',
-          message: 'Update photo success',
-          data: result,
+      const user = await userModel.getDetail(id);
+
+      if (!user.rowCount) {
+        if (req.file) {
+          deleteFile(req.file.path);
+        }
+        return failed(res, {
+          code: 404,
+          message: `User with id ${id} not found`,
+          error: 'Not Found',
         });
-      } else {
-        const result = await userModel.updatePhoto(filePhoto, id);
-        success(res, {
-          code: 200,
-          status: 'Success',
-          message: 'Update photo success',
-          data: result,
-        });
-        deleteFile(`./public/uploads/users/${getPhoto}`);
       }
+
+      // upload image to google drive
+      let { photo } = user.rows[0];
+      if (req.file) {
+        if (photo) {
+          // remove old image except default image
+          deleteGoogleDrive(photo);
+        }
+        // upload new image to google drive
+        const photoGd = await uploadGoogleDrive(req.file);
+        photo = photoGd.id;
+        // remove image after upload
+        deleteFile(req.file.path);
+      }
+
+      const result = await userModel.updatePhoto(photo, id);
+      success(res, {
+        code: 200,
+        status: 'Success',
+        message: 'Update photo success',
+        data: result,
+      });
     } catch (err) {
-      failed(res, {
-        code: 400,
-        status: 'Failed',
-        message: 'Update photo failed',
-        error: err.message,
+      if (req.file) {
+        deleteFile(req.file.path);
+      }
+      return failed(res, {
+        code: 500,
+        message: error.message,
+        error: 'Internal Server Error',
       });
     }
   },
