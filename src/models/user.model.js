@@ -71,10 +71,21 @@ const userModel = {
       );
     });
   },
-  updateProfile: (email, username, phone, city, address, postCode, id) => {
+  updateProfile: (
+    name,
+    email,
+    username,
+    phone,
+    city,
+    address,
+    postCode,
+    id
+  ) => {
     return new Promise((resolve, reject) => {
       db.query(
-        `UPDATE users SET email='${email}', username='${username}', phone_number='${phone}', city='${city}', address='${address}', post_code='${postCode}', updated_at=NOW() WHERE id='${id}'`,
+        `UPDATE users SET name='${name}', email='${email}', username='${username}', 
+        phone_number='${phone}', city='${city}', address='${address}', post_code='${postCode}', 
+        updated_at=NOW() WHERE id='${id}'`,
         (err, result) => {
           if (err) {
             reject(new Error(err.message));
