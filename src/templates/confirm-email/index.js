@@ -194,7 +194,7 @@ const index = (link, name) => {
                                           <td align="center" style="font-size:0px;padding:10px 25px;padding-bottom:40px;word-break:break-word;">
 
                                               <div style="font-family:'Helvetica Neue',Arial,sans-serif;font-size:28px;font-weight:bold;line-height:1;text-align:center;color:#555;">
-                                                  Welcome to Peworld Hire
+                                                  Welcome to Ankasa Ticketing
                                               </div>
 
                                           </td>
@@ -320,7 +320,7 @@ const index = (link, name) => {
                                                           <td align="center" style="font-size:0px;padding:0;word-break:break-word;">
 
                                                               <div style="font-family:'Helvetica Neue',Arial,sans-serif;font-size:12px;font-weight:300;line-height:1;text-align:center;color:#575757;">
-                                                                  Peworld Hire. Inc, 109 Jatinagara, Jawa Barat 46273, Indonesia
+                                                                  Ankasa Ticketing. Inc, 109 Jatinagara, Jawa Barat 46273, Indonesia
                                                               </div>
 
                                                           </td>

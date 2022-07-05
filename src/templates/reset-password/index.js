@@ -347,7 +347,7 @@ const index = (link) => {
 
                                                               <div
                                                                   style="font-family:'Helvetica Neue',Arial,sans-serif;font-size:12px;font-weight:300;line-height:1;text-align:center;color:#575757;">
-                                                                  Peworld Hire. Inc, 109 Jatinagara, Jawa Barat 46273, Indonesia
+                                                                  Ankasa Ticketing. Inc, 109 Jatinagara, Jawa Barat 46273, Indonesia
                                                               </div>
 
                                                           </td>

@@ -56,7 +56,7 @@ module.exports = {
 
       success(res, {
         code: 200,
-        message: 'create user sucesss, please activate your email',
+        message: 'Success Registered, please verification your email',
         data: result,
       });
     } catch (error) {
@@ -164,7 +164,7 @@ module.exports = {
           from: `"${APP_NAME}" <${EMAIL_FROM}>`,
           to: email.toLowerCase(),
           subject: 'Reset Your Password!',
-          html: resetAccount(`${APP_CLIENT}auth/reset/${verifyToken}`),
+          html: resetAccount(`${APP_CLIENT}reset/${verifyToken}`),
         };
         sendEmail(templateEmail);
 
@@ -194,7 +194,7 @@ module.exports = {
 
       if (!user.rowCount) {
         return failed(res, {
-          code: '401',
+          code: 401,
           message: 'Invalid token',
           error: 'Unauthorized',
         });

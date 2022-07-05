@@ -100,7 +100,8 @@ const userController = {
   updateProfile: async (req, res) => {
     try {
       const id = req.APP_DATA.tokenDecoded.id;
-      const { email, username, phone, city, address, postCode } = req.body;
+      const { name, email, username, phone, city, address, postCode } =
+        req.body;
       const emailCheck = await userModel.emailCheck(email);
       const usernameCheck = await userModel.usernameCheck(username);
       if (username != req.APP_DATA.tokenDecoded.username) {
@@ -108,7 +109,7 @@ const userController = {
           failed(res, {
             code: 400,
             status: 'Error',
-            message: 'User name is already exist',
+            message: 'Username is already exist',
             error: null,
           });
           return;
@@ -126,6 +127,7 @@ const userController = {
         }
       }
       const result = await userModel.updateProfile(
+        name,
         email,
         username,
         phone,
